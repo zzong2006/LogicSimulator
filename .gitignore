@@ -171,7 +171,7 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
-node_modules/
+C:/Users/zizi/Source/Repos/MFCProject/LogicSimulator/node_modules/
 orleans.codegen.cs
 
 # RIA/Silverlight projects
@@ -210,3 +210,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+#User-specific files
+*.VC.opendb
+*.VC.db

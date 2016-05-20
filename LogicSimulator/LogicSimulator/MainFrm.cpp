@@ -4,9 +4,11 @@
 
 #include "stdafx.h"
 #include "LogicSimulator.h"
+#include "MenuView.h"
+#include "CircuitView.h"
 
 #include "MainFrm.h"
-
+ // feafe
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -69,10 +71,30 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 	CCreateContext* pContext)
 {
-	return m_wndSplitter.Create(this,
-		2, 2,               // TODO: 행 및 열의 개수를 조정합니다.
-		CSize(10, 10),      // TODO: 최소 창 크기를 조정합니다.
-		pContext);
+	if (!m_wndSplitterMain.CreateStatic(this, 1, 2))
+	{
+		TRACE0("Fail to create splitter.\n");
+		return FALSE;
+	}
+	m_wndSplitterMain.SetColumnInfo(0, 300, 10);
+
+	m_wndSplitterMain.CreateView(0, 1, RUNTIME_CLASS(CCircuitView), CSize(300, 300), pContext);
+
+	// STEP 2: 좌측 분할 윈도우의 상/하 분할
+	if (!m_wndSplitterSub.CreateStatic(&m_wndSplitterMain, 2, 1, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, m_wndSplitterMain.IdFromRowCol(0, 0)))
+	{
+		TRACE0("Fail to create splitter.\n");
+		return FALSE;
+	}
+
+	
+	m_wndSplitterSub.CreateView(0, 0, RUNTIME_CLASS(CCircuitView), CSize(300, 300), pContext);
+	m_wndSplitterSub.CreateView(1, 0, RUNTIME_CLASS(CCircuitView), CSize(300, 300), pContext);
+
+
+
+
+	return TRUE;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
