@@ -1,11 +1,12 @@
 #pragma once
 
-
+#define UNIT 10
 // CCircuitView 뷰입니다.
 
 class CCircuitView : public CView
 {
 	DECLARE_DYNCREATE(CCircuitView)
+
 
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
