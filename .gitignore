@@ -171,7 +171,7 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
-C:/Users/zizi/Source/Repos/MFCProject/LogicSimulator/node_modules/
+/node_modules/
 orleans.codegen.cs
 
 # RIA/Silverlight projects
