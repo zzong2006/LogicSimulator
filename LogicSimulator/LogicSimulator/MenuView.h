@@ -1,10 +1,9 @@
 #pragma once
 
 
+// CMenuView 뷰입니다.
 
-// CMenuView 폼 뷰입니다.
-
-class CMenuView : public CFormView
+class CMenuView : public CTreeView
 {
 	DECLARE_DYNCREATE(CMenuView)
 
@@ -13,9 +12,6 @@ protected:
 	virtual ~CMenuView();
 
 public:
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_MENUVIEW };
-#endif
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 #ifndef _WIN32_WCE
@@ -24,9 +20,9 @@ public:
 #endif
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual void OnInitialUpdate();
 };
 
 

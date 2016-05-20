@@ -8,10 +8,9 @@
 
 // CMenuView
 
-IMPLEMENT_DYNCREATE(CMenuView, CFormView)
+IMPLEMENT_DYNCREATE(CMenuView, CTreeView)
 
 CMenuView::CMenuView()
-	: CFormView(IDD_MENUVIEW)
 {
 
 }
@@ -20,12 +19,7 @@ CMenuView::~CMenuView()
 {
 }
 
-void CMenuView::DoDataExchange(CDataExchange* pDX)
-{
-	CFormView::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CMenuView, CFormView)
+BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
 END_MESSAGE_MAP()
 
 
@@ -34,16 +28,57 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CMenuView::AssertValid() const
 {
-	CFormView::AssertValid();
+	CTreeView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CMenuView::Dump(CDumpContext& dc) const
 {
-	CFormView::Dump(dc);
+	CTreeView::Dump(dc);
 }
 #endif
 #endif //_DEBUG
 
 
 // CMenuView 메시지 처리기입니다.
+
+
+void CMenuView::OnInitialUpdate()
+{
+	CTreeView::OnInitialUpdate();
+
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	CTreeCtrl& treeCtrl = GetTreeCtrl();
+	treeCtrl.ModifyStyle(NULL, TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS);
+
+	TVINSERTSTRUCT tvi;
+	tvi.hParent = TVI_ROOT;
+	tvi.hInsertAfter = TVI_LAST;
+	tvi.item.mask = TVIF_TEXT;
+	tvi.item.pszText = _T("Gates");
+	HTREEITEM hItem = treeCtrl.InsertItem(&tvi);
+
+	tvi.hParent = hItem;
+	tvi.hInsertAfter = TVI_LAST;
+	tvi.item.mask = TVIF_TEXT;
+	tvi.item.pszText = _T("AND Gate");
+	treeCtrl.InsertItem(&tvi);
+
+	tvi.hParent = hItem;
+	tvi.hInsertAfter = TVI_LAST;
+	tvi.item.mask = TVIF_TEXT;
+	tvi.item.pszText = _T("OR Gate");
+	treeCtrl.InsertItem(&tvi);
+
+	tvi.hParent = hItem;
+	tvi.hInsertAfter = TVI_LAST;
+	tvi.item.mask = TVIF_TEXT;
+	tvi.item.pszText = _T("NAND Gate");
+	treeCtrl.InsertItem(&tvi);
+
+	tvi.hParent = hItem;
+	tvi.hInsertAfter = TVI_LAST;
+	tvi.item.mask = TVIF_TEXT;
+	tvi.item.pszText = _T("XOR Gate");
+	treeCtrl.InsertItem(&tvi);
+}

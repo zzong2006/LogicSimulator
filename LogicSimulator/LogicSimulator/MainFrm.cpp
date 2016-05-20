@@ -8,10 +8,12 @@
 #include "CircuitView.h"
 #include "PropertyView.h"
 #include "MainFrm.h"
+
  // feafe
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 // CMainFrame
 
@@ -103,7 +105,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
-
+	CSize size;
 	return TRUE;
 }
 
