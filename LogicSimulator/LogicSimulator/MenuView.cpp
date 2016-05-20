@@ -9,7 +9,7 @@
 // CMenuView
 
 IMPLEMENT_DYNCREATE(CMenuView, CFormView)
- 
+
 CMenuView::CMenuView()
 	: CFormView(IDD_MENUVIEW)
 {

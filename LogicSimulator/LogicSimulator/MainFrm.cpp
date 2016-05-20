@@ -1,12 +1,12 @@
 
 // MainFrm.cpp : CMainFrame 클래스의 구현
 //
-
+  
 #include "stdafx.h"
 #include "LogicSimulator.h"
 #include "MenuView.h"
 #include "CircuitView.h"
-
+#include "PropertyView.h"
 #include "MainFrm.h"
  // feafe
 #ifdef _DEBUG
@@ -88,8 +88,8 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 	}
 
 	
-	m_wndSplitterSub.CreateView(0, 0, RUNTIME_CLASS(CCircuitView), CSize(300, 300), pContext);
-	m_wndSplitterSub.CreateView(1, 0, RUNTIME_CLASS(CCircuitView), CSize(300, 300), pContext);
+	m_wndSplitterSub.CreateView(0, 0, RUNTIME_CLASS(CMenuView), CSize(300, 300), pContext);
+	m_wndSplitterSub.CreateView(1, 0, RUNTIME_CLASS(CPropertyView), CSize(300, 300), pContext);
 
 
 

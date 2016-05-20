@@ -185,11 +185,18 @@ BEGIN
     DEFPUSHBUTTON   "확인",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_MENUVIEW DIALOGEX 0, 0, 159, 101
+IDD_PROPERTYVIEW DIALOG 0, 0, 320, 200
 STYLE DS_SETFONT | WS_CHILD
-FONT 9, "굴림", 400, 0, 0x0
+FONT 9, "MS Shell Dlg"
 BEGIN
-    CONTROL         "",IDC_TREE1,"SysTreeView32",WS_BORDER | WS_HSCROLL | WS_TABSTOP,0,0,158,101
+    LTEXT           "TODO: 이 대화 상자에 폼 컨트롤을 배치합니다.",IDC_STATIC,24,42,280,8
+END
+
+IDD_MENUVIEW DIALOG 0, 0, 320, 200
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "MS Shell Dlg"
+BEGIN
+    LTEXT           "TODO: 이 대화 상자에 폼 컨트롤을 배치합니다.",IDC_STATIC,24,42,280,8
 END
 
 
@@ -248,22 +255,23 @@ BEGIN
         BOTTOMMARGIN, 55
     END
 
+    IDD_PROPERTYVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+
     IDD_MENUVIEW, DIALOG
     BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
     END
 END
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// AFX_DIALOG_LAYOUT
-//
-
-IDD_MENUVIEW AFX_DIALOG_LAYOUT
-BEGIN
-    0
-END
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,7 @@
 #pragma once
+
+
+
 // CMenuView Æû ºäÀÔ´Ï´Ù.
 
 class CMenuView : public CFormView
