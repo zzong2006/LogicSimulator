@@ -213,12 +213,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LogicSimulator.reg" />
+    <None Include="res\cursor1.cur" />
     <None Include="res\LogicSimulator.rc2" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LogicSimulator.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\andGate.gif" />
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />
     <Image Include="res\LogicSimulatorDoc.ico" />
     <Image Include="res\Toolbar.bmp" />

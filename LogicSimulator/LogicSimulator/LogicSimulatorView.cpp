@@ -38,6 +38,7 @@ CLogicSimulatorView::CLogicSimulatorView()
 
 CLogicSimulatorView::~CLogicSimulatorView()
 {
+
 }
 
 BOOL CLogicSimulatorView::PreCreateWindow(CREATESTRUCT& cs)

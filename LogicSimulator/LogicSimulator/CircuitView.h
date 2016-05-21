@@ -6,8 +6,10 @@
 class CCircuitView : public CView
 {
 	DECLARE_DYNCREATE(CCircuitView)
-
-
+protected:
+	CArray <Point, Point&> andPts;
+	int dec_x, dec_y;
+	int prev_x , prev_y;
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
@@ -25,6 +27,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	virtual void OnInitialUpdate();
 };
 
 
