@@ -5,7 +5,7 @@
 #include "LogicSimulator.h"
 #include "MenuView.h"
 #include "LogicSimulatorDoc.h"
-
+#include "andGate.h"
 // CMenuView
 
 IMPLEMENT_DYNCREATE(CMenuView, CTreeView)
@@ -17,6 +17,7 @@ CMenuView::CMenuView()
 
 CMenuView::~CMenuView()
 {
+
 }
 
 BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
@@ -76,7 +77,9 @@ void CMenuView::OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 	
 	pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
-	pDoc->isSelected = TRUE;
+
+	if(pDoc->selectedType.Compare(_T("Gates")))
+		pDoc->isSelected = TRUE;
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;

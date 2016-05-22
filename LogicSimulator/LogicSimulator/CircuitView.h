@@ -7,7 +7,7 @@ class CCircuitView : public CView
 {
 	DECLARE_DYNCREATE(CCircuitView)
 protected:
-	CArray <Point, Point&> andPts;
+	CArray <Gdiplus::Point, Gdiplus::Point&> andPts;
 	int dec_x, dec_y;
 	int prev_x , prev_y;
 protected:
@@ -30,6 +30,7 @@ public:
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	virtual void OnInitialUpdate();
+	afx_msg void OnPaint();
 };
 
 

@@ -185,7 +185,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="LogicSimulator.h" />
     <ClInclude Include="LogicSimulatorDoc.h" />
     <ClInclude Include="LogicSimulatorView.h" />
@@ -197,7 +199,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
+    <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />
     <ClCompile Include="LogicSimulatorDoc.cpp" />
     <ClCompile Include="LogicSimulatorView.cpp" />

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <gdiplus.h>
 
 class Gate
@@ -13,9 +14,9 @@ protected:
 
 public:
 	Gate();
-	virtual void draw(Graphics* gp, Pen* p) = 0;
+	virtual void draw(Gdiplus::Graphics* gp, Gdiplus::Pen* p) = 0;
 	virtual void turn() = 0;
-	virtual bool output() = 0;	//결과 생성
+	virtual bool calOutput() = 0;	//결과 생성
 
 	void addLabel (CString input);				//라벨 이름
 	void set_outputCoord(int x, int y);
