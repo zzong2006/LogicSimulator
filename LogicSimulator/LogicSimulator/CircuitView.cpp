@@ -43,7 +43,6 @@ void CCircuitView::OnPaint()
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	Gdiplus::Graphics graphics(dc);
 	Gdiplus::Pen P(Gdiplus::Color(0, 0, 0), 2);
-	Gdiplus::Pen DP(Gdiplus::Color(255, 255, 255), 2);
 
 	// TODO: 여기에 그리기 코드를 추가합니다.
 	CRect rect;
@@ -60,7 +59,7 @@ void CCircuitView::OnPaint()
 	if (!pDoc->isSelected) {
 		for (int i = 0; i < pDoc->gateinfo.size(); i++)
 		{
-			pDoc->gateinfo.at(i).draw(&graphics, &P);
+			pDoc->gateinfo.at(i).draw_main(&graphics);
 		}
 	}
 }
@@ -105,6 +104,8 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		andGate temp;
 		temp.set_outputCoord(dec_x, dec_y);
 		pDoc->gateinfo.push_back(temp);
+		free(pDoc->temp);
+		pDoc->temp = NULL;
 	}
 
 	pDoc->isSelected = false;
@@ -153,12 +154,13 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	//and east
 	if (pDoc->isSelected) {
 		if (pDoc->selectedType == _T("AND Gate")) {
-			pDoc->temp = new andGate();
-			pDoc->temp->draw(&graphics, &DP);
+			if(pDoc->temp == NULL)
+				pDoc->temp = new andGate();
+			pDoc->temp->draw_shadow(&graphics, &DP);
 			pDoc->temp->set_outputCoord(dec_x, dec_y);
-			pDoc->temp->draw(&graphics, &P);
+			pDoc->temp->draw_shadow(&graphics, &P);
 		}
-		free(pDoc->temp);
+		
 	}
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	

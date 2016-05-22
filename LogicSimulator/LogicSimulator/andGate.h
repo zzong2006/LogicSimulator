@@ -4,7 +4,8 @@
 class andGate : public Gate
 {
 public:
-	void draw(Gdiplus::Graphics* gp, Gdiplus::Pen* p);
+	void draw_main(Gdiplus::Graphics* gp);
+	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	bool calOutput();
 	void turn();
 	virtual bool output();

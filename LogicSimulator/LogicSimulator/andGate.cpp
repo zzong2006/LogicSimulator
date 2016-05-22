@@ -10,7 +10,35 @@ bool andGate::output()
 }
 
 
-void andGate::draw(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
+void andGate::draw_main(Gdiplus::Graphics* gp)
+{
+	Gdiplus::Point andPts[4];
+	Gdiplus::Pen *p;
+	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
+
+	andPts[0] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y - 2 * UNIT);
+	andPts[1] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT);
+	andPts[2] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
+	andPts[3] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y + 3 * UNIT);
+	
+	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT, 5 * UNIT, 5 * UNIT, -80, 173);
+	gp->DrawLines(p, andPts, 4);
+
+	p->SetColor(Gdiplus::Color(255, 0, 0));
+	gp->DrawEllipse(p, Gdiplus::Rect(outputCoord.x+1, outputCoord.y+1, 2, 2));
+
+	this->set_inputCoord(outputCoord.x, outputCoord.y);
+
+	p->SetColor(Gdiplus::Color(0, 0, 255));
+	for (int i = 0; i < inputNum; i++)
+	{
+		gp->DrawEllipse(p, Gdiplus::Rect(inputCoord[i].x - 1, inputCoord[i].y - 1, 2, 2));
+	}
+
+	delete p;
+}
+
+void andGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
 	Gdiplus::Point andPts[4];
 
@@ -20,6 +48,7 @@ void andGate::draw(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 	andPts[3] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y + 3 * UNIT);
 
 	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT, 5 * UNIT, 5 * UNIT, -80, 173);
+
 	gp->DrawLines(p, andPts, 4);
 }
 
@@ -35,7 +64,7 @@ void andGate::turn()
 
 andGate::andGate()
 {
-	
+	inputNum = 2;
 }
 
 

@@ -32,7 +32,7 @@ END_MESSAGE_MAP()
 CLogicSimulatorDoc::CLogicSimulatorDoc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
-	
+	temp = NULL;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()

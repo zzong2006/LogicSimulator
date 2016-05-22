@@ -16,7 +16,7 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
-	std::vector <andGate> gateinfo;
+	std::vector <andGate> gateinfo ;
 	int gateNum;
 	Gate* temp;
 // 작업입니다.
