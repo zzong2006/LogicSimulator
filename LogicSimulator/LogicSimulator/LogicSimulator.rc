@@ -83,6 +83,8 @@ IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
 
 IDB_BITMAP1             BITMAP                  "res\\bitmap2.bmp"
 
+IDB_BITMAP2             BITMAP                  "res\\bitmap1.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

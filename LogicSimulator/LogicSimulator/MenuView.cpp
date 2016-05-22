@@ -6,6 +6,7 @@
 #include "MenuView.h"
 #include "LogicSimulatorDoc.h"
 #include "andGate.h"
+#include "Resource.h"
 // CMenuView
 
 IMPLEMENT_DYNCREATE(CMenuView, CTreeView)
@@ -66,6 +67,15 @@ void CMenuView::OnInitialUpdate()
 	treeCtrl.InsertItem(_T("NAND Gate"), 4, 4, hGate, TVI_LAST);
 	treeCtrl.InsertItem(_T("NOR Gate"), 5, 5, hGate, TVI_LAST);
 	treeCtrl.InsertItem(_T("XOR Gate"), 6,6, hGate, TVI_LAST);
+
+	//il.Create(IDB_BITMAP2, 16, 1, RGB(255, 255, 255));
+	//treeCtrl.SetImageList(&il, TVSIL_NORMAL);
+	//il.Detach();
+
+	HTREEITEM hWiring = treeCtrl.InsertItem(_T("Wiring"), 0, 0, TVI_ROOT, TVI_LAST);
+
+	treeCtrl.InsertItem(_T("Pin"), 7,7, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("Clock"), 8,8, hWiring, TVI_LAST);
 }
 
 
@@ -77,10 +87,11 @@ void CMenuView::OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 	
 	pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
-
+	
 	if(pDoc->selectedType.Compare(_T("Gates")))
 		pDoc->isSelected = TRUE;
-
+	
+	treeCtrl.Select(NULL,0);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 }
