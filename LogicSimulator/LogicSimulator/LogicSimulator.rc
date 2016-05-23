@@ -91,7 +91,7 @@ IDB_BITMAP2             BITMAP                  "res\\bitmap1.bmp"
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR 16, 15
+IDR_MAINFRAME TOOLBAR 15, 15
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -103,6 +103,8 @@ BEGIN
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
+    BUTTON      ID_CLICK_MODE
+    BUTTON      ID_SELECT_MODE
 END
 
 
@@ -145,6 +147,11 @@ BEGIN
     POPUP "도움말(&H)"
     BEGIN
         MENUITEM "LogicSimulator 정보(&A)...",    ID_APP_ABOUT
+    END
+    POPUP "전환"
+    BEGIN
+        MENUITEM "클릭 모드",                       ID_CLICK_MODE
+        MENUITEM "선택 모드",                       ID_SELECT_MODE
     END
 END
 
@@ -432,6 +439,11 @@ END
 STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "인쇄 미리 보기 모드를 닫습니다.\n미리 보기 취소"
+END
+
+STRINGTABLE
+BEGIN
+    ID_CLICK_MODE           "클릭 모드로 전환합니다."
 END
 
 #endif    // 한국어(대한민국) resources

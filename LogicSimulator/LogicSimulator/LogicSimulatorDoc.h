@@ -19,6 +19,7 @@ public:
 	CString selectedType;
 	BOOL isSelected;
 	BOOL clickMode;
+	BOOL selectMode;
 	std::vector <LogicObject *> logicInfo;
 	int gateNum;
 	LogicObject* temp;

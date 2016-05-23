@@ -33,6 +33,7 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 {
 	temp = NULL;
 	clickMode = false;
+	selectMode = true;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()

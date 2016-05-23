@@ -26,6 +26,10 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
 	ON_WM_PAINT()
+	ON_COMMAND(ID_CLICK_MODE, &CCircuitView::OnClickMode)
+	ON_COMMAND(ID_SELECT_MODE, &CCircuitView::OnSelectMode)
+	ON_UPDATE_COMMAND_UI(ID_CLICK_MODE, &CCircuitView::OnUpdateClickMode)
+	ON_UPDATE_COMMAND_UI(ID_SELECT_MODE, &CCircuitView::OnUpdateSelectMode)
 END_MESSAGE_MAP()
 
 
@@ -161,8 +165,11 @@ BOOL CCircuitView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 		if (pDoc->isSelected)
 			::SetCursor(AfxGetApp()->LoadCursor(IDC_CURSOR1));
-		else
+		else if(pDoc->selectMode)
 			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+		else if(pDoc->clickMode)
+			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_HAND));
+			
 		return TRUE;
 	}
 
@@ -223,3 +230,38 @@ void CCircuitView::OnInitialUpdate()
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
 
+
+
+void CCircuitView::OnClickMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = TRUE;
+	pDoc->selectMode = FALSE;
+
+}
+
+
+void CCircuitView::OnSelectMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = FALSE;
+	pDoc->selectMode = TRUE;
+}
+
+
+void CCircuitView::OnUpdateClickMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
+}
+
+
+void CCircuitView::OnUpdateSelectMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+	
+	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
+}

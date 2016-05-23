@@ -10,13 +10,18 @@
 #define IDC_CURSOR1                     318
 #define IDB_BITMAP1                     319
 #define IDC_MFCPROPERTYGRID1            1002
+#define ID_CLICK_MODE                   32772
+#define ID_32773                        32773
+#define ID_BUTTON32774                  32774
+#define ID_32775                        32775
+#define ID_SELECT_MODE                  32776
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        320
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_COMMAND_VALUE         32777
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
