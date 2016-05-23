@@ -1,14 +1,15 @@
 #pragma once
+
 #include "Gate.h"
 
-class andGate : public Gate
+class orGate : public Gate
 {
 public:
 	void draw_main(Gdiplus::Graphics* gp);
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
-	bool calOutput(); 
+	bool calOutput();
 	void turn();
-	andGate();
-	virtual ~andGate();
+	orGate();
+	~orGate();
 };
 

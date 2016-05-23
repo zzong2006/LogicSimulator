@@ -36,7 +36,7 @@ void Gate::set_inputCoord(int x, int y)
 		inputCoord[0].x = x - 5 *UNIT;
 		inputCoord[0].y = y - 1 * UNIT;
 		inputCoord[1].x = x - 5 * UNIT;
-		inputCoord[1].y = y + 2 * UNIT;
+		inputCoord[1].y = y + 1 * UNIT;
 	}
 }
 

@@ -59,7 +59,7 @@ void CCircuitView::OnPaint()
 	if (!pDoc->isSelected) {
 		for (int i = 0; i < pDoc->gateinfo.size(); i++)
 		{
-			pDoc->gateinfo.at(i).draw_main(&graphics);
+			pDoc->gateinfo.at(i)->draw_main(&graphics);
 		}
 	}
 }
@@ -100,10 +100,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	//and east
 	
 
-	if (pDoc->isSelected && pDoc->selectedType == _T("AND Gate")) {
-		andGate temp;
-		temp.set_outputCoord(dec_x, dec_y);
-		pDoc->gateinfo.push_back(temp);
+	if (pDoc->isSelected) {
+		Gate *temp;
+		if (pDoc->selectedType == _T("AND Gate")) {
+			temp = new andGate();
+			temp->set_outputCoord(dec_x, dec_y);
+			pDoc->gateinfo.push_back(temp);
+		}
+		else if(pDoc->selectedType == _T("OR Gate")) {
+			temp = new orGate();
+			temp->set_outputCoord(dec_x, dec_y);
+			pDoc->gateinfo.push_back(temp);
+		}
 		free(pDoc->temp);
 		pDoc->temp = NULL;
 	}
@@ -156,11 +164,17 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		if (pDoc->selectedType == _T("AND Gate")) {
 			if(pDoc->temp == NULL)
 				pDoc->temp = new andGate();
-			pDoc->temp->draw_shadow(&graphics, &DP);
-			pDoc->temp->set_outputCoord(dec_x, dec_y);
-			pDoc->temp->draw_shadow(&graphics, &P);
 		}
-		
+		else if (pDoc->selectedType == _T("OR Gate")) {
+			if (pDoc->temp == NULL)
+				pDoc->temp = new orGate();
+		}
+
+		//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
+		pDoc->temp->draw_shadow(&graphics, &DP);
+		pDoc->temp->set_outputCoord(dec_x, dec_y);
+		pDoc->temp->draw_shadow(&graphics, &P);
+
 	}
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	
@@ -175,9 +189,7 @@ void CCircuitView::OnInitialUpdate()
 
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	pDoc->isSelected = false;
-	andPts.SetSize(4);
-	prev_x = INT_MAX;
-	prev_y = INT_MAX;
+
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
 

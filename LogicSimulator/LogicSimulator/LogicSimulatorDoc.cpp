@@ -37,6 +37,10 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
+	for (int i = 0; i < gateinfo.size(); i++)
+	{
+		delete gateinfo.at(i);
+	}
 }
 
 BOOL CLogicSimulatorDoc::OnNewDocument()
