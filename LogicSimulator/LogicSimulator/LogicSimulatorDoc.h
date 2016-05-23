@@ -5,7 +5,7 @@
 #pragma once
 #include <vector>
 #include "andGate.h"
-
+#include "orGate.h"
 class CLogicSimulatorDoc : public CDocument
 {
 protected: // serialization에서만 만들어집니다.
@@ -16,7 +16,7 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
-	std::vector <andGate> gateinfo ;
+	std::vector <Gate *> gateinfo ;
 	int gateNum;
 	Gate* temp;
 // 작업입니다.

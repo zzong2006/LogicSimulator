@@ -4,12 +4,6 @@
 
 #define UNIT 10
 
-bool andGate::output()
-{
-	return false;
-}
-
-
 void andGate::draw_main(Gdiplus::Graphics* gp)
 { 
 	Gdiplus::Point andPts[4];
@@ -25,7 +19,7 @@ void andGate::draw_main(Gdiplus::Graphics* gp)
 	gp->DrawLines(p, andPts, 4);
 
 	p->SetColor(Gdiplus::Color(255, 0, 0));
-	gp->DrawEllipse(p, Gdiplus::Rect(outputCoord.x+1, outputCoord.y+1, 2, 2));
+	gp->DrawLine(p, outputCoord.x, outputCoord.y, outputCoord.x + 3, outputCoord.y);
 
 	this->set_inputCoord(outputCoord.x, outputCoord.y);
 
@@ -54,7 +48,9 @@ void andGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 bool andGate::calOutput()
 {
-	return false;
+	output = input[0] & input[1];
+
+	return output;
 }
 
 void andGate::turn()

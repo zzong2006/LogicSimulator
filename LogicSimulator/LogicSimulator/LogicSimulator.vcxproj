@@ -193,6 +193,7 @@
     <ClInclude Include="LogicSimulatorView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MenuView.h" />
+    <ClInclude Include="orGate.h" />
     <ClInclude Include="PropertyView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="LogicSimulatorView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MenuView.cpp" />
+    <ClCompile Include="orGate.cpp" />
     <ClCompile Include="PropertyView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

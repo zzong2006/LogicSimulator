@@ -23,6 +23,7 @@ CMenuView::~CMenuView()
 
 BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, &CMenuView::OnTvnSelchanged)
+	ON_NOTIFY_REFLECT(NM_CLICK, &CMenuView::OnNMClick)
 END_MESSAGE_MAP()
 
 
@@ -86,12 +87,38 @@ void CMenuView::OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 	HTREEITEM hTreeItem = pNMTreeView->itemNew.hItem;
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 	
-	pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
-	
-	if(pDoc->selectedType.Compare(_T("Gates")))
-		pDoc->isSelected = TRUE;
-	
-	treeCtrl.Select(NULL,0);
+	//pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
+	//
+	//if(pDoc->selectedType.Compare(_T("Gates")))
+	//	pDoc->isSelected = TRUE;
+	//
+	//treeCtrl.Select(NULL,0);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}
+
+
+void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+	CTreeCtrl& treeCtrl = GetTreeCtrl();
+	CPoint p;
+	GetCursorPos(&p);	
+	UINT flag;
+	treeCtrl.ScreenToClient(&p);
+	HTREEITEM hltem_dc = treeCtrl.HitTest(p, &flag);
+
+	pDoc->selectedType = treeCtrl.GetItemText(hltem_dc);
+
+	if (pDoc->selectedType.Compare(_T("Gates")))
+		pDoc->isSelected = TRUE;
+
+	if (pDoc->temp != NULL) {
+		delete pDoc->temp;
+		pDoc->temp = NULL;
+	}
+
+
+
 	*pResult = 0;
 }
