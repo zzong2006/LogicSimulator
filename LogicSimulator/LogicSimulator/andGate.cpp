@@ -1,3 +1,4 @@
+//test
 #include "stdafx.h"
 #include "andGate.h"
 #include "LogicSimulator.h"
