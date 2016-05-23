@@ -8,6 +8,13 @@ Gate::Gate()
 	outputCoord.y = 0;
 }
 
+bool Gate::calOutput()
+{
+	output = input[0] & input[1];
+
+	return output;
+}
+
 void Gate::addLabel(CString input)
 {
 	label = input;
@@ -32,6 +39,8 @@ void Gate::set_inputCoord(int x, int y)
 		inputCoord[1].y = y + 2 * UNIT;
 	}
 }
+
+
 
 Gate::~Gate()
 {

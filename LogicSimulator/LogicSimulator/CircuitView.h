@@ -13,7 +13,7 @@ protected:
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
-
+	 
 public:
 	virtual void OnDraw(CDC* pDC);      // 이 뷰를 그리기 위해 재정의되었습니다.
 #ifdef _DEBUG

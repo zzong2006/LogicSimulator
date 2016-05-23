@@ -12,7 +12,7 @@
 #include "LogicSimulatorView.h"
 
 #include <gdiplus.h>
-
+ 
 using namespace Gdiplus;
 
 #ifdef _DEBUG

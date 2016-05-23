@@ -14,7 +14,7 @@ IMPLEMENT_DYNCREATE(CCircuitView, CView)
 CCircuitView::CCircuitView()
 {
 
-}
+} 
 
 CCircuitView::~CCircuitView()
 {
