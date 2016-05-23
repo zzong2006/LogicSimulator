@@ -169,7 +169,10 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 			if (pDoc->temp == NULL)
 				pDoc->temp = new orGate();
 		}
-
+		else if (pDoc->selectedType == _T("Pin")) {
+			if (pDoc->temp == NULL);
+				//pDoc->temp = new Pin();
+		}
 		//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
 		pDoc->temp->draw_shadow(&graphics, &DP);
 		pDoc->temp->set_outputCoord(dec_x, dec_y);

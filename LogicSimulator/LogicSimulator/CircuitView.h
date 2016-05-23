@@ -7,9 +7,7 @@ class CCircuitView : public CView
 {
 	DECLARE_DYNCREATE(CCircuitView)
 protected:
-	CArray <Gdiplus::Point, Gdiplus::Point&> andPts;
 	int dec_x, dec_y;
-	int prev_x , prev_y;
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
