@@ -46,6 +46,12 @@ void andGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 	gp->DrawLines(p, andPts, 4);
 }
 
+void andGate::set_Coord_From_outC(int x, int y)
+{
+	top.x = x - 6 * UNIT; top.y = y - 3 * UNIT;
+	bottom.x = x; bottom.y = y + 3 * UNIT;
+}
+
 bool andGate::calOutput()
 {
 	output = input[0] & input[1];

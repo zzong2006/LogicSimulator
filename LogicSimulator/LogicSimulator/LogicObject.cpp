@@ -29,9 +29,24 @@ void LogicObject::set_inputCoord(int x, int y)
 	}
 }
 
+void LogicObject::toggleOutput()
+{
+	output = !output;
+}
+
+POINT LogicObject::get_top() const
+{
+	return top;
+}
+
+POINT LogicObject::get_bottm() const
+{
+	return bottom;
+}
+
 LogicObject::LogicObject()
 {
-
+	output = 0;
 }
 
 

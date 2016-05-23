@@ -53,6 +53,12 @@ void orGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 		outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
 }
 
+void orGate::set_Coord_From_outC(int x, int y)
+{
+	top.x = x - 6 * UNIT; top.y = y - 3 * UNIT;
+	bottom.x = x; bottom.y = y + 3 * UNIT;
+}
+
 bool orGate::calOutput()
 {
 	output = input[0] | input[1];

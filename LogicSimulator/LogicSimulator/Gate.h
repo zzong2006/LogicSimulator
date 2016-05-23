@@ -11,7 +11,6 @@ protected:
 
 public:
 	Gate();
-
 	virtual bool calOutput() = 0;	//결과 생성
 	virtual ~Gate();
 

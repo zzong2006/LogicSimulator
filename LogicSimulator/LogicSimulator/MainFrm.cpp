@@ -89,12 +89,8 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 		return FALSE;
 	}
 
-	
 	m_wndSplitterSub.CreateView(0, 0, RUNTIME_CLASS(CMenuView), CSize(300, 300), pContext);
 	m_wndSplitterSub.CreateView(1, 0, RUNTIME_CLASS(CPropertyView), CSize(300, 300), pContext);
-
-
-
 
 	return TRUE;
 }

@@ -18,6 +18,7 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
+	BOOL clickMode;
 	std::vector <LogicObject *> logicInfo;
 	int gateNum;
 	LogicObject* temp;

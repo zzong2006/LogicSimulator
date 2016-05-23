@@ -104,25 +104,44 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		LogicObject *temp;
 		if (pDoc->selectedType == _T("AND Gate")) {
 			temp = new andGate();
-			temp->set_outputCoord(dec_x, dec_y);
-			pDoc->logicInfo.push_back(temp);
 		}
 		else if(pDoc->selectedType == _T("OR Gate")) {
 			temp = new orGate();
-			temp->set_outputCoord(dec_x, dec_y);
-			pDoc->logicInfo.push_back(temp);
 		}
 		else if (pDoc->selectedType == _T("Pin")) {
 			temp = new Pin();
-			temp->set_outputCoord(dec_x, dec_y);
-			pDoc->logicInfo.push_back(temp);
 		}
+
+		if (temp != NULL) {
+			temp->set_outputCoord(dec_x, dec_y);
+			temp->set_Coord_From_outC(dec_x, dec_y);
+			pDoc->logicInfo.push_back(temp);	
+		}
+
 		free(pDoc->temp);
 		pDoc->temp = NULL;
+
+		pDoc->isSelected = false;
 	}
 
-	pDoc->isSelected = false;
-	
+	if (pDoc->clickMode) {
+		CPoint pos;
+		
+		GetCursorPos(&pos);
+		ScreenToClient(&pos);
+
+		for (int i = 0; i < pDoc->logicInfo.size(); i++) {
+			POINT temp_top, temp_bottom;
+			temp_top = pDoc->logicInfo.at(i)->get_top();
+			temp_bottom = pDoc->logicInfo.at(i)->get_bottm();
+
+			CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
+
+			if (PtInRect(rect,pos)) {
+				pDoc->logicInfo.at(i)->toggleOutput();
+			}
+		}
+	}
 	Invalidate();
 
 	CView::OnLButtonDown(nFlags, point);
@@ -159,7 +178,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	Gdiplus::Graphics graphics(dc);
 
 	Gdiplus::Pen P(Gdiplus::Color(190,190,190), 2);
-	Gdiplus::Pen DP(Gdiplus::Color(250, 255, 255), 2);
+	Gdiplus::Pen DP(Gdiplus::Color(255, 255, 255), 2);
 
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
@@ -175,14 +194,17 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				pDoc->temp = new orGate();
 		}
 		else if (pDoc->selectedType == _T("Pin")) {
-			if (pDoc->temp == NULL);
+			if (pDoc->temp == NULL)
 				pDoc->temp = new Pin();
 		}
 		//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
-		pDoc->temp->draw_shadow(&graphics, &DP);
-		pDoc->temp->set_outputCoord(dec_x, dec_y);
-		pDoc->temp->draw_shadow(&graphics, &P);
 
+		if (pDoc->temp != NULL) {
+			pDoc->temp->draw_shadow(&graphics, &DP);
+			pDoc->temp->set_outputCoord(dec_x, dec_y);
+			pDoc->temp->draw_shadow(&graphics, &P);
+
+		}
 	}
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	
