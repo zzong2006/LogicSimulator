@@ -31,15 +31,16 @@ END_MESSAGE_MAP()
 
 CLogicSimulatorDoc::CLogicSimulatorDoc()
 {
-	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	temp = NULL;
+	clickMode = false;
+	selectMode = true;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
-	for (int i = 0; i < gateinfo.size(); i++)
+	for (int i = 0; i < logicInfo.size(); i++)
 	{
-		delete gateinfo.at(i);
+		delete logicInfo.at(i);
 	}
 }
 

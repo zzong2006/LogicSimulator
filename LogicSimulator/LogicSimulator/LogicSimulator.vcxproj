@@ -188,12 +188,14 @@
     <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="LogicObject.h" />
     <ClInclude Include="LogicSimulator.h" />
     <ClInclude Include="LogicSimulatorDoc.h" />
     <ClInclude Include="LogicSimulatorView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MenuView.h" />
     <ClInclude Include="orGate.h" />
+    <ClInclude Include="Pin.h" />
     <ClInclude Include="PropertyView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -203,12 +205,14 @@
     <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="LogicObject.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />
     <ClCompile Include="LogicSimulatorDoc.cpp" />
     <ClCompile Include="LogicSimulatorView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MenuView.cpp" />
     <ClCompile Include="orGate.cpp" />
+    <ClCompile Include="Pin.cpp" />
     <ClCompile Include="PropertyView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -227,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\andGate.gif" />
+    <Image Include="res\bitmap1.bmp" />
     <Image Include="res\bitmap2.bmp" />
     <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />

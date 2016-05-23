@@ -7,9 +7,8 @@ class CCircuitView : public CView
 {
 	DECLARE_DYNCREATE(CCircuitView)
 protected:
-	CArray <Gdiplus::Point, Gdiplus::Point&> andPts;
 	int dec_x, dec_y;
-	int prev_x , prev_y;
+
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
@@ -31,6 +30,10 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	virtual void OnInitialUpdate();
 	afx_msg void OnPaint();
+	afx_msg void OnClickMode();
+	afx_msg void OnSelectMode();
+	afx_msg void OnUpdateClickMode(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
 };
 
 

@@ -69,10 +69,6 @@ void CMenuView::OnInitialUpdate()
 	treeCtrl.InsertItem(_T("NOR Gate"), 5, 5, hGate, TVI_LAST);
 	treeCtrl.InsertItem(_T("XOR Gate"), 6,6, hGate, TVI_LAST);
 
-	//il.Create(IDB_BITMAP2, 16, 1, RGB(255, 255, 255));
-	//treeCtrl.SetImageList(&il, TVSIL_NORMAL);
-	//il.Detach();
-
 	HTREEITEM hWiring = treeCtrl.InsertItem(_T("Wiring"), 0, 0, TVI_ROOT, TVI_LAST);
 
 	treeCtrl.InsertItem(_T("Pin"), 7,7, hWiring, TVI_LAST);
@@ -110,8 +106,12 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 	pDoc->selectedType = treeCtrl.GetItemText(hltem_dc);
 
-	if (pDoc->selectedType.Compare(_T("Gates")))
+	if (pDoc->selectedType.Compare(_T("Gates"))
+		|| pDoc->selectedType.Compare(_T("Wiring"))
+		) {
 		pDoc->isSelected = TRUE;
+	}
+		
 
 	if (pDoc->temp != NULL) {
 		delete pDoc->temp;
