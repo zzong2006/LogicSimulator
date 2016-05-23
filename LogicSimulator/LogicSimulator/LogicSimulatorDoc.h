@@ -2,9 +2,9 @@
 // LogicSimulatorDoc.h : CLogicSimulatorDoc 클래스의 인터페이스
 //
 
-
 #pragma once
-
+#include <vector>
+#include "andGate.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -14,7 +14,11 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
-
+	CString selectedType;
+	BOOL isSelected;
+	std::vector <andGate> gateinfo ;
+	int gateNum;
+	Gate* temp;
 // 작업입니다.
 public:
 

@@ -11,6 +11,10 @@
 #include "LogicSimulatorDoc.h"
 #include "LogicSimulatorView.h"
 
+#include <gdiplus.h>
+ 
+using namespace Gdiplus;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -112,6 +116,12 @@ BOOL CLogicSimulatorApp::InitInstance()
 	//  SDI 응용 프로그램에서는 ProcessShellCommand 후에 이러한 호출이 발생해야 합니다.
 	// 끌어서 놓기에 대한 열기를 활성화합니다.
 	m_pMainWnd->DragAcceptFiles();
+
+	//Initialize GDI+
+	GdiplusStartupInput gdiplusStartupInput;
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+
 	return TRUE;
 }
 
@@ -161,3 +171,13 @@ void CLogicSimulatorApp::OnAppAbout()
 
 
 
+
+
+int CLogicSimulatorApp::ExitInstance()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	GdiplusShutdown(gdiplusToken);
+
+	return CWinApp::ExitInstance();
+}

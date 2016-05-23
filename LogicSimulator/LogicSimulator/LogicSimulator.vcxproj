@@ -185,7 +185,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="LogicSimulator.h" />
     <ClInclude Include="LogicSimulatorDoc.h" />
     <ClInclude Include="LogicSimulatorView.h" />
@@ -197,7 +199,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
+    <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />
     <ClCompile Include="LogicSimulatorDoc.cpp" />
     <ClCompile Include="LogicSimulatorView.cpp" />
@@ -213,12 +217,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LogicSimulator.reg" />
+    <None Include="res\cursor1.cur" />
     <None Include="res\LogicSimulator.rc2" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LogicSimulator.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\andGate.gif" />
+    <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />
     <Image Include="res\LogicSimulatorDoc.ico" />
     <Image Include="res\Toolbar.bmp" />

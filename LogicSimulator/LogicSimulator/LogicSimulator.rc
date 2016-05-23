@@ -81,6 +81,10 @@ IDR_LogicSimulatorTYPE  ICON                    "res\\LogicSimulatorDoc.ico"
 
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
 
+IDB_BITMAP1             BITMAP                  "res\\bitmap2.bmp"
+
+IDB_BITMAP2             BITMAP                  "res\\bitmap1.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -300,6 +304,14 @@ BEGIN
 0x445f, 0x7365, 0x7263, 0x7069, 0x6974, 0x6e6f, 0x6f52, 0x7377, "\076" 
     0
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSOR1             CURSOR                  "res\\cursor1.cur"
 
 
 /////////////////////////////////////////////////////////////////////////////

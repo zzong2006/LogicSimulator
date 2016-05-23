@@ -7,7 +7,9 @@
 	#error "PCH에 대해 이 파일을 포함하기 전에 'stdafx.h'를 포함합니다."
 #endif
 
+#define UNIT 10
 #include "resource.h"       // 주 기호입니다.
+
 
 
 // CLogicSimulatorApp:
@@ -27,6 +29,10 @@ public:
 // 구현입니다.
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+	virtual int ExitInstance();
+	
+private:
+	ULONG_PTR gdiplusToken;
 };
 
 extern CLogicSimulatorApp theApp;
