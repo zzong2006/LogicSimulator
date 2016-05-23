@@ -159,7 +159,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	Gdiplus::Graphics graphics(dc);
 
 	Gdiplus::Pen P(Gdiplus::Color(190,190,190), 2);
-	Gdiplus::Pen DP(Gdiplus::Color(255, 255, 255), 2);
+	Gdiplus::Pen DP(Gdiplus::Color(250, 255, 255), 2);
 
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;

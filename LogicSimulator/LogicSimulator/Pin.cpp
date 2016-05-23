@@ -6,6 +6,7 @@
 //객체가 통합되면 그리는 방식을 수정할 것.
 void Pin::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
+	p->SetColor(Gdiplus::Color(255, 0, 0));
 	gp->DrawRectangle(p, outputCoord.x - 2 *UNIT, outputCoord.y - 1 * UNIT, 2 *UNIT, 2 *UNIT);
 }
 
