@@ -37,9 +37,9 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
-	for (int i = 0; i < gateinfo.size(); i++)
+	for (int i = 0; i < logicInfo.size(); i++)
 	{
-		delete gateinfo.at(i);
+		delete logicInfo.at(i);
 	}
 }
 

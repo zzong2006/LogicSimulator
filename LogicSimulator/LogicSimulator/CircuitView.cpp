@@ -57,9 +57,9 @@ void CCircuitView::OnPaint()
 	}
 
 	if (!pDoc->isSelected) {
-		for (int i = 0; i < pDoc->gateinfo.size(); i++)
+		for (int i = 0; i < pDoc->logicInfo.size(); i++)
 		{
-			pDoc->gateinfo.at(i)->draw_main(&graphics);
+			pDoc->logicInfo.at(i)->draw_main(&graphics);
 		}
 	}
 }
@@ -101,16 +101,21 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	
 
 	if (pDoc->isSelected) {
-		Gate *temp;
+		LogicObject *temp;
 		if (pDoc->selectedType == _T("AND Gate")) {
 			temp = new andGate();
 			temp->set_outputCoord(dec_x, dec_y);
-			pDoc->gateinfo.push_back(temp);
+			pDoc->logicInfo.push_back(temp);
 		}
 		else if(pDoc->selectedType == _T("OR Gate")) {
 			temp = new orGate();
 			temp->set_outputCoord(dec_x, dec_y);
-			pDoc->gateinfo.push_back(temp);
+			pDoc->logicInfo.push_back(temp);
+		}
+		else if (pDoc->selectedType == _T("Pin")) {
+			temp = new Pin();
+			temp->set_outputCoord(dec_x, dec_y);
+			pDoc->logicInfo.push_back(temp);
 		}
 		free(pDoc->temp);
 		pDoc->temp = NULL;
@@ -171,7 +176,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 		else if (pDoc->selectedType == _T("Pin")) {
 			if (pDoc->temp == NULL);
-				//pDoc->temp = new Pin();
+				pDoc->temp = new Pin();
 		}
 		//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
 		pDoc->temp->draw_shadow(&graphics, &DP);

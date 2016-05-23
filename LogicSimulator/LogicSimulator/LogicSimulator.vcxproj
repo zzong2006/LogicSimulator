@@ -188,6 +188,7 @@
     <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="LogicObject.h" />
     <ClInclude Include="LogicSimulator.h" />
     <ClInclude Include="LogicSimulatorDoc.h" />
     <ClInclude Include="LogicSimulatorView.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="LogicObject.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />
     <ClCompile Include="LogicSimulatorDoc.cpp" />
     <ClCompile Include="LogicSimulatorView.cpp" />

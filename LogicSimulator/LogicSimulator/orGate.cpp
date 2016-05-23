@@ -26,6 +26,7 @@ void orGate::draw_main(Gdiplus::Graphics * gp)
 
 	this->set_inputCoord(outputCoord.x, outputCoord.y);
 
+
 	p->SetColor(Gdiplus::Color(0, 0, 255));
 	for (int i = 0; i < inputNum; i++)
 	{

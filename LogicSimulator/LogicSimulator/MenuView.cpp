@@ -110,8 +110,12 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 	pDoc->selectedType = treeCtrl.GetItemText(hltem_dc);
 
-	if (pDoc->selectedType.Compare(_T("Gates")))
+	if (pDoc->selectedType.Compare(_T("Gates"))
+		|| pDoc->selectedType.Compare(_T("Wiring"))
+		) {
 		pDoc->isSelected = TRUE;
+	}
+		
 
 	if (pDoc->temp != NULL) {
 		delete pDoc->temp;
