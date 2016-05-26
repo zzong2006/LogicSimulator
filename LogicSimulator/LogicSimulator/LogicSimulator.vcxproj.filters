@@ -63,6 +63,9 @@
     <ClInclude Include="LogicObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="LineObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LogicSimulator.cpp">
@@ -102,6 +105,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="LogicObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LineObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

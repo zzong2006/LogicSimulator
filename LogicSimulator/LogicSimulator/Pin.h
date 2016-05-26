@@ -4,6 +4,7 @@
 class Pin : public LogicObject
 {
 protected:
+	int state;
 public:
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	void draw_main(Gdiplus::Graphics* gp);
@@ -14,4 +15,3 @@ public:
 	Pin();
 	~Pin();
 };
-

@@ -1,4 +1,3 @@
-//test
 #include "stdafx.h"
 #include "andGate.h"
 #include "LogicSimulator.h"
@@ -6,7 +5,7 @@
 #define UNIT 10
 
 void andGate::draw_main(Gdiplus::Graphics* gp)
-{ 
+{
 	Gdiplus::Point andPts[4];
 	Gdiplus::Pen *p;
 	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
@@ -15,7 +14,7 @@ void andGate::draw_main(Gdiplus::Graphics* gp)
 	andPts[1] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT);
 	andPts[2] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
 	andPts[3] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y + 3 * UNIT);
-	
+
 	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT, 5 * UNIT, 5 * UNIT, -80, 173);
 	gp->DrawLines(p, andPts, 4);
 
@@ -63,6 +62,13 @@ bool andGate::calOutput()
 void andGate::turn()
 {
 
+}
+
+void andGate::set_output()
+{
+	if (input_line[0]->state == ON_SIGNAL && input_line[1]->state == ON_SIGNAL)
+		output_line->state = ON_SIGNAL;
+	else output_line->state = OFF_SIGNAL;
 }
 
 andGate::andGate()

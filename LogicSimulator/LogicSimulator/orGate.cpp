@@ -22,7 +22,7 @@ void orGate::draw_main(Gdiplus::Graphics * gp)
 		outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
 
 	p->SetColor(Gdiplus::Color(255, 0, 0));
-	gp->DrawLine(p, outputCoord.x, outputCoord.y, outputCoord.x + 3, outputCoord.y );
+	gp->DrawLine(p, outputCoord.x, outputCoord.y, outputCoord.x + 3, outputCoord.y);
 
 	this->set_inputCoord(outputCoord.x, outputCoord.y);
 
@@ -39,16 +39,16 @@ void orGate::draw_main(Gdiplus::Graphics * gp)
 
 void orGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
-	gp->DrawBezier(p, outputCoord.x , outputCoord.y,
-		outputCoord.x - 1 *UNIT, outputCoord.y - 1 *UNIT,
-		outputCoord.x - 4 *UNIT, outputCoord.y - 3 *UNIT,
-		outputCoord.x - 5 *UNIT, outputCoord.y - 3 *UNIT);
+	gp->DrawBezier(p, outputCoord.x, outputCoord.y,
+		outputCoord.x - 1 * UNIT, outputCoord.y - 1 * UNIT,
+		outputCoord.x - 4 * UNIT, outputCoord.y - 3 * UNIT,
+		outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT);
 	gp->DrawBezier(p, outputCoord.x, outputCoord.y,
 		outputCoord.x - 1 * UNIT, outputCoord.y + 1 * UNIT,
 		outputCoord.x - 4 * UNIT, outputCoord.y + 3 * UNIT,
 		outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
-	gp->DrawBezier(p, outputCoord.x -5 * UNIT, outputCoord.y - 3 * UNIT,
-		outputCoord.x - 4 * UNIT, outputCoord.y - 3* UNIT,
+	gp->DrawBezier(p, outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT,
+		outputCoord.x - 4 * UNIT, outputCoord.y - 3 * UNIT,
 		outputCoord.x - 4 * UNIT, outputCoord.y + 3 * UNIT,
 		outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
 }
