@@ -187,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
@@ -205,6 +206,7 @@
   <ItemGroup>
     <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />

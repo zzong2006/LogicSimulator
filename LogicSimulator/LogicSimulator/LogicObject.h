@@ -25,20 +25,23 @@ protected:
 public:
 	CString label, type;
 	bool output;
-	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;
-	virtual void draw_main(Gdiplus::Graphics* gp) = 0;
-	virtual void turn() = 0;
-	virtual void set_Coord_From_outC(int x, int y) = 0;
-	void setLabel(CString input);				//라벨 이름
-	void set_outputCoord(int x, int y);
-	void set_inputCoord(int x, int y);
+	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;		//그림자 그리기
+	virtual void draw_main(Gdiplus::Graphics* gp) = 0;		//실제로 그리기
+	//객체 방향 지정하여 돌리기
+	virtual void turn() = 0;						
+	//출력 좌표를 이용하여 로직 객체 전체(top/bottom)의 좌표를 정함.
+	virtual void set_Coord_From_outC(int x, int y) = 0;		
+	
+	void setLabel(CString input);				//라벨 이름 붙이기
+	void set_outputCoord(int x, int y);		//출력값 설정
+	void set_inputCoord(int x, int y);		//입력값 설정
 
 	int Is_match_inputCoord(POINT src);
 	BOOL Is_match_outputCoord(POINT src);
 	int Is_match_inputCoord(int src_x, int src_y);
 	BOOL Is_match_outputCoord(int src_x, int src_y);
 
-	void toggleOutput();
+	void toggleOutput();						//출력값 치환 0->1 or 1->0
 	POINT get_top() const;
 	POINT get_bottm() const;
 

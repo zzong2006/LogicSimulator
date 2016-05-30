@@ -2,8 +2,6 @@
 #include <vector>
 #pragma once
 
-
-
 #define START 0
 #define VTOH 1
 #define HTOV 2

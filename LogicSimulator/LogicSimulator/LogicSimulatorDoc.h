@@ -7,6 +7,7 @@
 #include "andGate.h"
 #include "orGate.h"
 #include "Pin.h"
+#include "Clock.h"
 
 class CLogicSimulatorDoc : public CDocument
 {

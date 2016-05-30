@@ -21,6 +21,7 @@ int cur_line;
 CPoint line[3];
 int move_state = 0;
 vector < LineObject *> lines;
+
 IMPLEMENT_DYNCREATE(CCircuitView, CView)
 
 CCircuitView::CCircuitView()
@@ -67,6 +68,7 @@ void CCircuitView::OnPaint()
 	CRect rect;
 	GetClientRect(&rect);
 	CheckCircuit();
+
 	/*for (int i = 0; i < rect.right; i += UNIT)
 	{
 	for (int j = 0; j < rect.bottom; j += UNIT)
@@ -74,13 +76,16 @@ void CCircuitView::OnPaint()
 	dc.SetPixel(i, j, RGB(128, 128, 128));
 	}
 	}*/
+
 	if (!pDoc->isSelected) {
 		for (int i = 0; i < pDoc->logicInfo.size(); i++)
 		{
 			pDoc->logicInfo.at(i)->draw_main(&graphics);
 		}
 	}
+
 	LineObject* templine;
+
 	for (int i = 0; i < lines.size(); i++)
 		lines.at(i)->draw_main(&graphics);
 
@@ -148,11 +153,14 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 	}
 
+	//로직 객체인 경우
 	if (object == GATE)
 	{
+		//메뉴에서 선택하고 필드에서 지정 완료될 때
 		if (pDoc->isSelected) {
 			LogicObject *temp;
 			temp = NULL;
+
 			if (pDoc->selectedType == _T("AND Gate")) {
 				temp = new andGate();
 				temp->input_line[0] = NULL;
@@ -169,7 +177,10 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				temp = new Pin();
 				temp->connect_line = NULL;
 			}
-
+			else if (pDoc->selectedType == _T("Clock")) {
+				temp = new Clock();
+				temp->connect_line = NULL;
+			}
 			if (temp != NULL) {
 				temp->set_outputCoord(dec_x, dec_y);
 				temp->set_Coord_From_outC(dec_x, dec_y);
@@ -182,12 +193,14 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			pDoc->isSelected = false;
 		}
 
+		//클릭 모드인 경우
 		if (pDoc->clickMode) {
 			CPoint pos;
 
 			GetCursorPos(&pos);
 			ScreenToClient(&pos);
 
+			//마우스 안에 있는 로직 객체는 output 정보가 바뀐다.
 			for (int i = 0; i < pDoc->logicInfo.size(); i++) {
 				POINT temp_top, temp_bottom;
 				temp_top = pDoc->logicInfo.at(i)->get_top();
@@ -200,9 +213,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		LineObject* temp_line = new LineObject();
 		cur_line = lines.size();
 		lines.push_back(temp_line);
@@ -351,6 +362,10 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				if (pDoc->temp == NULL)
 					pDoc->temp = new Pin();
 			}
+			else if (pDoc->selectedType == _T("Clock")) {
+				if (pDoc->temp == NULL)
+					pDoc->temp = new Clock();
+			}
 			//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
 
 			if (pDoc->temp != NULL) {
@@ -471,6 +486,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	CView::OnLButtonUp(nFlags, point);
 }
 
+//클릭 모드 버튼을 클릭했을 경우
 void CCircuitView::OnClickMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
@@ -480,7 +496,7 @@ void CCircuitView::OnClickMode()
 
 }
 
-
+//선택 모드 버튼을 클릭했을 경우
 void CCircuitView::OnSelectMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
@@ -489,8 +505,7 @@ void CCircuitView::OnSelectMode()
 	pDoc->selectMode = TRUE;
 }
 
-
-
+//클릭 모드를 체크할때의 조건 확인
 void CCircuitView::OnUpdateClickMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
@@ -498,7 +513,7 @@ void CCircuitView::OnUpdateClickMode(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
 }
 
-
+//선택모드를 체크할 때의 조건 확인
 void CCircuitView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
