@@ -21,6 +21,10 @@ public:
 	BOOL clickMode;
 	BOOL selectMode;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Gate *> gateInfo;
+	std::vector <Pin *> pinInfo;
+	int objectType;
+	int objectName;
 	int gateNum;
 	LogicObject* temp;
 // 작업입니다.

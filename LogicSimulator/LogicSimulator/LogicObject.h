@@ -3,11 +3,6 @@
 
 #define INPUT_SIZE 2
 
-#define OFF_SIGNAL 0
-#define ON_SIGNAL 1
-#define INPUT_SIGNAL 2
-#define OUTPUT_SIGNAL 3
-
 #define UNIT 10
 
 class LogicObject
@@ -24,6 +19,7 @@ protected:
 
 public:
 	CString label, type;
+	int objectType, objectName;
 	bool output;
 	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;
 	virtual void draw_main(Gdiplus::Graphics* gp) = 0;
