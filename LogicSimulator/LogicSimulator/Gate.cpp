@@ -10,7 +10,7 @@ Gate::Gate()
 	//test input_size
 	for (int i = 0; i < INPUT_SIZE; i++)
 	{
-		input_state[i] = INPUT_SIGNAL;
+		input_state[i] = 2;
 	}
 
 	output_state = OUTPUT_SIGNAL;
