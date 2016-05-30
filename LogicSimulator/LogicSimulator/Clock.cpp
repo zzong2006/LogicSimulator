@@ -52,6 +52,18 @@ void Clock::turn()
 
 void Clock::toggleOutput()
 {
+	output = !output;
+}
+
+void Clock::moveCycle()
+{
+	cycle -= 1000;
+	
+	if (cycle == 0)
+	{
+		cycle = oriCycle;
+		toggleOutput();
+	}
 }
 
 bool Clock::calOutput()
@@ -61,6 +73,8 @@ bool Clock::calOutput()
 
 Clock::Clock()
 {
+	cycle = 1000;
+	oriCycle = cycle;
 }
 
 

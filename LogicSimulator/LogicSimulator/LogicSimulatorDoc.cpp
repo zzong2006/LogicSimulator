@@ -34,14 +34,17 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 	temp = NULL;
 	clickMode = false;
 	selectMode = true;
+	simulateMode = false;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
 	for (int i = 0; i < logicInfo.size(); i++)
-	{
 		delete logicInfo.at(i);
-	}
+	for (int i = 0; i < clockInfo.size(); i++)
+		delete clockInfo.at(i);
+
+	
 }
 
 BOOL CLogicSimulatorDoc::OnNewDocument()

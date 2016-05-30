@@ -25,6 +25,10 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClick(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnClickMode();
+	afx_msg void OnUpdateClickMode(CCmdUI *pCmdUI);
+	afx_msg void OnSelectMode();
+	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
 };
 
 

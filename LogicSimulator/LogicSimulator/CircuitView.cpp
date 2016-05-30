@@ -46,6 +46,9 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_COMMAND(ID_SELECT_MODE, &CCircuitView::OnSelectMode)
 	ON_UPDATE_COMMAND_UI(ID_CLICK_MODE, &CCircuitView::OnUpdateClickMode)
 	ON_UPDATE_COMMAND_UI(ID_SELECT_MODE, &CCircuitView::OnUpdateSelectMode)
+	ON_COMMAND(ID_ON_SIMULATE, &CCircuitView::OnOnSimulate)
+	ON_UPDATE_COMMAND_UI(ID_ON_SIMULATE, &CCircuitView::OnUpdateOnSimulate)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -178,16 +181,19 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				temp->connect_line = NULL;
 			}
 			else if (pDoc->selectedType == _T("Clock")) {
-				temp = new Clock();
+				Clock *Ctemp = new Clock();
+				temp = Ctemp;
 				temp->connect_line = NULL;
+				pDoc->clockInfo.push_back(Ctemp);
 			}
 			if (temp != NULL) {
 				temp->set_outputCoord(dec_x, dec_y);
 				temp->set_Coord_From_outC(dec_x, dec_y);
 				pDoc->logicInfo.push_back(temp);
+				
 			}
 
-			free(pDoc->temp);
+			delete pDoc->temp;
 			pDoc->temp = NULL;
 
 			pDoc->isSelected = false;
@@ -200,7 +206,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			GetCursorPos(&pos);
 			ScreenToClient(&pos);
 
-			//마우스 안에 있는 로직 객체는 output 정보가 바뀐다.
+			//마우스 위에 있는 로직 객체는 output 정보가 바뀐다.
 			for (int i = 0; i < pDoc->logicInfo.size(); i++) {
 				POINT temp_top, temp_bottom;
 				temp_top = pDoc->logicInfo.at(i)->get_top();
@@ -346,7 +352,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 	}
 
-	//and east
 	if (object == GATE)
 	{
 		if (pDoc->isSelected) {
@@ -519,4 +524,45 @@ void CCircuitView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
 	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
+}
+
+
+void CCircuitView::OnOnSimulate()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	if (pDoc->simulateMode) {
+		pDoc->simulateMode = FALSE;
+		KillTimer(0);
+	}
+	else {
+		pDoc->simulateMode = TRUE;
+		SetTimer(0, 1000, NULL);
+	}
+		
+}
+
+
+void CCircuitView::OnUpdateOnSimulate(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->simulateMode == TRUE);
+}
+
+
+/*시뮬레이션 모드로 들어갈때 돌아갈 이벤트
+*모든 Clock의 cycle을 1000씩 빼준다 (1초마다) 
+*만약 cycle이 0이 될 경우 output toggle 및 cycle 초기화
+*/
+void CCircuitView::OnTimer(UINT_PTR nIDEvent)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	for (int i = 0; i < pDoc->clockInfo.size(); i++) {
+		pDoc->clockInfo.at(i)->moveCycle();
+	}
+
+	Invalidate();
+	CView::OnTimer(nIDEvent);
 }

@@ -105,6 +105,8 @@ BEGIN
     BUTTON      ID_APP_ABOUT
     BUTTON      ID_CLICK_MODE
     BUTTON      ID_SELECT_MODE
+    SEPARATOR
+    BUTTON      ID_ON_SIMULATE
 END
 
 
@@ -138,15 +140,13 @@ BEGIN
         MENUITEM "복사(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "붙여넣기(&P)\tCtrl+V",            ID_EDIT_PASTE
     END
-    POPUP "보기(&V)"
-    BEGIN
-        MENUITEM "도구 모음(&T)",                   ID_VIEW_TOOLBAR
-        MENUITEM "상태 표시줄(&S)",                  ID_VIEW_STATUS_BAR
-        MENUITEM "분할(&P)",                      ID_WINDOW_SPLIT
-    END
     POPUP "도움말(&H)"
     BEGIN
         MENUITEM "LogicSimulator 정보(&A)...",    ID_APP_ABOUT
+    END
+    POPUP "시뮬레이션"
+    BEGIN
+        MENUITEM "시뮬레이션 시작",                    ID_ON_SIMULATE
     END
     POPUP "전환"
     BEGIN
@@ -444,6 +444,7 @@ END
 STRINGTABLE
 BEGIN
     ID_CLICK_MODE           "클릭 모드로 전환합니다."
+    ID_ON_SIMULATE          "시뮬레이터를 시작합니다"
 END
 
 #endif    // 한국어(대한민국) resources

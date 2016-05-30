@@ -21,7 +21,9 @@ public:
 	BOOL isSelected;
 	BOOL clickMode;
 	BOOL selectMode;
+	BOOL simulateMode;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Clock *> clockInfo;
 	int gateNum;
 	LogicObject* temp;
 // 작업입니다.

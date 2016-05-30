@@ -24,6 +24,10 @@ CMenuView::~CMenuView()
 BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, &CMenuView::OnTvnSelchanged)
 	ON_NOTIFY_REFLECT(NM_CLICK, &CMenuView::OnNMClick)
+	ON_COMMAND(ID_CLICK_MODE, &CMenuView::OnClickMode)
+	ON_UPDATE_COMMAND_UI(ID_CLICK_MODE, &CMenuView::OnUpdateClickMode)
+	ON_COMMAND(ID_SELECT_MODE, &CMenuView::OnSelectMode)
+	ON_UPDATE_COMMAND_UI(ID_SELECT_MODE, &CMenuView::OnUpdateSelectMode)
 END_MESSAGE_MAP()
 
 
@@ -112,7 +116,6 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->isSelected = TRUE;
 	}
 		
-
 	if (pDoc->temp != NULL) {
 		delete pDoc->temp;
 		pDoc->temp = NULL;
@@ -121,4 +124,38 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 
 	*pResult = 0;
+}
+
+
+void CMenuView::OnClickMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = TRUE;
+	pDoc->selectMode = FALSE;
+}
+
+
+void CMenuView::OnUpdateClickMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
+}
+
+
+void CMenuView::OnSelectMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = FALSE;
+	pDoc->selectMode = TRUE;
+}
+
+
+void CMenuView::OnUpdateSelectMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
 }
