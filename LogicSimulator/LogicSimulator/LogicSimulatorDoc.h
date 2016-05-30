@@ -24,6 +24,11 @@ public:
 	BOOL simulateMode;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <Clock *> clockInfo;
+	std::vector <Gate *> gateInfo;
+	std::vector <Pin *> pinInfo;
+	int objectType;
+	int objectName;
+
 	int gateNum;
 	LogicObject* temp;
 // 작업입니다.

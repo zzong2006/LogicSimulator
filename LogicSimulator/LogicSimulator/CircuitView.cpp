@@ -13,8 +13,6 @@
 using std::vector;
 
 // CCircuitView
-#define LINE 100
-#define GATE 101
 
 int object = LINE;
 int cur_line;
@@ -72,14 +70,6 @@ void CCircuitView::OnPaint()
 	GetClientRect(&rect);
 	CheckCircuit();
 
-	/*for (int i = 0; i < rect.right; i += UNIT)
-	{
-	for (int j = 0; j < rect.bottom; j += UNIT)
-	{
-	dc.SetPixel(i, j, RGB(128, 128, 128));
-	}
-	}*/
-
 	if (!pDoc->isSelected) {
 		for (int i = 0; i < pDoc->logicInfo.size(); i++)
 		{
@@ -135,19 +125,29 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	dec_y = point.y - point.y % UNIT;
 	//and east
 
-	object = GATE;
+	object = OBJECT;
 
-	for (int i = 0; i < pDoc->logicInfo.size(); i++)
+	for (int i = 0; i < pDoc->gateInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
 	{
-		if (pDoc->logicInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->logicInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->gateInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		{
+			object = LINE;
+			break;
+		}
+	}
+	for (int i = 0; i < pDoc->pinInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
+	{
+		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
 		{
 			object = LINE;
 			break;
 		}
 	}
 
-	for (int i = 0; i < lines.size(); i++)
+
+	for (int i = 0; i < lines.size(); i++)						//선 오브젝트에서 선이 분기 될 경우
 	{
 		if (lines.at(i)->Is_match_IineCoord(point))
 		{
@@ -156,46 +156,80 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 	}
 
-	//로직 객체인 경우
-	if (object == GATE)
+
+	if (object == OBJECT)
 	{
 		//메뉴에서 선택하고 필드에서 지정 완료될 때
+		LogicObject* temp;
+		temp = NULL;
 		if (pDoc->isSelected) {
-			LogicObject *temp;
-			temp = NULL;
+			if (pDoc->objectType == GATE_TYPE)
+			{
+				Gate *Gtemp;
+				Gtemp = NULL;
 
-			if (pDoc->selectedType == _T("AND Gate")) {
-				temp = new andGate();
-				temp->input_line[0] = NULL;
-				temp->input_line[1] = NULL;
-				temp->output_line = NULL;
+				switch (pDoc->objectName)
+				{
+				case AND_GATE:
+					Gtemp = new andGate();
+					Gtemp->objectName = AND_GATE;
+					Gtemp->objectType = GATE_TYPE;
+					Gtemp->input_line[0] = NULL;
+					Gtemp->input_line[1] = NULL;
+					Gtemp->output_line = NULL;
+					break;
+				case OR_GATE:
+					Gtemp = new orGate();
+					Gtemp->objectName = OR_GATE;
+					Gtemp->objectType = GATE_TYPE;
+					Gtemp->input_line[0] = NULL;
+					Gtemp->input_line[1] = NULL;
+					Gtemp->output_line = NULL;
+					break;
+				}
+
+				if (Gtemp != NULL) {
+					Gtemp->set_outputCoord(dec_x, dec_y);
+					Gtemp->set_Coord_From_outC(dec_x, dec_y);
+					pDoc->gateInfo.push_back(Gtemp);
+					pDoc->logicInfo.push_back(Gtemp);
+				}
 			}
-			else if (pDoc->selectedType == _T("OR Gate")) {
-				temp = new orGate();
-				temp->input_line[0] = NULL;
-				temp->input_line[1] = NULL;
-				temp->output_line = NULL;
-			}
-			else if (pDoc->selectedType == _T("Pin")) {
-				temp = new Pin();
-				temp->connect_line = NULL;
-			}
-			else if (pDoc->selectedType == _T("Clock")) {
-				Clock *Ctemp = new Clock();
-				temp = Ctemp;
-				temp->connect_line = NULL;
-				pDoc->clockInfo.push_back(Ctemp);
-			}
-			if (temp != NULL) {
-				temp->set_outputCoord(dec_x, dec_y);
-				temp->set_Coord_From_outC(dec_x, dec_y);
-				pDoc->logicInfo.push_back(temp);
-				
+			else if (pDoc->objectType == WIRING_TYPE)
+			{
+				Pin *Ptemp;
+				Clock *Ctemp;
+				temp = NULL;
+
+				switch (pDoc->objectName)
+				{
+				case PIN :
+					Ptemp = new Pin();
+					Ptemp->objectType = WIRING_TYPE;
+					Ptemp->objectName = PIN;
+					Ptemp->connect_line = NULL;
+					pDoc->pinInfo.push_back(Ptemp);
+					temp = Ptemp;
+					break;
+
+				case CLOCK:
+					Ctemp = new Clock();
+					Ctemp->objectType = WIRING_TYPE;
+					Ctemp->objectName = CLOCK;
+					Ctemp->connect_line = NULL;
+					pDoc->clockInfo.push_back(Ctemp);
+					temp = Ctemp;
+					break;
+				}
+				if (temp != NULL) {
+					temp->set_outputCoord(dec_x, dec_y);
+					temp->set_Coord_From_outC(dec_x, dec_y);
+					pDoc->logicInfo.push_back(temp);
+				}
 			}
 
 			delete pDoc->temp;
 			pDoc->temp = NULL;
-
 			pDoc->isSelected = false;
 		}
 
@@ -206,44 +240,55 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			GetCursorPos(&pos);
 			ScreenToClient(&pos);
 
-			//마우스 위에 있는 로직 객체는 output 정보가 바뀐다.
-			for (int i = 0; i < pDoc->logicInfo.size(); i++) {
+			for (int i = 0; i < pDoc->gateInfo.size(); i++) {
+
 				POINT temp_top, temp_bottom;
-				temp_top = pDoc->logicInfo.at(i)->get_top();
-				temp_bottom = pDoc->logicInfo.at(i)->get_bottm();
+				temp_top = pDoc->gateInfo.at(i)->get_top();
+				temp_bottom = pDoc->gateInfo.at(i)->get_bottm();
 
 				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-				if (PtInRect(rect, pos)) {
-					pDoc->logicInfo.at(i)->toggleOutput();
-				}
+				if (PtInRect(rect, pos))
+					pDoc->gateInfo.at(i)->toggleOutput();
 			}
+			for (int i = 0; i < pDoc->pinInfo.size(); i++)
+			{
+				POINT temp_top, temp_bottom;
+				temp_top = pDoc->pinInfo.at(i)->get_top();
+				temp_bottom = pDoc->pinInfo.at(i)->get_bottm();
+
+				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
+
+				if (PtInRect(rect, pos)) 
+					pDoc->pinInfo.at(i)->toggleOutput();
+			}
+
+
 		}
 	} else {
 		LineObject* temp_line = new LineObject();
 		cur_line = lines.size();
 		lines.push_back(temp_line);
 		temp_line->state = OFF_SIGNAL;
-		for (int i = 0; i < pDoc->logicInfo.size(); i++)
+		
+		for (int i = 0; i < pDoc->gateInfo.size(); i++)
 		{
-			if (pDoc->logicInfo.at(i)->type == ("Pin"))
+			int index = 0;
+			if (pDoc->gateInfo.at(i)->Is_match_outputCoord(point))
 			{
-				if (pDoc->logicInfo.at(i)->Is_match_outputCoord(point))
-				{
-					pDoc->logicInfo.at(i)->connect_line = temp_line;
-				}
+				pDoc->gateInfo.at(i)->output_line = temp_line;
 			}
-			else if (pDoc->logicInfo.at(i)->type == ("Gate"))
+			else if ((index = pDoc->gateInfo.at(i)->Is_match_inputCoord(point)) != -1)
 			{
-				int index = 0;
-				if (pDoc->logicInfo.at(i)->Is_match_outputCoord(point))
-				{
-					pDoc->logicInfo.at(i)->output_line = temp_line;
-				}
-				else if ((index = pDoc->logicInfo.at(i)->Is_match_inputCoord(point)) != -1)
-				{
-					pDoc->logicInfo.at(i)->input_line[index] = temp_line;
-				}
+				pDoc->gateInfo.at(i)->input_line[index] = temp_line;
+			}
+		}
+
+		for (int i = 0; i < pDoc->pinInfo.size(); i++)
+		{
+			if (pDoc->pinInfo.at(i)->Is_match_outputCoord(point))
+			{
+				pDoc->pinInfo.at(i)->connect_line = temp_line;
 			}
 		}
 
@@ -266,32 +311,26 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 void CCircuitView::CheckCircuit()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-	if (!pDoc->isSelected)
-		for (int i = 0; i < pDoc->logicInfo.size(); i++)
+
+	for (int i = 0; i < pDoc->pinInfo.size(); i++)
+	{
+		if (pDoc->pinInfo.at(i)->connect_line != NULL)
 		{
-			if (pDoc->logicInfo.at(i)->type == ("Pin"))
-			{
-				if (pDoc->logicInfo.at(i)->connect_line != NULL)
-				{
-					pDoc->logicInfo.at(i)->connect_line->state = (pDoc->logicInfo.at(i)->output == TRUE)? ON_SIGNAL : OFF_SIGNAL;
-					pDoc->logicInfo.at(i)->connect_line->check_connect();
-				}
-			}
+			pDoc->pinInfo.at(i)->connect_line->state = (pDoc->pinInfo.at(i)->output == TRUE) ? ON_SIGNAL : OFF_SIGNAL;
+			pDoc->pinInfo.at(i)->connect_line->check_connect();
 		}
-	if (!pDoc->isSelected)
-		for (int i = 0; i < pDoc->logicInfo.size(); i++)
+	}
+
+	for (int i = 0; i < pDoc->gateInfo.size(); i++)
+	{
+		if (pDoc->gateInfo.at(i)->output_line != NULL && pDoc->gateInfo.at(i)->input_line[0] != NULL && pDoc->gateInfo.at(i)->input_line[1] != NULL
+			&& pDoc->gateInfo.at(i)->input_line[0]->state == ON_SIGNAL && pDoc->gateInfo.at(i)->input_line[1]->state == ON_SIGNAL)
 		{
-			if (pDoc->logicInfo.at(i)->type == ("Gate"))
-			{
-				if (pDoc->logicInfo.at(i)->output_line != NULL && pDoc->logicInfo.at(i)->input_line[0] != NULL && pDoc->logicInfo.at(i)->input_line[1] != NULL
-					&& pDoc->logicInfo.at(i)->input_line[0]->state == ON_SIGNAL && pDoc->logicInfo.at(i)->input_line[1]->state == ON_SIGNAL)
-				{
-					pDoc->logicInfo.at(i)->output_line->state = ON_SIGNAL;
-				}
-				else if (pDoc->logicInfo.at(i)->output_line != NULL)
-					pDoc->logicInfo.at(i)->output_line->state = OUTPUT_SIGNAL;
-			}
+			pDoc->gateInfo.at(i)->output_line->state = ON_SIGNAL;
 		}
+		else if (pDoc->gateInfo.at(i)->output_line != NULL)
+			pDoc->gateInfo.at(i)->output_line->state = OUTPUT_SIGNAL;
+	}
 }
 
 
@@ -333,10 +372,20 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
 
-	for (int i = 0; i < pDoc->logicInfo.size(); i++)
+	for (int i = 0; i < pDoc->gateInfo.size(); i++)
 	{
-		if (pDoc->logicInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->logicInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->gateInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		{
+			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
+			break;
+		}
+	}
+
+	for (int i = 0; i < pDoc->pinInfo.size(); i++)
+	{
+		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
 		{
 			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
 			break;
@@ -352,32 +401,39 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 	}
 
-	if (object == GATE)
+
+	if (object == OBJECT)
 	{
-		if (pDoc->isSelected) {
-			if (pDoc->selectedType == _T("AND Gate")) {
-				if (pDoc->temp == NULL)
+		if (pDoc->isSelected && pDoc->temp == NULL) {
+			if (pDoc->objectType == GATE_TYPE)
+			{
+				switch (pDoc->objectName)
+				{
+				case AND_GATE :
 					pDoc->temp = new andGate();
-			}
-			else if (pDoc->selectedType == _T("OR Gate")) {
-				if (pDoc->temp == NULL)
+					break;
+				case OR_GATE :
 					pDoc->temp = new orGate();
+					break;
+				}
 			}
-			else if (pDoc->selectedType == _T("Pin")) {
-				if (pDoc->temp == NULL)
+			else if (pDoc->objectType == WIRING_TYPE)
+			{
+				switch (pDoc->objectName)
+				{
+				case PIN :
 					pDoc->temp = new Pin();
-			}
-			else if (pDoc->selectedType == _T("Clock")) {
-				if (pDoc->temp == NULL)
+					break;
+				case CLOCK:
 					pDoc->temp = new Clock();
+					break;
+				}
 			}
-			//다른 메뉴를 선택했을때 강제로 종료된다면 이 구문을 if문 안쪽으로 넣으면 해결됨.
 
 			if (pDoc->temp != NULL) {
 				pDoc->temp->draw_shadow(&graphics, &DP);
 				pDoc->temp->set_outputCoord(dec_x, dec_y);
 				pDoc->temp->draw_shadow(&graphics, &P);
-
 			}
 		}
 	}
@@ -464,26 +520,25 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				lines.at(cur_line)->connect_lines.push_back(lines.at(i));
 			}
 		}
-		for (int i = 0; i < pDoc->logicInfo.size(); i++)
+
+		for (int i = 0; i < pDoc->gateInfo.size(); i++)
 		{
-			if (pDoc->logicInfo.at(i)->type == ("Pin"))
+			int index = 0;
+			if (pDoc->gateInfo.at(i)->Is_match_outputCoord(point))
 			{
-				if (pDoc->logicInfo.at(i)->Is_match_outputCoord(point))
-				{
-					pDoc->logicInfo.at(i)->connect_line = lines.at(cur_line);
-				}
+				pDoc->gateInfo.at(i)->output_line = lines.at(cur_line);
 			}
-			else if (pDoc->logicInfo.at(i)->type == ("Gate"))
+			else if ((index = pDoc->gateInfo.at(i)->Is_match_inputCoord(point)) != -1)
 			{
-				int index = 0;
-				if (pDoc->logicInfo.at(i)->Is_match_outputCoord(point))
-				{
-					pDoc->logicInfo.at(i)->output_line = lines.at(cur_line);
-				}
-				else if ((index = pDoc->logicInfo.at(i)->Is_match_inputCoord(point)) != -1)
-				{
-					pDoc->logicInfo.at(i)->input_line[index] = lines.at(cur_line);
-				}
+				pDoc->gateInfo.at(i)->input_line[index] = lines.at(cur_line);
+			}
+		}
+
+		for (int i = 0; i < pDoc->pinInfo.size(); i++)
+		{
+			if (pDoc->pinInfo.at(i)->Is_match_outputCoord(point))
+			{
+				pDoc->pinInfo.at(i)->connect_line = lines.at(cur_line);
 			}
 		}
 	}

@@ -87,13 +87,6 @@ void CMenuView::OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 	HTREEITEM hTreeItem = pNMTreeView->itemNew.hItem;
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 	
-	//pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
-	//
-	//if(pDoc->selectedType.Compare(_T("Gates")))
-	//	pDoc->isSelected = TRUE;
-	//
-	//treeCtrl.Select(NULL,0);
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 }
 
@@ -102,13 +95,37 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
+
 	CPoint p;
 	GetCursorPos(&p);	
+
 	UINT flag;
 	treeCtrl.ScreenToClient(&p);
 	HTREEITEM hltem_dc = treeCtrl.HitTest(p, &flag);
+	CString typeTemp = treeCtrl.GetItemText(hltem_dc);
 
-	pDoc->selectedType = treeCtrl.GetItemText(hltem_dc);
+	pDoc->selectedType = typeTemp;
+
+	if (typeTemp == "AND Gate")
+	{
+		pDoc->objectName = AND_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "OR Gate")
+	{
+		pDoc->objectName = OR_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "Pin")
+	{
+		pDoc->objectName = PIN;
+		pDoc->objectType = WIRING_TYPE;
+	}
+	else if (typeTemp == "Clock")
+	{
+		pDoc->objectName = CLOCK;
+		pDoc->objectType = WIRING_TYPE;
+	}
 
 	if (pDoc->selectedType.Compare(_T("Gates"))
 		|| pDoc->selectedType.Compare(_T("Wiring"))

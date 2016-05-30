@@ -196,6 +196,7 @@
     <ClInclude Include="LogicSimulatorView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MenuView.h" />
+    <ClInclude Include="name_repo.h" />
     <ClInclude Include="orGate.h" />
     <ClInclude Include="Pin.h" />
     <ClInclude Include="PropertyView.h" />
