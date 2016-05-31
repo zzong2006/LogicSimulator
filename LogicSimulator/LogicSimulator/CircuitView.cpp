@@ -467,6 +467,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				pDoc->CanBeDivided = TRUE;
 				nothingSearched = FALSE;
 				Invalidate();
+				break;
 			}
 		}
 	}
