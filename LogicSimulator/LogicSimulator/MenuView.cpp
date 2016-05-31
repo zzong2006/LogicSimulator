@@ -96,15 +96,22 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 
-	CPoint p;
-	GetCursorPos(&p);	
+	TV_HITTESTINFO p;
+	//화면 상에서 마우스의 위치를 얻는다.
+	GetCursorPos(&p.pt);	
 
+	//얻은 마우스 좌표를 트리 컨트롤 기준의 좌표로 변경한다.
 	UINT flag;
-	treeCtrl.ScreenToClient(&p);
-	HTREEITEM hltem_dc = treeCtrl.HitTest(p, &flag);
-	CString typeTemp = treeCtrl.GetItemText(hltem_dc);
+	::ScreenToClient(treeCtrl.m_hWnd,&p.pt);
 
-	pDoc->selectedType = typeTemp;
+	//현재 마우스 좌표가 위치한 항목 정보를 얻는다..
+	HTREEITEM current_item = treeCtrl.HitTest(&p);
+
+	CString typeTemp = treeCtrl.GetItemText(current_item);
+
+	if (current_item != NULL) {
+		treeCtrl.Select(current_item, TVGN_CARET);
+	}
 
 	if (typeTemp == "AND Gate")
 	{
@@ -126,7 +133,9 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectName = CLOCK;
 		pDoc->objectType = WIRING_TYPE;
 	}
-
+	else {
+		AfxMessageBox(typeTemp);
+	}
 	if (pDoc->selectedType.Compare(_T("Gates"))
 		|| pDoc->selectedType.Compare(_T("Wiring"))
 		) {

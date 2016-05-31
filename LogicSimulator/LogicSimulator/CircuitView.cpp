@@ -404,32 +404,34 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (pDoc->isSelected && pDoc->temp == NULL) {
-			if (pDoc->objectType == GATE_TYPE)
-			{
-				switch (pDoc->objectName)
+		if (pDoc->isSelected) {
+			if (pDoc->temp == NULL) {
+				if (pDoc->objectType == GATE_TYPE)
 				{
-				case AND_GATE :
-					pDoc->temp = new andGate();
-					break;
-				case OR_GATE :
-					pDoc->temp = new orGate();
-					break;
+					switch (pDoc->objectName)
+					{
+					case AND_GATE:
+						pDoc->temp = new andGate();
+						break;
+					case OR_GATE:
+						pDoc->temp = new orGate();
+						break;
+					}
+				}
+				else if (pDoc->objectType == WIRING_TYPE)
+				{
+					switch (pDoc->objectName)
+					{
+					case PIN:
+						pDoc->temp = new Pin();
+						break;
+					case CLOCK:
+						pDoc->temp = new Clock();
+						break;
+					}
 				}
 			}
-			else if (pDoc->objectType == WIRING_TYPE)
-			{
-				switch (pDoc->objectName)
-				{
-				case PIN :
-					pDoc->temp = new Pin();
-					break;
-				case CLOCK:
-					pDoc->temp = new Clock();
-					break;
-				}
-			}
-
+			
 			if (pDoc->temp != NULL) {
 				pDoc->temp->draw_shadow(&graphics, &DP);
 				pDoc->temp->set_outputCoord(dec_x, dec_y);
