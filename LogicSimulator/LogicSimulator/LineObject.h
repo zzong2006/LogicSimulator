@@ -18,6 +18,7 @@ protected:
 public:
 	CPoint line[2];
 	int state = 0;
+	int chk;
 
 	int connect_pin;
 	std::vector<LineObject *> connect_lines;

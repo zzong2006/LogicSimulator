@@ -42,7 +42,7 @@ void LineObject::draw_main(Gdiplus::Graphics *gp)
 		p->SetColor(Gdiplus::Color(60, 130, 20));
 		break;
 	case ON_SIGNAL:
-		p->SetColor(Gdiplus::Color(50, 250, 60));
+		p->SetColor(Gdiplus::Color(0, 250, 0));
 		break;
 	case INPUT_SIGNAL:
 		p->SetColor(Gdiplus::Color(0, 0, 255));

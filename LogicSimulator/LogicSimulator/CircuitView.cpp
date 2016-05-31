@@ -10,6 +10,8 @@
 #include <gdiplus.h>
 #include <vector>
 
+#define CAPACITY 100
+
 using std::vector;
 
 // CCircuitView
@@ -42,6 +44,51 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
+LineObject* Queue[CAPACITY];
+int front = 0, rear = 0;
+
+void push(LineObject* line)
+{
+	int pos = 0;
+	if (rear == CAPACITY + 1)
+	{
+		rear = 0;
+		pos = 0;
+	}
+	else{
+		pos = rear++;
+	}
+	Queue[pos] = line;
+}
+
+LineObject* pop()
+{
+	int pos = front;
+	if (front == CAPACITY)
+		front = 0;
+	else
+		front++;
+	return Queue[pos];
+}
+
+int empty()
+{
+	return (front == rear);
+}
+
+int full()
+{
+	if (front < rear)
+		return rear - front == CAPACITY;
+	else
+		return rear + 1 == front;
+}
+
+int Rounding(int x)
+{
+	x += 5;
+	return x - (x % UNIT);
+}
 
 // CCircuitView 그리기입니다.
 
@@ -131,12 +178,6 @@ void CCircuitView::Dump(CDumpContext& dc) const
 	3. 
 
 */
-
-int Rounding(int x)
-{
-	x += 5;
-	return x - (x % UNIT);
-}
 
 void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 {
@@ -295,12 +336,13 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		temp_line[0]->connect_lines.push_back(temp_line[1]);	//두 선 서로 연결
 		temp_line[1]->connect_lines.push_back(temp_line[0]);
 
-		//0에게만 오브젝트 연결
+		//첫번째 선에게만 오브젝트 연결
 		for (int i = 0; i < pDoc->lines.size(); i++)	
 		{
 			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
 			{
 				pDoc->lines.at(i)->connect_lines.push_back(temp_line[0]);
+				temp_line[0]->connect_lines.push_back(pDoc->lines.at(i));
 			}
 		}
 		
@@ -316,24 +358,68 @@ void CCircuitView::CheckCircuit()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	for (int i = 0; i < pDoc->pinInfo.size(); i++)
+	front = 0; rear = 0;
+	//초기화
+	for (int i = 0; i < pDoc->lines.size(); i++)
 	{
-		if (pDoc->pinInfo.at(i)->output_line != NULL)
-		{
-			pDoc->pinInfo.at(i)->output_line->state = (pDoc->pinInfo.at(i)->output == TRUE) ? ON_SIGNAL : OFF_SIGNAL;
-			pDoc->pinInfo.at(i)->output_line->check_connect();
-		}
+		pDoc->lines.at(i)->chk = 0;
 	}
-
 	for (int i = 0; i < pDoc->gateInfo.size(); i++)
 	{
-		if (pDoc->gateInfo.at(i)->output_line != NULL && pDoc->gateInfo.at(i)->input_line[0] != NULL && pDoc->gateInfo.at(i)->input_line[1] != NULL
-			&& pDoc->gateInfo.at(i)->input_line[0]->state == ON_SIGNAL && pDoc->gateInfo.at(i)->input_line[1]->state == ON_SIGNAL)
+		pDoc->gateInfo.at(i)->chk = 0;
+	}
+
+	//입력 값 받기
+	for (int i = 0; i < pDoc->pinInfo.size(); i++)
+	{
+		LineObject* temp_line = pDoc->pinInfo.at(i)->output_line;
+		temp_line->state = pDoc->pinInfo.at(i)->calOutput();
+		push(temp_line);
+	}
+	for (int i = 0; i < pDoc->clockInfo.size(); i++)
+	{
+		LineObject* temp_line = pDoc->clockInfo.at(i)->output_line;
+		temp_line->state = pDoc->clockInfo.at(i)->calOutput();
+		push(temp_line);
+	}
+
+
+	//돌기
+	int level = 1;
+	while (!empty())
+	{
+		while (!empty())
 		{
-			pDoc->gateInfo.at(i)->output_line->state = ON_SIGNAL;
+			LineObject* temp_line = pop();
+			temp_line->chk = level;
+			for (int i = 0; i < temp_line->connect_lines.size(); i++)
+			{
+				if (temp_line->connect_lines.at(i)->chk != level)
+				{
+					temp_line->connect_lines.at(i)->state = temp_line->state;
+					temp_line->connect_lines.at(i)->chk = level;
+					push(temp_line->connect_lines.at(i));
+				}
+			}
 		}
-		else if (pDoc->gateInfo.at(i)->output_line != NULL)
-			pDoc->gateInfo.at(i)->output_line->state = OUTPUT_SIGNAL;
+		for (int i = 0; i < pDoc->gateInfo.size(); i++)
+		{
+			Gate* temp_gate = pDoc->gateInfo.at(i);
+			if (temp_gate->chk != level)
+			{
+				switch (temp_gate->objectName)
+				{
+				case AND_GATE:
+					temp_gate->output_line->state = temp_gate->input_line[0]->state & temp_gate->input_line[1]->state;
+					break;
+				case OR_GATE:
+					temp_gate->output_line->state = temp_gate->input_line[0]->state | temp_gate->input_line[1]->state;
+					break;
+				}
+				push(temp_gate->output_line);
+			}
+			temp_gate->chk = level;
+		}
 	}
 }
 
