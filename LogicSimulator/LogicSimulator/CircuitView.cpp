@@ -98,7 +98,7 @@ void CCircuitView::DrawImage(CDC *pDC)
 	P.SetColor(Gdiplus::Color(20, 20, 250));
 	if(pDoc->CanBeDivided)
 		graphics.DrawArc(&P, dec_x-5, dec_y-5, 10, 10, 0, 360);
-	P.SetColor(Gdiplust::Color(0, 0, 0));
+	P.SetColor(Gdiplus::Color(0, 0, 0));
 
 	for (int i = 0; i < pDoc->lines.size(); i++)
 		pDoc->lines.at(i)->draw_main(&graphics);
