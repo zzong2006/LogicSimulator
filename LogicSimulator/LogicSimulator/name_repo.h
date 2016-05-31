@@ -5,6 +5,7 @@
 #define NOT_GATE                  20002
 #define XOR_GATE                  20003
 #define PIN                       20010
+#define CLOCK							20011
 #define GATE_TYPE				  30000
 #define WIRING_TYPE				  30001
 

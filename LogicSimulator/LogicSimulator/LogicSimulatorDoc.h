@@ -7,6 +7,7 @@
 #include "andGate.h"
 #include "orGate.h"
 #include "Pin.h"
+#include "Clock.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -20,11 +21,14 @@ public:
 	BOOL isSelected;
 	BOOL clickMode;
 	BOOL selectMode;
+	BOOL simulateMode;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Clock *> clockInfo;
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
 	int objectType;
 	int objectName;
+
 	int gateNum;
 	LogicObject* temp;
 // 작업입니다.

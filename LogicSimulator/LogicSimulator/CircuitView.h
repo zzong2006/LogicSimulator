@@ -24,12 +24,13 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+	void DrawImage(CDC *pDC);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	virtual void OnInitialUpdate();
 	void CheckCircuit();
-	afx_msg void OnPaint();
+//	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnMouseLeave();
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
@@ -37,6 +38,9 @@ public:
 	afx_msg void OnSelectMode();
 	afx_msg void OnUpdateClickMode(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
+	afx_msg void OnOnSimulate();
+	afx_msg void OnUpdateOnSimulate(CCmdUI *pCmdUI);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 

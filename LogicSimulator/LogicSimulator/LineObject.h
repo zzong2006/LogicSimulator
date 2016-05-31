@@ -11,13 +11,14 @@
 #define INPUT_SIGNAL 2
 #define OUTPUT_SIGNAL 3
 
-typedef class LineObject* ConnectLines;
 class LineObject
 {
 protected:
+
 public:
 	CPoint line[2];
 	int state = 0;
+
 	int connect_pin;
 	std::vector<LineObject *> connect_lines;
 
@@ -27,7 +28,9 @@ public:
 	void check_connect();
 
 	BOOL Is_match_IineCoord(CPoint src);
+
 	LineObject(int x, int y);
 	LineObject(CPoint point);
+	LineObject();
 	~LineObject();
 };
