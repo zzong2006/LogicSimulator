@@ -98,20 +98,23 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 	TV_HITTESTINFO p;
 	//화면 상에서 마우스의 위치를 얻는다.
-	GetCursorPos(&p.pt);	
+	GetCursorPos(&p.pt);
 
 	//얻은 마우스 좌표를 트리 컨트롤 기준의 좌표로 변경한다.
 	UINT flag;
-	::ScreenToClient(treeCtrl.m_hWnd,&p.pt);
+	::ScreenToClient(treeCtrl.m_hWnd, &p.pt);
 
 	//현재 마우스 좌표가 위치한 항목 정보를 얻는다..
 	HTREEITEM current_item = treeCtrl.HitTest(&p);
 
-	CString typeTemp = treeCtrl.GetItemText(current_item);
-
 	if (current_item != NULL) {
 		treeCtrl.Select(current_item, TVGN_CARET);
+		pDoc->isSelected = TRUE;
 	}
+
+	//항목 정보의 이름을 얻는다.
+	CString typeTemp = treeCtrl.GetItemText(current_item);
+
 
 	if (typeTemp == "AND Gate")
 	{
@@ -134,19 +137,19 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectType = WIRING_TYPE;
 	}
 	else {
-		AfxMessageBox(typeTemp);
+		pDoc->isSelected = FALSE;
 	}
-	if (pDoc->selectedType.Compare(_T("Gates"))
-		|| pDoc->selectedType.Compare(_T("Wiring"))
-		) {
-		pDoc->isSelected = TRUE;
+
+	//폴더를 선택했을 경우에는 선택한게 아니므로 FALSE
+	if (typeTemp == "Gates" || typeTemp == "Wiring")
+	{
+		pDoc->isSelected = FALSE;
 	}
-		
+	
 	if (pDoc->temp != NULL) {
 		delete pDoc->temp;
 		pDoc->temp = NULL;
 	}
-
 
 
 	*pResult = 0;

@@ -14,7 +14,7 @@ using std::vector;
 
 // CCircuitView
 
-int object = LINE;
+int object = OBJECT;
 int cur_line;
 CPoint line[3];
 int move_state = 0;
@@ -125,6 +125,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	dec_y = point.y - point.y % UNIT;
 	//and east
 
+	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
 
 	for (int i = 0; i < pDoc->gateInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
@@ -145,7 +146,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			break;
 		}
 	}
-
 
 	for (int i = 0; i < lines.size(); i++)						//선 오브젝트에서 선이 분기 될 경우
 	{
@@ -233,27 +233,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			pDoc->isSelected = false;
 		}
 
-		//클릭 모드인 경우
+		//클릭 모드인 경우 
+		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
 		if (pDoc->clickMode) {
 			CPoint pos;
 
 			GetCursorPos(&pos);
 			ScreenToClient(&pos);
+			POINT temp_top, temp_bottom;
 
-			for (int i = 0; i < pDoc->gateInfo.size(); i++) {
-
-				POINT temp_top, temp_bottom;
-				temp_top = pDoc->gateInfo.at(i)->get_top();
-				temp_bottom = pDoc->gateInfo.at(i)->get_bottm();
-
-				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
-
-				if (PtInRect(rect, pos))
-					pDoc->gateInfo.at(i)->toggleOutput();
-			}
 			for (int i = 0; i < pDoc->pinInfo.size(); i++)
 			{
-				POINT temp_top, temp_bottom;
+				
 				temp_top = pDoc->pinInfo.at(i)->get_top();
 				temp_bottom = pDoc->pinInfo.at(i)->get_bottm();
 
@@ -263,7 +254,16 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					pDoc->pinInfo.at(i)->toggleOutput();
 			}
 
+			for (int i = 0; i < pDoc->clockInfo.size(); i++)
+			{
+				temp_top = pDoc->clockInfo.at(i)->get_top();
+				temp_bottom = pDoc->clockInfo.at(i)->get_bottm();
 
+				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
+
+				if (PtInRect(rect, pos))
+					pDoc->clockInfo.at(i)->toggleOutput();
+			}
 		}
 	} else {
 		LineObject* temp_line = new LineObject();
@@ -308,6 +308,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	CView::OnLButtonDown(nFlags, point);
 }
 
+//선을 돌아가면서 0,1 값을 체크한다.
 void CCircuitView::CheckCircuit()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
@@ -336,7 +337,6 @@ void CCircuitView::CheckCircuit()
 
 BOOL CCircuitView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
 	if (nHitTest == HTCLIENT)
@@ -372,6 +372,8 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
 
+	//선택 된 상태를 보여주려 하는 코드 같은데,
+	//이 부분은 object가 선택되었을때 보여지는것으로 바뀌어 져야 할것이다.
 	for (int i = 0; i < pDoc->gateInfo.size(); i++)
 	{
 		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
@@ -401,6 +403,8 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 	}
 
+	//메뉴에서 오브젝트가 선택된 상태라면 움직이면
+	//오브젝트가 그려지게 된다.
 
 	if (object == OBJECT)
 	{
@@ -439,7 +443,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 			}
 		}
 	}
-	else
+	else		// 선 선택되었을때 mouse 움직일때
 	{
 		if (nFlags == MK_LBUTTON)
 		{
@@ -472,8 +476,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 			Invalidate();
 		}
 	}
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
+	
 
 	CView::OnMouseMove(nFlags, point);
 }
@@ -543,6 +546,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				pDoc->pinInfo.at(i)->connect_line = lines.at(cur_line);
 			}
 		}
+		object = OBJECT;
 	}
 	Invalidate();
 	CView::OnLButtonUp(nFlags, point);
