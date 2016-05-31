@@ -14,9 +14,11 @@
 class LineObject
 {
 protected:
+
 public:
 	CPoint line[3];
 	int state = 0;
+
 	int connect_pin;
 	std::vector<LineObject *> connect_lines;
 
@@ -26,6 +28,7 @@ public:
 	void check_connect();
 
 	BOOL Is_match_IineCoord(CPoint src);
+	BOOL IS_match_mouseCoord(POINT src);
 	LineObject();
 	~LineObject();
 };

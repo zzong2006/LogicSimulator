@@ -68,6 +68,7 @@ void CCircuitView::OnPaint()
 	// TODO: 여기에 그리기 코드를 추가합니다.
 	CRect rect;
 	GetClientRect(&rect);
+
 	CheckCircuit();
 
 	if (!pDoc->isSelected) {
@@ -82,12 +83,6 @@ void CCircuitView::OnPaint()
 	for (int i = 0; i < lines.size(); i++)
 		lines.at(i)->draw_main(&graphics);
 
-	if (lines.size() > 0)
-	{
-		templine = lines.at(cur_line);
-		dc.Rectangle(templine->line[0].x - 5, templine->line[0].y - 5, templine->line[0].x + 5, templine->line[0].y + 5);
-		dc.Rectangle(templine->line[2].x - 5, templine->line[2].y - 5, templine->line[2].x + 5, templine->line[2].y + 5);
-	}
 }
 
 
@@ -110,10 +105,16 @@ void CCircuitView::Dump(CDumpContext& dc) const
 
 // CCircuitView 메시지 처리기입니다.
 
+/*
+	마우스 왼쪽 클릭했을때 일어나야 할 일들
+	1. 메뉴에서 논리 오브젝트 선택하고 오른쪽에서 선택하면
+	그려진다.
+	2. 메뉴에서 논리 오브젝트 선택하지 않고 (isSelected 가 False 인 경우) field 에서 선택하면 표시가 나면서 선택되어짐.
+	3. 
 
+*/
 void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
 	CClientDC dc(this);
@@ -127,44 +128,14 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
 
-	for (int i = 0; i < pDoc->gateInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
-	{
-		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->gateInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
+	// 선들중 하나가 마우스 포인터 위에 있다고 하면
+	// 그 선을 선택하고 움직이게함.
+	for (int i = 0; i < lines.size(); i++) {
+		if (lines.at(i)->IS_match_mouseCoord(point)) {
 			object = LINE;
 			break;
 		}
 	}
-	for (int i = 0; i < pDoc->pinInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
-	{
-		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			object = LINE;
-			break;
-		}
-	}
-
-	for (int i = 0; i < pDoc->clockInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
-	{
-		if (pDoc->clockInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->clockInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			object = LINE;
-			break;
-		}
-	}
-
-	for (int i = 0; i < lines.size(); i++)						//선 오브젝트에서 선이 분기 될 경우
-	{
-		if (lines.at(i)->Is_match_IineCoord(point))
-		{
-			object = LINE;
-			break;
-		}
-	}
-
 
 	if (object == OBJECT)
 	{
@@ -274,7 +245,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					pDoc->clockInfo.at(i)->toggleOutput();
 			}
 		}
-	} else {
+	} else {		//위에서 LINE MODE인것을 확인하고 시작함
 		LineObject* temp_line = new LineObject();
 		cur_line = lines.size();
 		lines.push_back(temp_line);
@@ -354,10 +325,13 @@ BOOL CCircuitView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		::GetCursorPos(&point);
 		ScreenToClient(&point);
 
+		//배치 모드일땐 십자 표시
 		if (pDoc->isSelected)
 			::SetCursor(AfxGetApp()->LoadCursor(IDC_CURSOR1));
+		//선택 모드일땐 화살표 표시
 		else if (pDoc->selectMode)
 			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+		//클릭 모드일땐 손모양 표시
 		else if (pDoc->clickMode)
 			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_HAND));
 
@@ -384,44 +358,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	//선택 된 상태를 보여주려 하는 코드 같은데,
 	//이 부분은 문제가 있다. 왜냐면 모든 line 을 담은 곳을 보면서 확인하면 한번에 해결되기 때문이다.
 
-	for (int i = 0; i < pDoc->gateInfo.size(); i++)
-	{
-		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->gateInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
-			break;
-		}
-	}
-
-	for (int i = 0; i < pDoc->pinInfo.size(); i++)
-	{
-		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
-			break;
-		}
-	}
-
-	for (int i = 0; i < pDoc->clockInfo.size(); i++)
-	{
-		if (pDoc->clockInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->clockInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
-			break;
-		}
-	}
-
-	for (int i = 0; i < lines.size(); i++)
-	{
-		if (lines.at(i)->Is_match_IineCoord(point))
-		{
-			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
-			break;
-		}
-	}
 
 	//메뉴에서 오브젝트가 선택된 상태라면 움직이면
 	//오브젝트가 그려지게 된다.
@@ -462,9 +398,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				pDoc->temp->draw_shadow(&graphics, &P);
 			}
 		}
-	}
-	else		// LINE mode 에서 mouse가 움직일때
-	{
+
+	} else {
+		// LINE mode 에서 왼쪽 버튼 누르며 mouse가 움직일때
 		if (nFlags == MK_LBUTTON)
 		{
 			LineObject* temp_line = lines.at(cur_line);
@@ -474,6 +410,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				temp_line->line[1].x = dec_x;
 				temp_line->line[2].x = temp_line->line[1].x;
 				temp_line->line[2].y = dec_y;
+
 				if (dec_x == temp_line->line[0].x)
 					move_state = VTOH;
 			}
@@ -518,7 +455,7 @@ BOOL CCircuitView::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
-	return CView::OnEraseBkgnd(pDC);
+	return FALSE;
 }
 
 
@@ -531,10 +468,9 @@ void CCircuitView::OnMouseLeave()
 
 void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
+	//그리기를 마쳤을때 하는 behavior
 	if (object == LINE)
 	{
 		for (int i = 0; i < lines.size(); i++)
@@ -568,6 +504,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 		object = OBJECT;
 	}
+
 	Invalidate();
 	CView::OnLButtonUp(nFlags, point);
 }

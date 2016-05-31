@@ -10,6 +10,12 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	return FALSE;
 }
 
+BOOL LineObject::IS_match_mouseCoord(POINT src)
+{
+
+	return 0;
+}
+
 /*선의 색은...
 	Pin(Wiring) 과 연결안됬을 경우 -> 파란색
 	Pin 과 연결되고 입력값이 1일 경우 -> 밝은 초록색
