@@ -100,8 +100,6 @@ void CCircuitView::DrawImage(CDC *pDC)
 		}
 	}
 
-	LineObject* templine;
-
 	for (int i = 0; i < lines.size(); i++)
 		lines.at(i)->draw_main(&graphics);
 }
@@ -278,7 +276,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		temp_line[0] = new LineObject(dec_x, dec_y);
 		temp_line[1] = new LineObject(dec_x, dec_y);
 
-		cur_line = lines.size() + 1;
+		cur_line = (int)lines.size() + 1;
 		lines.push_back(temp_line[0]);
 		lines.push_back(temp_line[1]);
 
