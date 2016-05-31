@@ -95,8 +95,10 @@ void CCircuitView::DrawImage(CDC *pDC)
 	}
 	
 	//현재 마우스가 위치한 자리가 분기 (또는 선그리기) 가능한 점이라면 동그라미 표시
+	P.SetColor(Gdiplus::Color(20, 20, 250));
 	if(pDoc->CanBeDivided)
 		graphics.DrawArc(&P, dec_x-5, dec_y-5, 10, 10, 0, 360);
+	P.SetColor(Gdiplust::Color(0, 0, 0));
 
 	for (int i = 0; i < pDoc->lines.size(); i++)
 		pDoc->lines.at(i)->draw_main(&graphics);
@@ -451,7 +453,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	BOOL nothingSearched = TRUE;
-	if (nFlags != MK_LBUTTON) {
+	//선을 이동중이거나 다른 작업중이면 동그라미 표시가 생기면 안된다.
+	if (nFlags != MK_LBUTTON &&
+		!(pDoc->isSelected)) {
 		for (int i = 0; i < pDoc->lines.size(); i++)
 		{
 			if (pDoc->lines.at(i)->Is_match_IineCoord(point)) {
