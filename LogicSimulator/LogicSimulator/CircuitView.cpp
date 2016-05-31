@@ -280,7 +280,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 		temp_line->line[0] = CPoint(dec_x, dec_y);
 		temp_line->line[1] = CPoint(dec_x, dec_y);
-		temp_line->line[2] = CPoint(dec_x, dec_y);
+		temp_line->line[0] = CPoint(dec_x, dec_y);
 	}
 
 	Invalidate();
