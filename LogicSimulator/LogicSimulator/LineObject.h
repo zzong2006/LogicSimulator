@@ -16,7 +16,7 @@ class LineObject
 protected:
 
 public:
-	CPoint line[2];
+	CPoint line[3];
 	int state = 0;
 
 	int connect_pin;

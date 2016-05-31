@@ -36,7 +36,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
-	ON_WM_PAINT()
+//	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSELEAVE()
 	ON_WM_LBUTTONUP()
@@ -54,15 +54,37 @@ END_MESSAGE_MAP()
 
 void CCircuitView::OnDraw(CDC* pDC)
 {
+	CRect rect;
+	GetClientRect(&rect);
 
+	// 메모리 DC 선언
+	CDC memDC;
+	CBitmap *pOldBitmap, bitmap;
+
+	// 화면 DC와 호환되는 메모리 DC 객체를 생성
+	memDC.CreateCompatibleDC(pDC);
+
+	// 마찬가지로 화면 DC와 호환되는 Bitmap 생성
+	bitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+
+	pOldBitmap = memDC.SelectObject(&bitmap);
+	memDC.PatBlt(0, 0, rect.Width(), rect.Height(), WHITENESS); // 흰색으로 초기화
+		
+	DrawImage(&memDC);			// 메모리 DC에 그리기
+
+	// 메모리 DC를 화면 DC에 고속 복사
+	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, 0, 0, SRCCOPY);
+
+	memDC.SelectObject(pOldBitmap);
+	memDC.DeleteDC();
+	bitmap.DeleteObject();
 }
 
-
-void CCircuitView::OnPaint()
+void CCircuitView::DrawImage(CDC *pDC)
 {
 	CPaintDC dc(this); // device context for painting
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-	Gdiplus::Graphics graphics(dc);
+	Gdiplus::Graphics graphics(pDC->m_hDC);
 	Gdiplus::Pen P(Gdiplus::Color(0, 0, 0), 2);
 
 	// TODO: 여기에 그리기 코드를 추가합니다.
@@ -82,8 +104,13 @@ void CCircuitView::OnPaint()
 
 	for (int i = 0; i < lines.size(); i++)
 		lines.at(i)->draw_main(&graphics);
-
 }
+
+//void CCircuitView::OnPaint()
+//{
+//	
+//
+//}
 
 
 // CCircuitView 진단입니다.
@@ -130,12 +157,35 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	// 선들중 하나가 마우스 포인터 위에 있다고 하면
 	// 그 선을 선택하고 움직이게함.
-	for (int i = 0; i < lines.size(); i++) {
-		if (lines.at(i)->IS_match_mouseCoord(point)) {
+	for (int i = 0; i < pDoc->gateInfo.size(); i++)            //논리 오브젝트에서 선이 분기 될 경우
+		 {
+		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
+			 || pDoc->gateInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+			 {
 			object = LINE;
 			break;
+			}
 		}
-	}
+	for (int i = 0; i < pDoc->pinInfo.size(); i++)            //논리 오브젝트에서 선이 분기 될 경우
+		 {
+		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
+			 || pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+			 {
+			object = LINE;
+			break;
+			}
+		}
+	
+		for (int i = 0; i < pDoc->clockInfo.size(); i++)            //논리 오브젝트에서 선이 분기 될 경우
+		 {
+		if (pDoc->clockInfo.at(i)->Is_match_inputCoord(point) != -1
+			 || pDoc->clockInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+			 {
+			object = LINE;
+			break;
+			}
+		}
+
 
 	if (object == OBJECT)
 	{
@@ -456,6 +506,7 @@ BOOL CCircuitView::OnEraseBkgnd(CDC* pDC)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
 	return FALSE;
+	//return CView::OnEraseBkgnd(pDC);
 }
 
 
