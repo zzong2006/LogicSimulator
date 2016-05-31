@@ -120,16 +120,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	object = OBJECT;
 
-	/*for (int i = 0; i < pDoc->logicInfo.size(); i++)
-	{
-		if (pDoc->logicInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->logicInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			object = LINE;
-			break;
-		}
-	}*/
-
 
 
 	for (int i = 0; i < lines.size(); i++)						//선 오브젝트에서 선이 분기 될 경우
@@ -225,15 +215,23 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		LineObject* temp_line = new LineObject(dec_x, dec_y);
-		cur_line = lines.size();
-		lines.push_back(temp_line);
-		temp_line->state = OFF_SIGNAL;
+		LineObject* temp_line[2];								//선 두개 생성
+		temp_line[0] = new LineObject(dec_x, dec_y);
+		temp_line[1] = new LineObject(dec_x, dec_y);
 
-		for (int i = 0; i < lines.size(); i++)
+		cur_line = lines.size() + 1;
+		lines.push_back(temp_line[0]);
+		lines.push_back(temp_line[1]);
+
+		temp_line[0]->connect_lines.push_back(temp_line[1]);	//두 선 서로 연결
+		temp_line[1]->connect_lines.push_back(temp_line[0]);
+
+		for (int i = 0; i < lines.size(); i++)					//0에게만 오브젝트 연결
 		{
 			if (i != cur_line && lines.at(i)->Is_match_IineCoord(point))
-				lines.at(i)->connect_lines.push_back(temp_line);
+			{
+				lines.at(i)->connect_lines.push_back(temp_line[0]);
+			}
 		}
 	}
 
@@ -305,16 +303,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
+	CPoint dec = CPoint(dec_x, dec_y);
 
-	for (int i = 0; i < pDoc->logicInfo.size(); i++)
-	{
-		if (pDoc->logicInfo.at(i)->Is_match_inputCoord(point) != -1
-			|| pDoc->logicInfo.at(i)->Is_match_outputCoord(point) == TRUE)
-		{
-			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
-			break;
-		}
-	}
+	//로직 오브젝트 검색 삭제
 
 	for (int i = 0; i < lines.size(); i++)
 	{
@@ -361,7 +352,33 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		if (nFlags == MK_LBUTTON)
 		{
-			lines.at(cur_line)->move_line(dec_x, dec_y, move_state);
+			LineObject* temp_line[2];				//클릭할 때 만들어둔 선 두개 받기
+			temp_line[0] = lines.at(cur_line - 1);
+			temp_line[1] = lines.at(cur_line);
+
+			CPoint sp = temp_line[0]->line[0], cp = temp_line[0]->line[1];
+													//선 자르고 그리기 수정 완료
+			if (sp == cp)
+			{
+				temp_line[0]->line[1] = dec;
+			}
+			else
+			{
+				if (cp.x != sp.x)
+				{
+					temp_line[0]->line[1].x = dec.x;
+					temp_line[0]->line[1].y = sp.y;		//확인사살
+				}
+				else if (cp.y != sp.y)
+				{
+					temp_line[0]->line[1].y = dec.y;
+					temp_line[0]->line[1].x = sp.x;		//확인사살
+				}
+			}
+
+			temp_line[1]->line[0] = temp_line[0]->line[1];
+
+			temp_line[1]->line[1] = dec;
 			Invalidate();
 		}
 	}
@@ -405,6 +422,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 	if (object == LINE)
 	{
+		//로직 오브젝트 검색 삭제
 		for (int i = 0; i < lines.size(); i++)
 		{
 			if (i != cur_line && lines.at(i)->Is_match_IineCoord(point))

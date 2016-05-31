@@ -16,15 +16,13 @@ class LineObject
 {
 protected:
 public:
-	CPoint line[3];
+	CPoint line[2];
 	int state = 0;
 	int connect_pin;
 	std::vector<LineObject *> connect_lines;
 
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	void draw_main(Gdiplus::Graphics* gp);
-	void move_line(int x, int y, int& move_state);
-	//void connect_object(CLogicSimulatorDoc* pDoc, CPoint point);
 
 	void check_connect();
 
