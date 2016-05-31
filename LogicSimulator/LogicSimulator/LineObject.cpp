@@ -3,10 +3,11 @@
 
 BOOL LineObject::Is_match_IineCoord(CPoint src)
 {
-	if (src.x >= line[0].x && src.x < line[0].x + 10 && src.y >= line[0].y && src.y < line[0].y + 10)
+	CRect area(line[0].x - 5, line[0].y - 5, line[1].x + 5, line[1].y + 5);
+
+	if (area.PtInRect(src))
 		return TRUE;
-	if (src.x >= line[1].x && src.x < line[1].x + 10 && src.y >= line[1].y && src.y < line[1].y + 10)
-		return TRUE;
+
 	return FALSE;
 }
 

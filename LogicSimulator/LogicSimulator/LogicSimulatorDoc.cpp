@@ -35,6 +35,7 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 	clickMode = false;
 	selectMode = true;
 	simulateMode = false;
+	CanBeDivided = false;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()

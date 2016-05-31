@@ -14,17 +14,11 @@ using std::vector;
 
 // CCircuitView
 
-int object = OBJECT;
-int cur_line;
-CPoint line[3];
-int move_state = 0;
-vector < LineObject *> lines;
-
 IMPLEMENT_DYNCREATE(CCircuitView, CView)
 
 CCircuitView::CCircuitView()
 {
-
+	object = OBJECT;
 }
 
 CCircuitView::~CCircuitView()
@@ -36,7 +30,6 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
-//	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSELEAVE()
 	ON_WM_LBUTTONUP()
@@ -86,22 +79,27 @@ void CCircuitView::DrawImage(CDC *pDC)
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	Gdiplus::Graphics graphics(pDC->m_hDC);
 	Gdiplus::Pen P(Gdiplus::Color(0, 0, 0), 2);
+	CPoint pos;			//현재 마우스 포지션
 
-	// TODO: 여기에 그리기 코드를 추가합니다.
+	GetCursorPos(&pos);
+	ScreenToClient(&pos);
+
 	CRect rect;
 	GetClientRect(&rect);
 
 	CheckCircuit();
 
-	if (!pDoc->isSelected) {
-		for (int i = 0; i < pDoc->logicInfo.size(); i++)
-		{
-			pDoc->logicInfo.at(i)->draw_main(&graphics);
-		}
+	for (int i = 0; i < pDoc->logicInfo.size(); i++)
+	{
+		pDoc->logicInfo.at(i)->draw_main(&graphics);
 	}
+	
+	//현재 마우스가 위치한 자리가 분기 (또는 선그리기) 가능한 점이라면 동그라미 표시
+	if(pDoc->CanBeDivided)
+		graphics.DrawArc(&P, dec_x-5, dec_y-5, 10, 10, 0, 360);
 
-	for (int i = 0; i < lines.size(); i++)
-		lines.at(i)->draw_main(&graphics);
+	for (int i = 0; i < pDoc->lines.size(); i++)
+		pDoc->lines.at(i)->draw_main(&graphics);
 }
 
 // CCircuitView 진단입니다.
@@ -139,17 +137,17 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	Gdiplus::Graphics graphics(dc);
 	Gdiplus::Pen P(Gdiplus::Color(0, 0, 0), 2);
 
-	int dec_x, dec_y;
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
 
 	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
 
-	for (int i = 0; i < lines.size(); i++)						//선 오브젝트에서 선이 분기 될 경우
-		// + 메뉴에서 선택이 안됬을 경우
+	//선 오브젝트에서 선이 분기 될 경우
+	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
+	for (int i = 0; i < pDoc->lines.size(); i++)						
 	{
-		if (lines.at(i)->Is_match_IineCoord(point)
+		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
 			&& !(pDoc->isSelected))
 		{
 			object = LINE;
@@ -187,9 +185,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				if (Gtemp != NULL) {
 					Gtemp->set_Coord_From_outC(dec_x, dec_y);
 					
-					lines.push_back(Gtemp->input_line[0]);
-					lines.push_back(Gtemp->input_line[1]);
-					lines.push_back(Gtemp->output_line);
+					pDoc->lines.push_back(Gtemp->input_line[0]);
+					pDoc->lines.push_back(Gtemp->input_line[1]);
+					pDoc->lines.push_back(Gtemp->output_line);
 
 					pDoc->logicInfo.push_back(Gtemp);
 					pDoc->gateInfo.push_back(Gtemp);
@@ -226,7 +224,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					temp->set_outputCoord(dec_x, dec_y);
 					temp->set_Coord_From_outC(dec_x, dec_y);
 
-					lines.push_back(temp->output_line);
+					pDoc->lines.push_back(temp->output_line);
 					pDoc->logicInfo.push_back(temp);
 
 				}
@@ -272,23 +270,28 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	else if(object != OBJECT && !(pDoc->isSelected))
 	{
-		LineObject* temp_line[2];								//선 두개 생성
+		//동그란 표시 지우기
+		if (pDoc->CanBeDivided) {
+			pDoc->CanBeDivided = FALSE;
+		}
+
+		LineObject* temp_line[2];			//선 두개 생성
 		temp_line[0] = new LineObject(dec_x, dec_y);
 		temp_line[1] = new LineObject(dec_x, dec_y);
 
-		cur_line = (int)lines.size() + 1;
-		lines.push_back(temp_line[0]);
-		lines.push_back(temp_line[1]);
+		cur_line = (int)pDoc->lines.size() + 1;
+		pDoc->lines.push_back(temp_line[0]);
+		pDoc->lines.push_back(temp_line[1]);
 
 		temp_line[0]->connect_lines.push_back(temp_line[1]);	//두 선 서로 연결
 		temp_line[1]->connect_lines.push_back(temp_line[0]);
 
 		//0에게만 오브젝트 연결
-		for (int i = 0; i < lines.size(); i++)	
+		for (int i = 0; i < pDoc->lines.size(); i++)	
 		{
-			if (i != cur_line && lines.at(i)->Is_match_IineCoord(point))
+			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
 			{
-				lines.at(i)->connect_lines.push_back(temp_line[0]);
+				pDoc->lines.at(i)->connect_lines.push_back(temp_line[0]);
 			}
 		}
 		
@@ -365,9 +368,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
-	CPoint dec = CPoint(dec_x, dec_y);
-
-	//로직 오브젝트 검색 삭제
 
 	//메뉴에서 오브젝트가 선택된 상태라면 움직이면
 	//오브젝트가 그려지게 된다.
@@ -415,9 +415,10 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		// LINE mode 에서 왼쪽 버튼 누르며 mouse가 움직일때
 		if (nFlags == MK_LBUTTON)
 		{
+			CPoint dec = CPoint(dec_x, dec_y);
 			LineObject* temp_line[2];				//클릭할 때 만들어둔 선 두개 받기
-			temp_line[0] = lines.at(cur_line - 1);
-			temp_line[1] = lines.at(cur_line);
+			temp_line[0] = pDoc->lines.at(cur_line - 1);
+			temp_line[1] = pDoc->lines.at(cur_line);
 
 			CPoint sp = temp_line[0]->line[0], cp = temp_line[0]->line[1];
 			
@@ -447,6 +448,23 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 			Invalidate();
 		}
+	}
+
+	BOOL nothingSearched = TRUE;
+	if (nFlags != MK_LBUTTON) {
+		for (int i = 0; i < pDoc->lines.size(); i++)
+		{
+			if (pDoc->lines.at(i)->Is_match_IineCoord(point)) {
+				pDoc->CanBeDivided = TRUE;
+				nothingSearched = FALSE;
+				Invalidate();
+			}
+		}
+	}
+	
+	if (nothingSearched && pDoc->CanBeDivided) {
+		pDoc->CanBeDivided = FALSE;
+		Invalidate();
 	}
 
 	CView::OnMouseMove(nFlags, point);
@@ -489,12 +507,12 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	if (object == LINE)
 	{
 		//로직 오브젝트 검색 삭제
-		for (int i = 0; i < lines.size(); i++)
+		for (int i = 0; i < pDoc->lines.size(); i++)
 		{
-			if (i != cur_line && lines.at(i)->Is_match_IineCoord(point))
+			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
 			{
-				lines.at(i)->connect_lines.push_back(lines.at(cur_line));
-				lines.at(cur_line)->connect_lines.push_back(lines.at(i));
+				pDoc->lines.at(i)->connect_lines.push_back(pDoc->lines.at(cur_line));
+				pDoc->lines.at(cur_line)->connect_lines.push_back(pDoc->lines.at(i));
 			}
 		}
 		object = OBJECT;

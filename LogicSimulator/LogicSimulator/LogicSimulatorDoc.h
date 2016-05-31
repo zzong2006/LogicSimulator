@@ -19,10 +19,12 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
+	BOOL CanBeDivided;
 	BOOL clickMode;
 	BOOL selectMode;
 	BOOL simulateMode;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <LineObject *> lines;
 	std::vector <Clock *> clockInfo;
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;

@@ -8,6 +8,8 @@ class CCircuitView : public CView
 	DECLARE_DYNCREATE(CCircuitView)
 protected:
 	int dec_x, dec_y;
+	int object;
+	int cur_line;
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
