@@ -11,7 +11,6 @@ protected:
 	int input_state[INPUT_SIZE], output_state;
 
 public:
-	//LineObject* connect_line;
 	Gate();
 	Gate(int dec_x, int dec_y);
 	virtual bool calOutput() = 0;	//결과 생성

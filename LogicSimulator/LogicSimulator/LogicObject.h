@@ -37,7 +37,6 @@ public:
 	POINT get_top() const;
 	POINT get_bottm() const;
 
-	LineObject* connect_line;
 	LineObject* input_line[2], *output_line;
 	POINT inputCoord[2], outputCoord;
 
