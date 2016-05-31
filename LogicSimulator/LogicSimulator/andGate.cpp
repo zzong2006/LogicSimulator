@@ -10,12 +10,12 @@ void andGate::draw_main(Gdiplus::Graphics* gp)
 	Gdiplus::Pen *p;
 	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
 
-	andPts[0] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y - 2 * UNIT);
-	andPts[1] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT);
+	andPts[0] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y - 3 * UNIT);
+	andPts[1] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT);
 	andPts[2] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
 	andPts[3] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y + 3 * UNIT);
 
-	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 2 * UNIT, 5 * UNIT, 5 * UNIT, -80, 173);
+	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT, 5 * UNIT, 6 * UNIT, 275, 180);
 	gp->DrawLines(p, andPts, 4);
 
 	p->SetColor(Gdiplus::Color(255, 0, 0));
