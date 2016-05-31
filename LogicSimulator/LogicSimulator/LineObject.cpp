@@ -23,33 +23,46 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	Pin(Wiring) 과 연결안됬을 경우 -> 파란색
 	Pin 과 연결되고 입력값이 1일 경우 -> 밝은 초록색
 	Pin 과 연결되고 입력값이 0일 경우 -> 어두운 초록색
+	
+	가로인지 세로인지 검사해서 좀더 길게(2정도) 나오도록
 */
 void LineObject::draw_main(Gdiplus::Graphics *gp)
 {
 	Gdiplus::Pen *p;
 	Gdiplus::Point drw_line[2];
+	BOOL vertical = FALSE;
 
-	drw_line[0].X = line[0].x; 
-	drw_line[0].Y = line[0].y;
-	drw_line[1].X = line[1].x; 
-	drw_line[1].Y = line[1].y;
+	if (line[0].x == line[1].x)	//세로일 경우
+		vertical = TRUE;
 
-	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
+	drw_line[0].X = MIN(line[0].x, line[1].x);
+	drw_line[0].Y = MIN(line[0].y, line[1].y);
+	drw_line[1].X = MAX(line[0].x, line[1].x);
+	drw_line[1].Y = MAX(line[0].y, line[1].y);
+
+	if (vertical) {
+		drw_line[0].Y -= 2;
+		drw_line[1].Y += 2;
+	}
+	else {
+		drw_line[0].X -= 2;
+		drw_line[1].X += 2;
+	}
+
+	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 3);
 
 	switch (state)
 	{
 	case OFF_SIGNAL:
-		p->SetColor(Gdiplus::Color(60, 130, 20));
+		p->SetColor(Gdiplus::Color(220, 100, 10));
 		break;
 	case ON_SIGNAL:
 		p->SetColor(Gdiplus::Color(50, 250, 60));
 		break;
-	case INPUT_SIGNAL:
-		p->SetColor(Gdiplus::Color(0, 0, 255));
+	default:
+		p->SetColor(Gdiplus::Color(255, 40, 60));
 		break;
-	case OUTPUT_SIGNAL:
-		p->SetColor(Gdiplus::Color(0, 255, 0));
-		break;
+
 	}
 
 	gp->DrawLines(p, drw_line, 2);
