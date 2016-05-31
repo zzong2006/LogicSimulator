@@ -101,7 +101,6 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 	GetCursorPos(&p.pt);
 
 	//얻은 마우스 좌표를 트리 컨트롤 기준의 좌표로 변경한다.
-	UINT flag;
 	::ScreenToClient(treeCtrl.m_hWnd, &p.pt);
 
 	//현재 마우스 좌표가 위치한 항목 정보를 얻는다..

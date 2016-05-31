@@ -11,7 +11,6 @@
 #define INPUT_SIGNAL 2
 #define OUTPUT_SIGNAL 3
 
-typedef class LineObject* ConnectLines;
 class LineObject
 {
 protected:

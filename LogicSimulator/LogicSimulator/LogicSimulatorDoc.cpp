@@ -41,10 +41,12 @@ CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
 	for (int i = 0; i < logicInfo.size(); i++)
 		delete logicInfo.at(i);
+	for (int i = 0; i < pinInfo.size(); i++)
+		delete pinInfo.at(i);
+	for (int i = 0; i < gateInfo.size(); i++)
+		delete gateInfo.at(i);
 	for (int i = 0; i < clockInfo.size(); i++)
-		delete clockInfo.at(i);
-
-	
+		delete clockInfo.at(i);	
 }
 
 BOOL CLogicSimulatorDoc::OnNewDocument()

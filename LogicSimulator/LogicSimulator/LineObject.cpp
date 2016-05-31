@@ -10,6 +10,11 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	return FALSE;
 }
 
+/*선의 색은...
+	Pin(Wiring) 과 연결안됬을 경우 -> 파란색
+	Pin 과 연결되고 입력값이 1일 경우 -> 밝은 초록색
+	Pin 과 연결되고 입력값이 0일 경우 -> 어두운 초록색
+*/
 void LineObject::draw_main(Gdiplus::Graphics *gp)
 {
 	Gdiplus::Pen *p;
@@ -23,10 +28,10 @@ void LineObject::draw_main(Gdiplus::Graphics *gp)
 	switch (state)
 	{
 	case OFF_SIGNAL:
-		p->SetColor(Gdiplus::Color(0, 0, 0));
+		p->SetColor(Gdiplus::Color(60, 130, 20));
 		break;
 	case ON_SIGNAL:
-		p->SetColor(Gdiplus::Color(255, 0, 0));
+		p->SetColor(Gdiplus::Color(50, 250, 60));
 		break;
 	case INPUT_SIGNAL:
 		p->SetColor(Gdiplus::Color(0, 0, 255));
@@ -39,9 +44,11 @@ void LineObject::draw_main(Gdiplus::Graphics *gp)
 	gp->DrawLines(p, drw_line, 3);
 
 }
+
+//Line 은 draw_shadow가 필요 없음.
 void LineObject::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
-	//gp->DrawRectangle(p, outputCoord.x - 2 * UNIT, outputCoord.y - 1 * UNIT, 2 * UNIT, 2 * UNIT);
+
 }
 
 void LineObject::check_connect()
@@ -52,6 +59,7 @@ void LineObject::check_connect()
 	}
 }
 
+// 초기 설정: 모든 선의 초기 값은 0
 LineObject::LineObject()
 {
 	state = OFF_SIGNAL;
@@ -60,4 +68,5 @@ LineObject::LineObject()
 
 LineObject::~LineObject()
 {
+
 }

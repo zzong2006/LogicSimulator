@@ -123,7 +123,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	int dec_x, dec_y;
 	dec_x = point.x - point.x % UNIT;
 	dec_y = point.y - point.y % UNIT;
-	//and east
 
 	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
@@ -141,6 +140,16 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
 			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		{
+			object = LINE;
+			break;
+		}
+	}
+
+	for (int i = 0; i < pDoc->clockInfo.size(); i++)			//논리 오브젝트에서 선이 분기 될 경우
+	{
+		if (pDoc->clockInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->clockInfo.at(i)->Is_match_outputCoord(point) == TRUE)
 		{
 			object = LINE;
 			break;
@@ -373,7 +382,8 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	dec_y = point.y - point.y % UNIT;
 
 	//선택 된 상태를 보여주려 하는 코드 같은데,
-	//이 부분은 object가 선택되었을때 보여지는것으로 바뀌어 져야 할것이다.
+	//이 부분은 문제가 있다. 왜냐면 모든 line 을 담은 곳을 보면서 확인하면 한번에 해결되기 때문이다.
+
 	for (int i = 0; i < pDoc->gateInfo.size(); i++)
 	{
 		if (pDoc->gateInfo.at(i)->Is_match_inputCoord(point) != -1
@@ -388,6 +398,16 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		if (pDoc->pinInfo.at(i)->Is_match_inputCoord(point) != -1
 			|| pDoc->pinInfo.at(i)->Is_match_outputCoord(point) == TRUE)
+		{
+			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
+			break;
+		}
+	}
+
+	for (int i = 0; i < pDoc->clockInfo.size(); i++)
+	{
+		if (pDoc->clockInfo.at(i)->Is_match_inputCoord(point) != -1
+			|| pDoc->clockInfo.at(i)->Is_match_outputCoord(point) == TRUE)
 		{
 			dc.Rectangle(dec_x - 5, dec_y - 5, dec_x + 5, dec_y + 5);
 			break;
@@ -443,7 +463,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 			}
 		}
 	}
-	else		// 선 선택되었을때 mouse 움직일때
+	else		// LINE mode 에서 mouse가 움직일때
 	{
 		if (nFlags == MK_LBUTTON)
 		{
