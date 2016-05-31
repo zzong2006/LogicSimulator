@@ -1,4 +1,6 @@
 #pragma once
+#define MAX(a,b) (a) >= (b) ? (a) : (b)
+#define MIN(a,b) (a) <= (b) ? (a) : (b)
 
 #define AND_GATE                  20000
 #define OR_GATE                   20001

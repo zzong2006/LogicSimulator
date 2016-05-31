@@ -1,9 +1,16 @@
 #include "stdafx.h"
 #include "LineObject.h"
+#include "name_repo.h"
 
 BOOL LineObject::Is_match_IineCoord(CPoint src)
 {
-	CRect area(line[0].x - 5, line[0].y - 5, line[1].x + 5, line[1].y + 5);
+	POINT max, min;
+	min.x = MIN(line[0].x, line[1].x);
+	min.y = MIN(line[0].y, line[1].y);
+	max.x = MAX(line[0].x, line[1].x);
+	max.y = MAX(line[0].y, line[1].y);
+
+	CRect area(min.x - 5, min.y - 5, max.x + 5, max.y + 5);
 
 	if (area.PtInRect(src))
 		return TRUE;
@@ -20,12 +27,15 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 void LineObject::draw_main(Gdiplus::Graphics *gp)
 {
 	Gdiplus::Pen *p;
-	Gdiplus::Point drw_line[3];
+	Gdiplus::Point drw_line[2];
 
-	drw_line[0].X = line[0].x; drw_line[0].Y = line[0].y;
-	drw_line[1].X = line[1].x; drw_line[1].Y = line[1].y;
+	drw_line[0].X = line[0].x; 
+	drw_line[0].Y = line[0].y;
+	drw_line[1].X = line[1].x; 
+	drw_line[1].Y = line[1].y;
 
 	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
+
 	switch (state)
 	{
 	case OFF_SIGNAL:
