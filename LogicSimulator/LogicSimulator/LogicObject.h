@@ -12,7 +12,6 @@ protected:
 	POINT labelPos;
 	int width, height;
 
-	POINT inputCoord[2], outputCoord;
 	bool input[2];
 	int inputNum;			//입력선 개수
 	int direct;				//게이트 방향
@@ -40,6 +39,7 @@ public:
 
 	LineObject* connect_line;
 	LineObject* input_line[2], *output_line;
+	POINT inputCoord[2], outputCoord;
 
 	LogicObject();
 	virtual ~LogicObject();

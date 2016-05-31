@@ -21,8 +21,6 @@ void andGate::draw_main(Gdiplus::Graphics* gp)
 	p->SetColor(Gdiplus::Color(255, 0, 0));
 	gp->DrawLine(p, outputCoord.x, outputCoord.y, outputCoord.x + 3, outputCoord.y);
 
-	this->set_inputCoord(outputCoord.x, outputCoord.y);
-
 	p->SetColor(Gdiplus::Color(0, 0, 255));
 	for (int i = 0; i < inputNum; i++)
 	{
@@ -76,6 +74,14 @@ andGate::andGate()
 	inputNum = 2;
 }
 
+andGate::andGate(int dec_x, int dec_y)
+{
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
+	this->input_line[0] = new LineObject(this->inputCoord[0]);
+	this->input_line[1] = new LineObject(this->inputCoord[1]);
+	this->output_line = new LineObject(this->outputCoord);
+}
 
 andGate::~andGate()
 {

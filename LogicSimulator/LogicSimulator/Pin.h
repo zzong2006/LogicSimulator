@@ -1,5 +1,6 @@
-#include "LogicObject.h"
 #pragma once
+#include "LogicObject.h"
+
 
 class Pin : public LogicObject
 {

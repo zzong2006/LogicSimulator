@@ -1,8 +1,6 @@
+#pragma once
 #include "stdafx.h"
 #include <vector>
-#pragma once
-
-
 
 #define START 0
 #define VTOH 1
@@ -25,10 +23,13 @@ public:
 
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	void draw_main(Gdiplus::Graphics* gp);
+	void move_line(int x, int y, int& move_state);
+	//void connect_object(CLogicSimulatorDoc* pDoc, CPoint point);
 
 	void check_connect();
 
 	BOOL Is_match_IineCoord(CPoint src);
-	LineObject();
+	LineObject(int x, int y);
+	LineObject(CPoint point);
 	~LineObject();
 };

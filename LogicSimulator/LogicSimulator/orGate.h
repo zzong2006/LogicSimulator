@@ -11,6 +11,7 @@ public:
 	bool calOutput();
 	void turn();
 	orGate();
+	orGate(int dec_x, int dec_y);
 	~orGate();
 };
 

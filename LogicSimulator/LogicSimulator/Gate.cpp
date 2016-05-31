@@ -12,6 +12,22 @@ Gate::Gate()
 
 	output_state = OUTPUT_SIGNAL;
 	type.SetString(_T("Gate"));
+	this->objectType = GATE_TYPE;
+}
+
+Gate::Gate(int dec_x, int dec_y)
+{
+	//test input_size
+	for (int i = 0; i < INPUT_SIZE; i++)
+	{
+		input_state[i] = 2;
+	}
+
+	output_state = OUTPUT_SIGNAL;
+	type.SetString(_T("Gate"));
+	this->objectType = GATE_TYPE;
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
 }
 
 int Gate::getOutput()
