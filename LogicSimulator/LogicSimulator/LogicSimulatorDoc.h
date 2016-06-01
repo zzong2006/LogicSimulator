@@ -20,10 +20,12 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
-	BOOL CanBeDivided;
+	BOOL CanBeDivided;		//분기 가능상태면 동그라미
 	BOOL clickMode;
 	BOOL selectMode;
 	BOOL simulateMode;
+	BOOL isOnFocus;			//선택 상태 모서리에 네모
+	std::vector <LogicObject *> currObject;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
 	std::vector <Clock *> clockInfo;

@@ -99,6 +99,9 @@ void CCircuitView::DrawImage(CDC *pDC)
 	for (int i = 0; i < pDoc->logicInfo.size(); i++)
 	{
 		pDoc->logicInfo.at(i)->draw_main(&graphics);
+		//선택 됬다면 표시해줌
+		if (pDoc->logicInfo.at(i)->isSelected)
+			pDoc->logicInfo.at(i)->showSelected(&graphics);
 	}
 	
 	//현재 마우스가 위치한 자리가 분기 (또는 선그리기) 가능한 점이라면 동그라미 표시
@@ -248,10 +251,10 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
 		if (pDoc->clickMode) {
-			CPoint pos;
+		/*	CPoint pos;
 
 			GetCursorPos(&pos);
-			ScreenToClient(&pos);
+			ScreenToClient(&pos);*/
 			POINT temp_top, temp_bottom;
 
 			for (int i = 0; i < pDoc->pinInfo.size(); i++)
@@ -262,7 +265,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-				if (PtInRect(rect, pos)) 
+				if (PtInRect(rect, point)) 
 					pDoc->pinInfo.at(i)->toggleOutput();
 			}
 
@@ -273,8 +276,39 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-				if (PtInRect(rect, pos))
+				if (PtInRect(rect, point))
 					pDoc->clockInfo.at(i)->toggleOutput();
+			}
+		}
+		else {	//클릭 모드 상태에서만 객체 선택 가능
+			if (!(pDoc->isSelected)) {
+				pDoc->currObject.clear();
+
+				POINT temp_top, temp_bottom;
+				BOOL checkFocus = FALSE;
+
+				for (int i = 0; i < pDoc->logicInfo.size(); i++){
+					pDoc->logicInfo.at(i)->isSelected = FALSE;
+
+					temp_top = pDoc->logicInfo.at(i)->get_top();
+
+					temp_bottom = pDoc->logicInfo.at(i)->get_bottm();
+
+					CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
+
+					//마우스가 객체안에 있으면 선택함.
+					if (PtInRect(rect, point))
+					{
+						checkFocus = TRUE;
+						pDoc->isOnFocus = TRUE;
+						pDoc->logicInfo.at(i)->isSelected = TRUE;
+						pDoc->currObject.push_back(pDoc->logicInfo.at(i));
+					}
+				}
+				
+				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
+				if (!checkFocus)
+					pDoc->isOnFocus = FALSE;
 			}
 		}
 	}
