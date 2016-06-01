@@ -82,6 +82,21 @@ POINT LogicObject::get_bottm() const
 	return bottom;
 }
 
+int LogicObject::isInputSet() const
+{
+	int sum = 0;
+
+	for (int i = 0; i < inputNum; i++)
+	{
+		if (input_line[i]->chk)
+			sum++;
+	}
+	if (sum == inputNum)
+		return 1;
+
+	return 0;
+}
+
 LogicObject::LogicObject()
 {
 	output = 0;

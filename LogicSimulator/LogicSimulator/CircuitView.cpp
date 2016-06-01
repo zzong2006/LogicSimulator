@@ -9,7 +9,6 @@
 
 #include <gdiplus.h>
 #include <vector>
-
 #define CAPACITY 100
 
 using std::vector;
@@ -17,6 +16,11 @@ using std::vector;
 // CCircuitView
 
 IMPLEMENT_DYNCREATE(CCircuitView, CView)
+inline int Rounding(int x)
+{
+	x += 5;
+	return x - (x % UNIT);
+}
 
 CCircuitView::CCircuitView()
 {
@@ -44,51 +48,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
-LineObject* Queue[CAPACITY];
-int front = 0, rear = 0;
 
-void push(LineObject* line)
-{
-	int pos = 0;
-	if (rear == CAPACITY + 1)
-	{
-		rear = 0;
-		pos = 0;
-	}
-	else{
-		pos = rear++;
-	}
-	Queue[pos] = line;
-}
-
-LineObject* pop()
-{
-	int pos = front;
-	if (front == CAPACITY)
-		front = 0;
-	else
-		front++;
-	return Queue[pos];
-}
-
-int empty()
-{
-	return (front == rear);
-}
-
-int full()
-{
-	if (front < rear)
-		return rear - front == CAPACITY;
-	else
-		return rear + 1 == front;
-}
-
-int Rounding(int x)
-{
-	x += 5;
-	return x - (x % UNIT);
-}
 
 // CCircuitView 그리기입니다.
 
@@ -134,7 +94,7 @@ void CCircuitView::DrawImage(CDC *pDC)
 	CRect rect;
 	GetClientRect(&rect);
 
-	CheckCircuit();
+	pDoc->CheckCircuit();
 
 	for (int i = 0; i < pDoc->logicInfo.size(); i++)
 	{
@@ -352,77 +312,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CView::OnLButtonDown(nFlags, point);
 }
-
-//선을 돌아가면서 0,1 값을 체크한다.
-void CCircuitView::CheckCircuit()
-{
-	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-
-	front = 0; rear = 0;
-	//초기화
-	for (int i = 0; i < pDoc->lines.size(); i++)
-	{
-		pDoc->lines.at(i)->chk = 0;
-	}
-	for (int i = 0; i < pDoc->gateInfo.size(); i++)
-	{
-		pDoc->gateInfo.at(i)->chk = 0;
-	}
-
-	//입력 값 받기
-	for (int i = 0; i < pDoc->pinInfo.size(); i++)
-	{
-		LineObject* temp_line = pDoc->pinInfo.at(i)->output_line;
-		temp_line->state = pDoc->pinInfo.at(i)->calOutput();
-		push(temp_line);
-	}
-	for (int i = 0; i < pDoc->clockInfo.size(); i++)
-	{
-		LineObject* temp_line = pDoc->clockInfo.at(i)->output_line;
-		temp_line->state = pDoc->clockInfo.at(i)->calOutput();
-		push(temp_line);
-	}
-
-
-	//돌기
-	int level = 1;
-	while (!empty())
-	{
-		while (!empty())
-		{
-			LineObject* temp_line = pop();
-			temp_line->chk = level;
-			for (int i = 0; i < temp_line->connect_lines.size(); i++)
-			{
-				if (temp_line->connect_lines.at(i)->chk != level)
-				{
-					temp_line->connect_lines.at(i)->state = temp_line->state;
-					temp_line->connect_lines.at(i)->chk = level;
-					push(temp_line->connect_lines.at(i));
-				}
-			}
-		}
-		for (int i = 0; i < pDoc->gateInfo.size(); i++)
-		{
-			Gate* temp_gate = pDoc->gateInfo.at(i);
-			if (temp_gate->chk != level)
-			{
-				switch (temp_gate->objectName)
-				{
-				case AND_GATE:
-					temp_gate->output_line->state = temp_gate->input_line[0]->state & temp_gate->input_line[1]->state;
-					break;
-				case OR_GATE:
-					temp_gate->output_line->state = temp_gate->input_line[0]->state | temp_gate->input_line[1]->state;
-					break;
-				}
-				push(temp_gate->output_line);
-			}
-			temp_gate->chk = level;
-		}
-	}
-}
-
 
 BOOL CCircuitView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
@@ -694,3 +583,4 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 	Invalidate();
 	CView::OnTimer(nIDEvent);
 }
+

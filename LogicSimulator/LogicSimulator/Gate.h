@@ -20,6 +20,7 @@ public:
 	virtual void draw_main(Gdiplus::Graphics* gp) = 0;
 	virtual void turn() = 0;
 	virtual void set_Coord_From_outC(int x, int y) = 0;
+	void setOutput();
 	int getOutput();
 
 };

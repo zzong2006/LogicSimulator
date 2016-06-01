@@ -30,6 +30,25 @@ Gate::Gate(int dec_x, int dec_y)
 	this->set_inputCoord(dec_x, dec_y);
 }
 
+//주어진 input state을 활용해 output line state를 설정한다.
+void Gate::setOutput()
+{
+	switch (objectName) {
+	case AND_GATE:
+		output_line->state =
+			input_line[0]->state & input_line[1]->state;
+		break;
+	case OR_GATE:
+		output_line->state =
+			input_line[0]->state | input_line[1]->state;
+		break;
+	case NOT_GATE:
+		output_line->state =
+			!(input_line[0]->state);
+		break;
+	}
+}
+
 int Gate::getOutput()
 {
 	return 0;

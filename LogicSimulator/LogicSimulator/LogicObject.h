@@ -15,11 +15,13 @@ protected:
 	bool input[2];
 	int inputNum;			//입력선 개수
 	int direct;				//게이트 방향
+				
 
 public:
 	CString label, type;
 	int objectType, objectName;
 	bool output;
+	BOOL chk;			//알고리즘 돌때 방문했는가?
 
 	//그림자 그리기
 	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;	
@@ -29,6 +31,7 @@ public:
 	virtual void turn() = 0;						
 	//출력 좌표를 이용하여 로직 객체 전체(top/bottom)의 좌표를 정함.
 	virtual void set_Coord_From_outC(int x, int y) = 0;	
+
 
 	//라벨 이름 설정하기
 	void setLabel(CString input);				
@@ -43,6 +46,9 @@ public:
 	void toggleOutput();						//출력값 치환 0->1 or 1->0
 	POINT get_top() const;
 	POINT get_bottm() const;
+
+	//현재 연결된 선들이 모두 방문된 상태인가를 체크함
+	int isInputSet() const;
 
 	LineObject* input_line[2], *output_line;
 	POINT inputCoord[2], outputCoord;
