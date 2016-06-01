@@ -6,6 +6,7 @@
 #include "CircuitView.h"
 #include "LogicSimulatorDoc.h"
 #include "LineObject.h"
+#include "PropertyView.h"
 
 #include <gdiplus.h>
 #include <vector>
@@ -305,6 +306,16 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
 				if (!checkFocus)
 					pDoc->isOnFocus = FALSE;
+
+				//현재 선택된 로직 오브젝트의 상태를 보여준다.
+				if (pDoc->isOnFocus) {
+					if (pDoc->currObject.size() == 1) {
+						CPropertyView::InitializePropGrid(pDoc->currObject.at(0));
+					}
+					else {
+
+					}
+				}
 			}
 		}
 	}

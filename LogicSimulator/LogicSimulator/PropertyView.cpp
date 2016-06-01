@@ -95,3 +95,10 @@ void CPropertyView::OnInitialUpdate()
 	m_pGridInfo.AddProperty(pGroupPrint);
 	m_pGridInfo.UpdateData(FALSE);
 }
+
+void CPropertyView::InitializePropGrid(LogicObject *tempLO)
+{
+
+}
+
+
