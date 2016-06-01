@@ -13,13 +13,13 @@ protected:
 	int width, height;
 
 	bool input[2];
-	int inputNum,outputNum;			//입력선 개수
 	int direct;				//게이트 방향
 				
 
 public:
 	CString label;
 	int objectType, objectName;
+	int inputNum, outputNum;			//입력선 개수, 출력선 개수
 	bool output;
 	BOOL chk;			//알고리즘 돌때 방문했는가?
 

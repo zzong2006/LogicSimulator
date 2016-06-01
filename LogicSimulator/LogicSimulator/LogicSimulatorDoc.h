@@ -7,6 +7,10 @@
 #include <queue>
 #include "andGate.h"
 #include "orGate.h"
+#include "notGate.h"
+#include "xorGate.h"
+#include "nandGate.h"
+#include "norGate.h"
 #include "Pin.h"
 #include "Clock.h"
 

@@ -188,16 +188,33 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					Gtemp = new orGate(dec_x, dec_y);
 					Gtemp->objectName = OR_GATE;
 					break;
+				case NAND_GATE:
+					Gtemp = new nandGate(dec_x, dec_y);
+					Gtemp->objectName = NAND_GATE;
+					break;
+				case NOR_GATE:
+					Gtemp = new norGate(dec_x, dec_y);
+					Gtemp->objectName = NOR_GATE;
+					break;
+				case XOR_GATE:
+					Gtemp = new xorGate(dec_x, dec_y);
+					Gtemp->objectName = XOR_GATE;
+					break;
+				case NOT_GATE:
+					Gtemp = new notGate(dec_x, dec_y);
+					Gtemp->objectName = NOT_GATE;
+					break;
 				}
 
 				temp = Gtemp; // delete 용으로 필요함.
 
 				if (Gtemp != NULL) {
 					Gtemp->set_Coord_From_outC(dec_x, dec_y);
-					
-					pDoc->lines.push_back(Gtemp->input_line[0]);
-					pDoc->lines.push_back(Gtemp->input_line[1]);
-					pDoc->lines.push_back(Gtemp->output_line);
+
+					for (int i = 0; i < Gtemp->inputNum; i++)			//입력선 개수만 큼 push_back
+						pDoc->lines.push_back(Gtemp->input_line[i]);
+
+					pDoc->lines.push_back(Gtemp->output_line);			//출력선 push_back
 
 					pDoc->logicInfo.push_back(Gtemp);
 					pDoc->gateInfo.push_back(Gtemp);
@@ -370,6 +387,18 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 						break;
 					case OR_GATE:
 						pDoc->temp = new orGate();
+						break;
+					case NOT_GATE :
+						pDoc->temp = new notGate();
+						break;
+					case NAND_GATE :
+						pDoc->temp = new nandGate();
+						break;
+					case NOR_GATE :
+						pDoc->temp = new norGate();
+						break;
+					case XOR_GATE :
+						pDoc->temp = new xorGate();
 						break;
 					}
 

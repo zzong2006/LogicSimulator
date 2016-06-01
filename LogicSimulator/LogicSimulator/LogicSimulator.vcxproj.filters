@@ -46,6 +46,18 @@
     <ClCompile Include="PropertyView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="notGate.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="xorGate.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="nandGate.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="norGate.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="andGate.h">
@@ -100,6 +112,18 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="PropertyView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="notGate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="xorGate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="nandGate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="norGate.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
