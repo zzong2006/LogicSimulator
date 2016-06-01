@@ -133,6 +133,26 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectName = OR_GATE;
 		pDoc->objectType = GATE_TYPE;
 	}
+	else if (typeTemp == "NOT Gate")
+	{
+		pDoc->objectName = NOT_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "NAND Gate")
+	{
+		pDoc->objectName = OR_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "NOR Gate")
+	{
+		pDoc->objectName = NOR_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "XOR Gate")
+	{
+		pDoc->objectName = XOR_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
 	else if (typeTemp == "Pin")
 	{
 		pDoc->objectName = PIN;
