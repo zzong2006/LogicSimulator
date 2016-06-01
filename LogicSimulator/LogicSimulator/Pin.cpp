@@ -21,7 +21,7 @@ void Pin::draw_main(Gdiplus::Graphics * gp)
 		B.SetColor(Gdiplus::Color(100, 200, 40));
 
 	//draw inner circle
-	gp->FillEllipse(&B, outputCoord.x - 1.8 * UNIT, outputCoord.y - (int)(0.8 * UNIT), 1.5 * UNIT, 1.5 * UNIT);
+	gp->FillEllipse(&B, outputCoord.x - (int)(1.8 * UNIT), outputCoord.y - (int)(0.8 * UNIT), 1.5 * UNIT, 1.5 * UNIT);
 
 	//draw font 
 	B.SetColor(Gdiplus::Color(255, 255, 255));
@@ -45,6 +45,7 @@ void Pin::set_Coord_From_outC(int x, int y)
 
 void Pin::turn()
 {
+
 }
 
 void Pin::toggleOutput()
@@ -62,7 +63,6 @@ Pin::Pin() : LogicObject()
 	width = 2;
 	height = 2;
 
-	type.SetString(_T("Pin"));
 }
 
 

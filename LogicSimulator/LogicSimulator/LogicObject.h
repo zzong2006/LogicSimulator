@@ -18,7 +18,7 @@ protected:
 				
 
 public:
-	CString label, type;
+	CString label;
 	int objectType, objectName;
 	bool output;
 	BOOL chk;			//알고리즘 돌때 방문했는가?
@@ -38,9 +38,9 @@ public:
 	void set_outputCoord(int x, int y);		//출력 좌표 설정
 	void set_inputCoord(int x, int y);		//입력 좌표 설정
 
-	int Is_match_inputCoord(POINT src);
+
 	BOOL Is_match_outputCoord(POINT src);
-	int Is_match_inputCoord(int src_x, int src_y);
+
 	BOOL Is_match_outputCoord(int src_x, int src_y);
 
 	void toggleOutput();						//출력값 치환 0->1 or 1->0

@@ -155,7 +155,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	//선 오브젝트에서 선이 분기 될 경우
 	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
-	for (int i = 0; i < pDoc->lines.size(); i++)						
+	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
 			&& !(pDoc->isSelected))

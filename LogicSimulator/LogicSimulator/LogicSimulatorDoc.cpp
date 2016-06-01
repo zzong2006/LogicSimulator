@@ -168,12 +168,12 @@ void CLogicSimulatorDoc::CheckCircuit()
 		searchLine.push(temp_line);
 	}
 
-	//for (int i = 0; i < clockInfo.size(); i++)
-	//{
-	//	LineObject* temp_line = clockInfo.at(i)->output_line;
-	//	temp_line->state = clockInfo.at(i)->calOutput();
-	//	push(temp_line);
-	//}
+	for (int i = 0; i < clockInfo.size(); i++)
+	{
+		LineObject* temp_line = clockInfo.at(i)->output_line;
+		temp_line->state = clockInfo.at(i)->calOutput();
+		searchLine.push(temp_line);
+	}
 
 
 	//µ¹±â
