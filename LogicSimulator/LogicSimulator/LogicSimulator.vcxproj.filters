@@ -37,13 +37,13 @@
     <ClCompile Include="Pin.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PropertyView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Gate.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

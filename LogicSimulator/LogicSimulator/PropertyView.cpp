@@ -13,6 +13,7 @@ IMPLEMENT_DYNCREATE(CPropertyView, CFormView)
 CPropertyView::CPropertyView()
 	: CFormView(IDD_PROPERTYVIEW)
 {
+
 }
 
 CPropertyView::~CPropertyView()
@@ -22,7 +23,6 @@ CPropertyView::~CPropertyView()
 void CPropertyView::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MFCPROPERTYGRID1, m_ctrlGridControl);
 }
 
 BEGIN_MESSAGE_MAP(CPropertyView, CFormView)
@@ -53,12 +53,23 @@ void CPropertyView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
 
-	SetScrollSizes(MM_TEXT, CSize(0, 0));
-	
-	HDITEM item;
-	item.cxy = 90;
-	item.mask = HDI_WIDTH;
-	m_ctrlGridControl.GetHeaderCtrl().SetItem(0, &HDITEM(item));
+	//스크롤바 무효화 
+	CSize scrollSize(0, 0);
+	SetScrollSizes(MM_TEXT, scrollSize);
 
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	CRect rectDummy, rc;
+
+	rectDummy.SetRectEmpty();
+
+	m_pGridInfo.Create(WS_VISIBLE | WS_CHILD, rectDummy, this, 2);
+	
+	//PropertyGrid 기본 셋팅
+	CPropertyView::GetClientRect(&rc);
+	CPropertyView::MapWindowPoints(this, &rc);
+
+	m_pGridInfo.MoveWindow(&rc);
+
+	m_pGridInfo.EnableHeaderCtrl(FALSE);
+	m_pGridInfo.SetVSDotNetLook();
+	m_pGridInfo.EnableDescriptionArea();
 }
