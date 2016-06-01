@@ -96,6 +96,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	Label->AddOption(_T("West"));
 	Label->AddOption(_T("North"));
 	Label->AddOption(_T("South"));
+	Label->AllowEdit(FALSE);
 	pGroupInfo->AddSubItem(Label);
 
 	m_pGridInfo.AddProperty(pGroupInfo);

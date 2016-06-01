@@ -52,11 +52,8 @@ void Gate::setOutput()
 			!(input_line[0]->state | input_line[1]->state);
 		break;
 	case XOR_GATE :
-
-		if (input_line[0]->state != input_line[1]->state)
-			output_line->state = ON_SIGNAL;
-		else output_line->state = OFF_SIGNAL;
-
+		output_line->state = 
+			input_line[0]->state^input_line[1]->state;
 		break;
 	}
 }

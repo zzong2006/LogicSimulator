@@ -61,7 +61,7 @@ void notGate::set_output()
 	else output_line->state = ON_SIGNAL;
 }
 
-notGate::notGate()
+notGate::notGate() : Gate()
 {
 	inputNum = 1;
 }
