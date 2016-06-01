@@ -76,6 +76,7 @@ int LogicObject::isInputSet() const
 LogicObject::LogicObject()
 {
 	output = 0;
+	facing = _T("East");
 }
 
 

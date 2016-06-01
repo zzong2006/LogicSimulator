@@ -64,7 +64,7 @@ void orGate::turn()
 
 }
 
-orGate::orGate()
+orGate::orGate() : Gate()
 {
 	inputNum = 2;
 }

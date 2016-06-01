@@ -18,7 +18,7 @@ protected:
 				
 
 public:
-	CString label;
+	CString label, facing;
 	int objectType, objectName;
 	bool output, isSelected;
 	BOOL chk;			//알고리즘 돌때 방문했는가?

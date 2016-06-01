@@ -5,6 +5,7 @@
 #include "LogicSimulator.h"
 #include "CircuitView.h"
 #include "LogicSimulatorDoc.h"
+#include "MainFrm.h"
 #include "LineObject.h"
 #include "PropertyView.h"
 
@@ -26,6 +27,7 @@ inline int Rounding(int x)
 CCircuitView::CCircuitView()
 {
 	object = OBJECT;
+	
 }
 
 CCircuitView::~CCircuitView()
@@ -310,7 +312,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				//현재 선택된 로직 오브젝트의 상태를 보여준다.
 				if (pDoc->isOnFocus) {
 					if (pDoc->currObject.size() == 1) {
-						CPropertyView::InitializePropGrid(pDoc->currObject.at(0));
+						CPropertyView *PVCtrl = (CPropertyView *)((CMainFrame*)AfxGetMainWnd())->m_wndSplitterSub.GetPane(1, 0);
+						
+						PVCtrl->InitializePropGrid(pDoc->currObject.at(0));
 					}
 					else {
 

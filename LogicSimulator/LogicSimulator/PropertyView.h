@@ -32,7 +32,7 @@ public:
 	virtual void OnInitialUpdate();
 
 	CMFCPropertyGridCtrl m_pGridInfo;
-	void static InitializePropGrid(LogicObject *);
+	void InitializePropGrid(LogicObject *);
 };
 
 
