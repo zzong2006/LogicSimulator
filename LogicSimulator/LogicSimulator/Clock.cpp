@@ -66,10 +66,6 @@ void Clock::moveCycle()
 	}
 }
 
-bool Clock::calOutput()
-{
-	return output;
-}
 
 Clock::Clock()
 {

@@ -164,14 +164,14 @@ void CLogicSimulatorDoc::CheckCircuit()
 	for (int i = 0; i < pinInfo.size(); i++)
 	{
 		LineObject* temp_line = pinInfo.at(i)->output_line;
-		temp_line->state = pinInfo.at(i)->calOutput();
+		temp_line->state = pinInfo.at(i)->getOutput();
 		searchLine.push(temp_line);
 	}
 
 	for (int i = 0; i < clockInfo.size(); i++)
 	{
 		LineObject* temp_line = clockInfo.at(i)->output_line;
-		temp_line->state = clockInfo.at(i)->calOutput();
+		temp_line->state = clockInfo.at(i)->getOutput();
 		searchLine.push(temp_line);
 	}
 

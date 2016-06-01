@@ -37,15 +37,11 @@ public:
 	void setLabel(CString input);				
 	void set_outputCoord(int x, int y);		//출력 좌표 설정
 	void set_inputCoord(int x, int y);		//입력 좌표 설정
-
-
-	BOOL Is_match_outputCoord(POINT src);
-
-	BOOL Is_match_outputCoord(int src_x, int src_y);
-
-	void toggleOutput();						//출력값 치환 0->1 or 1->0
+	
+	void toggleOutput();		//출력값 치환 0->1 or 1->0
 	POINT get_top() const;
 	POINT get_bottm() const;
+	BOOL getOutput() const { return output; } ;
 
 	//현재 연결된 선들이 모두 방문된 상태인가를 체크함
 	int isInputSet() const;

@@ -44,6 +44,7 @@ POINT LogicObject::get_bottm() const
 	return bottom;
 }
 
+
 int LogicObject::isInputSet() const
 {
 	int sum = 0;

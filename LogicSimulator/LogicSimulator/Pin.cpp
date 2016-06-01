@@ -53,11 +53,6 @@ void Pin::toggleOutput()
 	output = !output;
 }
 
-bool Pin::calOutput()
-{
-	return output;
-}
-
 Pin::Pin() : LogicObject()
 {
 	width = 2;

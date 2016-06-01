@@ -14,7 +14,6 @@ public:
 	int chk;
 	Gate();
 	Gate(int dec_x, int dec_y);
-	virtual bool calOutput() = 0;	//결과 생성
 	virtual ~Gate();
 	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;
 	virtual void draw_main(Gdiplus::Graphics* gp) = 0;

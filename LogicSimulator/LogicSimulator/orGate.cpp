@@ -59,15 +59,9 @@ void orGate::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 3 * UNIT;
 }
 
-bool orGate::calOutput()
-{
-	output = input[0] | input[1];
-
-	return output;
-}
-
 void orGate::turn()
 {
+
 }
 
 orGate::orGate()

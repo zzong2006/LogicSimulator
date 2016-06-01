@@ -49,13 +49,6 @@ void andGate::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 3 * UNIT;
 }
 
-bool andGate::calOutput()
-{
-	output = input[0] & input[1];
-
-	return output;
-}
-
 void andGate::turn()
 {
 

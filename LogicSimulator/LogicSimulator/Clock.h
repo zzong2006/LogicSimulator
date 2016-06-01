@@ -17,7 +17,7 @@ public:
 	void turn();
 	void toggleOutput();
 	void moveCycle();	//시뮬레이터 시작후 사이클을 돌린다.
-	bool calOutput();	//결과 생성
+
 	Clock();
 	~Clock();
 };
