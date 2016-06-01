@@ -61,7 +61,7 @@ Pin::Pin() : LogicObject()
 {
 	width = 2;
 	height = 2;
-	state = ON_SIGNAL;
+
 	type.SetString(_T("Pin"));
 }
 

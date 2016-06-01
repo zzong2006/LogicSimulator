@@ -13,7 +13,7 @@ protected:
 	int width, height;
 
 	bool input[2];
-	int inputNum;			//입력선 개수
+	int inputNum,outputNum;			//입력선 개수
 	int direct;				//게이트 방향
 				
 
