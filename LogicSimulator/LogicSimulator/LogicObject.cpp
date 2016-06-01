@@ -18,8 +18,8 @@ void LogicObject::set_inputCoord(int x, int y)
 {
 	if (inputNum == 1)			// NOT GATE
 	{
-		inputCoord[0].x = x - 3 * UNIT;
-		inputCoord[0].y = y * UNIT;
+		inputCoord[0].x = x - 5 * UNIT;
+		inputCoord[0].y = y;
 	}
 	else {
 		inputCoord[0].x = x - 5 * UNIT;

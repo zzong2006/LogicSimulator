@@ -42,6 +42,21 @@ void Gate::setOutput()
 		output_line->state =
 			!(input_line[0]->state);
 		break;
+	case NAND_GATE :
+		output_line->state =
+			!(input_line[0]->state & input_line[1]->state);
+		break;
+	case NOR_GATE :
+		output_line->state =
+			!(input_line[0]->state | input_line[1]->state);
+		break;
+	case XOR_GATE :
+
+		if (input_line[0]->state != input_line[1]->state)
+			output_line->state = ON_SIGNAL;
+		else output_line->state = OFF_SIGNAL;
+
+		break;
 	}
 }
 

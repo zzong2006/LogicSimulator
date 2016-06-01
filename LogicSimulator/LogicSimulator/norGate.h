@@ -1,8 +1,7 @@
 #pragma once
-
 #include "Gate.h"
 
-class orGate : public Gate
+class norGate : public Gate
 {
 public:
 	void draw_main(Gdiplus::Graphics* gp);
@@ -11,8 +10,8 @@ public:
 	bool calOutput();
 	void turn();
 	void set_output();
-	orGate();
-	orGate(int dec_x, int dec_y);
-	~orGate();
+	norGate();
+	norGate(int dec_x, int dec_y);
+	virtual ~norGate();
 };
 

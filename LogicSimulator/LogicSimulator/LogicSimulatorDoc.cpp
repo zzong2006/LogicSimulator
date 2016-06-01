@@ -153,7 +153,10 @@ void CLogicSimulatorDoc::CheckCircuit()
 
 	//√ ±‚»≠
 	for (int i = 0; i < lines.size(); i++)
+	{
 		lines.at(i)->chk = 0;
+		lines.at(i)->state = OFF_SIGNAL;
+	}
 	
 	for (int i = 0; i < gateInfo.size(); i++)
 		gateInfo.at(i)->chk = 0;
