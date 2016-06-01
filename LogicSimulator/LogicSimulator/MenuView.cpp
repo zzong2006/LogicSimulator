@@ -76,7 +76,15 @@ void CMenuView::OnInitialUpdate()
 	HTREEITEM hWiring = treeCtrl.InsertItem(_T("Wiring"), 0, 0, TVI_ROOT, TVI_LAST);
 
 	treeCtrl.InsertItem(_T("Pin"), 7,7, hWiring, TVI_LAST);
-	treeCtrl.InsertItem(_T("Clock"), 8,8, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("Out"), 8,8, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("Clock"), 9, 9, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("7-Seg"), 10, 10, hWiring, TVI_LAST);
+
+	HTREEITEM hFF = treeCtrl.InsertItem(_T("Flip-Flop"), 0, 0, TVI_ROOT, TVI_LAST);
+
+	treeCtrl.InsertItem(_T("D Flip-Flop"), 11, 11, hFF, TVI_LAST);
+	treeCtrl.InsertItem(_T("JK Flip-Flop"), 12, 12, hFF, TVI_LAST);
+	treeCtrl.InsertItem(_T("T Flip-Flop"), 13, 13, hFF, TVI_LAST);
 }
 
 
