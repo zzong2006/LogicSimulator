@@ -64,14 +64,8 @@ void orGate::turn()
 
 }
 
-void orGate::set_output()
-{
-	if (input_line[0]->state == ON_SIGNAL || input_line[1]->state == ON_SIGNAL)
-		output_line->state = ON_SIGNAL;
-	else output_line->state = OFF_SIGNAL;
-}
 
-orGate::orGate()
+orGate::orGate() : Gate()
 {
 	inputNum = 2;
 }

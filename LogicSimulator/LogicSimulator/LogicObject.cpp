@@ -3,6 +3,19 @@
 
 #define UNIT 10
 
+void LogicObject::showSelected(Gdiplus::Graphics * gp)
+{
+	Gdiplus::Pen *p;
+	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
+
+	gp->DrawRectangle(p, top.x - 2, top.y - 2, 4, 4);
+	gp->DrawRectangle(p, bottom.x - 2, top.y - 2, 4, 4);
+	gp->DrawRectangle(p, top.x - 2, bottom.y - 2, 4, 4);
+	gp->DrawRectangle(p, bottom.x - 2, bottom.y - 2, 4, 4);
+
+	delete p;
+}
+
 void LogicObject::setLabel(CString input)
 {
 	label = input;
@@ -63,6 +76,7 @@ int LogicObject::isInputSet() const
 LogicObject::LogicObject()
 {
 	output = 0;
+	facing = _T("East");
 }
 
 

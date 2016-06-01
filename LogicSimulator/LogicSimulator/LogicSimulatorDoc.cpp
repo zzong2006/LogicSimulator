@@ -36,6 +36,7 @@ CLogicSimulatorDoc::CLogicSimulatorDoc()
 	selectMode = true;
 	simulateMode = false;
 	CanBeDivided = false;
+	isOnFocus = false;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()

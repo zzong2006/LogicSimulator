@@ -17,10 +17,12 @@ protected:
 				
 
 public:
-	CString label;
+	CString label, facing;
 	int objectType, objectName;
+
 	int inputNum, outputNum;			//입력선 개수, 출력선 개수
-	bool output;
+	bool output, isSelected;
+
 	BOOL chk;			//알고리즘 돌때 방문했는가?
 
 	//그림자 그리기
@@ -32,7 +34,8 @@ public:
 	//출력 좌표를 이용하여 로직 객체 전체(top/bottom)의 좌표를 정함.
 	virtual void set_Coord_From_outC(int x, int y) = 0;	
 
-
+	//객체가 선택됬다면 양 끝 모서리에 네모를 표시함.
+	void showSelected(Gdiplus::Graphics* gp);
 	//라벨 이름 설정하기
 	void setLabel(CString input);				
 	void set_outputCoord(int x, int y);		//출력 좌표 설정

@@ -1,6 +1,6 @@
 #pragma once
 #include "afxpropertygridctrl.h"
-
+#include "LogicObject.h"
 
 
 // CPropertyView Æû ºäÀÔ´Ï´Ù.
@@ -30,7 +30,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+
 	CMFCPropertyGridCtrl m_pGridInfo;
+	void InitializePropGrid(LogicObject *);
 };
 
 

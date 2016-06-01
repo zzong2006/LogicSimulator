@@ -2,7 +2,7 @@
 #include "Gate.h"
 #include "LogicSimulator.h"
 
-Gate::Gate()
+Gate::Gate() : LogicObject()
 {
 	//test input_size
 	for (int i = 0; i < INPUT_SIZE; i++)
@@ -11,6 +11,7 @@ Gate::Gate()
 	}
 
 	this->objectType = GATE_TYPE;
+
 }
 
 Gate::Gate(int dec_x, int dec_y)

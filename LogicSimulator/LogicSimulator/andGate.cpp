@@ -66,7 +66,7 @@ andGate::andGate()
 	inputNum = 2;
 }
 
-andGate::andGate(int dec_x, int dec_y)
+andGate::andGate(int dec_x, int dec_y) : Gate()
 {
 	inputNum = 2;
 	this->set_outputCoord(dec_x, dec_y);

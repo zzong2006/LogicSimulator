@@ -67,7 +67,7 @@ void Clock::moveCycle()
 }
 
 
-Clock::Clock()
+Clock::Clock() : LogicObject()
 {
 	cycle = 1000;
 	oriCycle = cycle;
