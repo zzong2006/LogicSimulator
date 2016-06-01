@@ -161,7 +161,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
-			&& !(pDoc->isSelected))
+			&& !(pDoc->isSelected) && !(pDoc->clickMode))
 		{
 			object = LINE;
 			break;
@@ -251,10 +251,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
 		if (pDoc->clickMode) {
-		/*	CPoint pos;
-
-			GetCursorPos(&pos);
-			ScreenToClient(&pos);*/
 			POINT temp_top, temp_bottom;
 
 			for (int i = 0; i < pDoc->pinInfo.size(); i++)
@@ -467,9 +463,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	BOOL nothingSearched = TRUE;
-	//선을 이동중이거나 다른 작업중이면 동그라미 표시가 생기면 안된다.
+	//선을 이동중이거나 다른 작업중이면 동그라미 표시가 생기면 안된다. 클릭 모드 포함 (손 모양)
 	if (nFlags != MK_LBUTTON &&
-		!(pDoc->isSelected)) {
+		!(pDoc->isSelected) && !(pDoc->clickMode)) {
 		for (int i = 0; i < pDoc->lines.size(); i++)
 		{
 			if (pDoc->lines.at(i)->Is_match_IineCoord(point)) {
