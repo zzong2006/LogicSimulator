@@ -8,7 +8,7 @@ class CMenuView : public CTreeView
 	DECLARE_DYNCREATE(CMenuView)
 
 protected:
-	CMenuView();           // 동적 만들기에 사용되는 protected 생성자입니다.
+	CMenuView();   
 	virtual ~CMenuView();
 
 public:
@@ -25,6 +25,10 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClick(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnClickMode();
+	afx_msg void OnUpdateClickMode(CCmdUI *pCmdUI);
+	afx_msg void OnSelectMode();
+	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
 };
 
 

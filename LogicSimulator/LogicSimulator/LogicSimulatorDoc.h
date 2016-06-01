@@ -4,9 +4,11 @@
 
 #pragma once
 #include <vector>
+#include <queue>
 #include "andGate.h"
 #include "orGate.h"
 #include "Pin.h"
+#include "Clock.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -18,9 +20,18 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CString selectedType;
 	BOOL isSelected;
+	BOOL CanBeDivided;
 	BOOL clickMode;
 	BOOL selectMode;
+	BOOL simulateMode;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <LineObject *> lines;
+	std::vector <Clock *> clockInfo;
+	std::vector <Gate *> gateInfo;
+	std::vector <Pin *> pinInfo;
+	int objectType;
+	int objectName;
+
 	int gateNum;
 	LogicObject* temp;
 // 작업입니다.
@@ -53,4 +64,6 @@ protected:
 	// 검색 처리기에 대한 검색 콘텐츠를 설정하는 도우미 함수
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	void CheckCircuit();
 };

@@ -9,6 +9,7 @@
 
 //#define UNIT 10
 #include "resource.h"       // 주 기호입니다.
+#include "name_repo.h"
 
 
 

@@ -187,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="LogicSimulatorView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MenuView.h" />
+    <ClInclude Include="name_repo.h" />
     <ClInclude Include="orGate.h" />
     <ClInclude Include="Pin.h" />
     <ClInclude Include="PropertyView.h" />
@@ -205,6 +207,7 @@
   <ItemGroup>
     <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />

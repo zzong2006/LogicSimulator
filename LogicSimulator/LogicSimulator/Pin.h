@@ -1,5 +1,6 @@
-#include "LogicObject.h"
 #pragma once
+#include "LogicObject.h"
+
 
 class Pin : public LogicObject
 {
@@ -11,7 +12,6 @@ public:
 	void set_Coord_From_outC(int x, int y);
 	void turn();
 	void toggleOutput();
-	bool calOutput();	//결과 생성
 	Pin();
 	~Pin();
 };

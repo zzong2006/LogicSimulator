@@ -24,6 +24,10 @@ CMenuView::~CMenuView()
 BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, &CMenuView::OnTvnSelchanged)
 	ON_NOTIFY_REFLECT(NM_CLICK, &CMenuView::OnNMClick)
+	ON_COMMAND(ID_CLICK_MODE, &CMenuView::OnClickMode)
+	ON_UPDATE_COMMAND_UI(ID_CLICK_MODE, &CMenuView::OnUpdateClickMode)
+	ON_COMMAND(ID_SELECT_MODE, &CMenuView::OnSelectMode)
+	ON_UPDATE_COMMAND_UI(ID_SELECT_MODE, &CMenuView::OnUpdateSelectMode)
 END_MESSAGE_MAP()
 
 
@@ -72,7 +76,15 @@ void CMenuView::OnInitialUpdate()
 	HTREEITEM hWiring = treeCtrl.InsertItem(_T("Wiring"), 0, 0, TVI_ROOT, TVI_LAST);
 
 	treeCtrl.InsertItem(_T("Pin"), 7,7, hWiring, TVI_LAST);
-	treeCtrl.InsertItem(_T("Clock"), 8,8, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("Out"), 8,8, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("Clock"), 9, 9, hWiring, TVI_LAST);
+	treeCtrl.InsertItem(_T("7-Seg"), 10, 10, hWiring, TVI_LAST);
+
+	HTREEITEM hFF = treeCtrl.InsertItem(_T("Flip-Flop"), 0, 0, TVI_ROOT, TVI_LAST);
+
+	treeCtrl.InsertItem(_T("D Flip-Flop"), 11, 11, hFF, TVI_LAST);
+	treeCtrl.InsertItem(_T("JK Flip-Flop"), 12, 12, hFF, TVI_LAST);
+	treeCtrl.InsertItem(_T("T Flip-Flop"), 13, 13, hFF, TVI_LAST);
 }
 
 
@@ -83,13 +95,6 @@ void CMenuView::OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 	HTREEITEM hTreeItem = pNMTreeView->itemNew.hItem;
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
 	
-	//pDoc->selectedType = treeCtrl.GetItemText(hTreeItem);
-	//
-	//if(pDoc->selectedType.Compare(_T("Gates")))
-	//	pDoc->isSelected = TRUE;
-	//
-	//treeCtrl.Select(NULL,0);
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 }
 
@@ -98,27 +103,95 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	CTreeCtrl& treeCtrl = GetTreeCtrl();
-	CPoint p;
-	GetCursorPos(&p);	
-	UINT flag;
-	treeCtrl.ScreenToClient(&p);
-	HTREEITEM hltem_dc = treeCtrl.HitTest(p, &flag);
 
-	pDoc->selectedType = treeCtrl.GetItemText(hltem_dc);
+	TV_HITTESTINFO p;
+	//화면 상에서 마우스의 위치를 얻는다.
+	GetCursorPos(&p.pt);
 
-	if (pDoc->selectedType.Compare(_T("Gates"))
-		|| pDoc->selectedType.Compare(_T("Wiring"))
-		) {
+	//얻은 마우스 좌표를 트리 컨트롤 기준의 좌표로 변경한다.
+	::ScreenToClient(treeCtrl.m_hWnd, &p.pt);
+
+	//현재 마우스 좌표가 위치한 항목 정보를 얻는다..
+	HTREEITEM current_item = treeCtrl.HitTest(&p);
+
+	if (current_item != NULL) {
+		treeCtrl.Select(current_item, TVGN_CARET);
 		pDoc->isSelected = TRUE;
 	}
-		
 
+	//항목 정보의 이름을 얻는다.
+	CString typeTemp = treeCtrl.GetItemText(current_item);
+
+
+	if (typeTemp == "AND Gate")
+	{
+		pDoc->objectName = AND_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "OR Gate")
+	{
+		pDoc->objectName = OR_GATE;
+		pDoc->objectType = GATE_TYPE;
+	}
+	else if (typeTemp == "Pin")
+	{
+		pDoc->objectName = PIN;
+		pDoc->objectType = WIRING_TYPE;
+	}
+	else if (typeTemp == "Clock")
+	{
+		pDoc->objectName = CLOCK;
+		pDoc->objectType = WIRING_TYPE;
+	}
+	else {
+		pDoc->isSelected = FALSE;
+	}
+
+	//폴더를 선택했을 경우에는 선택한게 아니므로 FALSE
+	if (typeTemp == "Gates" || typeTemp == "Wiring")
+	{
+		pDoc->isSelected = FALSE;
+	}
+	
 	if (pDoc->temp != NULL) {
 		delete pDoc->temp;
 		pDoc->temp = NULL;
 	}
 
 
-
 	*pResult = 0;
+}
+
+
+void CMenuView::OnClickMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = TRUE;
+	pDoc->selectMode = FALSE;
+}
+
+
+void CMenuView::OnUpdateClickMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
+}
+
+
+void CMenuView::OnSelectMode()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pDoc->clickMode = FALSE;
+	pDoc->selectMode = TRUE;
+}
+
+
+void CMenuView::OnUpdateSelectMode(CCmdUI *pCmdUI)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
 }

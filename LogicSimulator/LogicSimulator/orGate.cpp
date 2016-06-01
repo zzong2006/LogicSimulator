@@ -59,20 +59,24 @@ void orGate::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 3 * UNIT;
 }
 
-bool orGate::calOutput()
-{
-	output = input[0] | input[1];
-
-	return output;
-}
-
 void orGate::turn()
 {
+
 }
 
 orGate::orGate()
 {
 	inputNum = 2;
+}
+
+orGate::orGate(int dec_x, int dec_y)
+{
+	inputNum = 2;
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
+	this->input_line[0] = new LineObject(this->inputCoord[0]);
+	this->input_line[1] = new LineObject(this->inputCoord[1]);
+	this->output_line = new LineObject(this->outputCoord);
 }
 
 

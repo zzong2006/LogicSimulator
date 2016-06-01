@@ -11,6 +11,7 @@ public:
 	void turn();
 	void set_output();
 	andGate();
+	andGate(int dec_x, int dec_y);
 	virtual ~andGate();
 };
 

@@ -30,8 +30,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
-	// PropertyControl
-	CMFCPropertyGridCtrl m_ctrlGridControl;
+	CMFCPropertyGridCtrl m_pGridInfo;
 };
 
 
