@@ -363,6 +363,7 @@ void CCircuitView::CheckCircuit()
 	for (int i = 0; i < pDoc->lines.size(); i++)
 	{
 		pDoc->lines.at(i)->chk = 0;
+		//pDoc->lines.at(i)->state = OFF_SIGNAL;
 	}
 	for (int i = 0; i < pDoc->gateInfo.size(); i++)
 	{
