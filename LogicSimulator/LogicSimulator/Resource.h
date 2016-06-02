@@ -15,6 +15,10 @@
 #define IDB_GATE_SHADOW                 326
 #define IDB_GATE                        327
 #define IDB_GATE_ORI                    327
+#define IDB_FLIPFLOP_SHADOW             328
+#define IDB_WIRING                      329
+#define IDB_BITMAP5                     330
+#define IDB_WIRING_SHADOW               330
 #define IDC_MFCPROPERTYGRID1            1002
 #define ID_CLICK_MODE                   32772
 #define ID_32773                        32773
@@ -27,7 +31,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        328
+#define _APS_NEXT_RESOURCE_VALUE        331
 #define _APS_NEXT_COMMAND_VALUE         32782
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           313

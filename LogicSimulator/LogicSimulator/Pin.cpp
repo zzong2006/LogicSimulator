@@ -1,39 +1,41 @@
 #include "stdafx.h"
 #include "Pin.h"
 #include <string>
+#include "resource.h"
+#include "LogicSimulator.h"
 
-//객체가 통합되면 그리는 방식을 수정할 것.
 void Pin::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
-	gp->DrawRectangle(p, outputCoord.x - 2 * UNIT, outputCoord.y - 1 * UNIT, 2 * UNIT, 2 * UNIT);
+	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_WIRING_SHADOW));
+
+	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
+	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
+
+	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
+	if (!output)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2* UNIT, outputCoord.y - UNIT, 20, 20), 20 * 0, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2* UNIT, outputCoord.y - UNIT, 20, 20), 20 * 1, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+
+	delete pBitmap;
 }
 
-//객체가 통합되면 수정할 것.
 void Pin::draw_main(Gdiplus::Graphics * gp)
 {
-	Gdiplus::Pen *p;
-	CString out;
-	Gdiplus::SolidBrush B(Gdiplus::Color(160, 130, 20));
-	out.Format(_T("%d"), output);
-	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 2);
+	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_WIRING));
 
-	if (output)
-		B.SetColor(Gdiplus::Color(100, 200, 40));
+	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
+	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
 
-	//draw inner circle
-	gp->FillEllipse(&B, outputCoord.x - (int)(1.8 * UNIT), outputCoord.y - (int)(0.8 * UNIT), 1.5 * UNIT, 1.5 * UNIT);
+	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
+	if(!output)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 20, 20), 20 * 0, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 20, 20), 20 * 1, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
-	//draw font 
-	B.SetColor(Gdiplus::Color(255, 255, 255));
-	Gdiplus::Font F(L"Arial", 10);
-	Gdiplus::PointF P(outputCoord.x - UNIT * 1.5, outputCoord.y - UNIT * 0.8);
-
-	gp->DrawString(out, -1, &F, P, &B);
-
-	//draw sekel
-	gp->DrawRectangle(p, outputCoord.x - 2 * UNIT, outputCoord.y - 1 * UNIT, 2 * UNIT, 2 * UNIT);
-
-	delete p;
+	delete pBitmap;
 }
 
 void Pin::set_Coord_From_outC(int x, int y)
@@ -53,13 +55,24 @@ void Pin::toggleOutput()
 	output = !output;
 }
 
-Pin::Pin() : LogicObject()
+
+Pin::Pin() : Wiring()
 {
 	width = 2;
 	height = 2;
 
 }
 
+Pin::Pin(int dec_x, int dec_y) : Wiring()
+{
+	objectType = WIRING_TYPE;
+	objectName = PIN;
+	inputNum = 1;
+
+	output_line = new LineObject(dec_x, dec_y);
+	width = 2;
+	height = 2;
+}
 
 Pin::~Pin()
 {

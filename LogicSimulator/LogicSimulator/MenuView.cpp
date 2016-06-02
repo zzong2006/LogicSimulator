@@ -163,12 +163,22 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectName = CLOCK;
 		pDoc->objectType = WIRING_TYPE;
 	}
+	else if (typeTemp == "Out")
+	{
+		pDoc->objectName = OUTPIN;
+		pDoc->objectType = WIRING_TYPE;
+	}
+	else if (typeTemp == "D Flip-Flop")
+	{
+		pDoc->objectName = D_FF;
+		pDoc->objectType = FLIPFLOP_TYPE;
+	}
 	else {
 		pDoc->isSelected = FALSE;
 	}
 
 	//폴더를 선택했을 경우에는 선택한게 아니므로 FALSE
-	if (typeTemp == "Gates" || typeTemp == "Wiring")
+	if (typeTemp == "Gates" || typeTemp == "Wiring" || typeTemp == "Flip-Flop")
 	{
 		pDoc->isSelected = FALSE;
 	}

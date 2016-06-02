@@ -188,6 +188,7 @@
     <ClInclude Include="andGate.h" />
     <ClInclude Include="CircuitView.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="DFlipFlop.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
@@ -201,17 +202,20 @@
     <ClInclude Include="norGate.h" />
     <ClInclude Include="notGate.h" />
     <ClInclude Include="orGate.h" />
+    <ClInclude Include="Out.h" />
     <ClInclude Include="Pin.h" />
     <ClInclude Include="PropertyView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Wiring.h" />
     <ClInclude Include="xorGate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="andGate.cpp" />
     <ClCompile Include="CircuitView.cpp" />
     <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="DFlipFlop.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />
@@ -224,6 +228,7 @@
     <ClCompile Include="norGate.cpp" />
     <ClCompile Include="notGate.cpp" />
     <ClCompile Include="orGate.cpp" />
+    <ClCompile Include="Out.cpp" />
     <ClCompile Include="Pin.cpp" />
     <ClCompile Include="PropertyView.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -232,6 +237,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Wiring.cpp" />
     <ClCompile Include="xorGate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -249,8 +255,11 @@
     <Image Include="res\bitmap1.bmp" />
     <Image Include="res\bitmap2.bmp" />
     <Image Include="res\bitmap3.bmp" />
+    <Image Include="res\bitmap4.bmp" />
+    <Image Include="res\bitmap5.bmp" />
     <Image Include="res\bmp00001.bmp" />
     <Image Include="res\bmp00002.bmp" />
+    <Image Include="res\bmp00003.bmp" />
     <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />
     <Image Include="res\LogicSimulatorDoc.ico" />

@@ -107,6 +107,13 @@ void CCircuitView::DrawImage(CDC *pDC)
 			pDoc->logicInfo.at(i)->showSelected(&graphics);
 	}
 	
+	//현재 메뉴에서 아이템 선택한 상태라면 shadowing 그리기
+	if (pDoc->isSelected) {
+		Gdiplus::Pen DP(Gdiplus::Color(255, 255, 255), 2); //Dummy Pen 
+		pDoc->temp->set_outputCoord(dec_x, dec_y);
+		pDoc->temp->draw_shadow(&graphics, &DP);
+	}
+
 	//현재 마우스가 위치한 자리가 분기 (또는 선그리기) 가능한 점이라면 동그라미 표시
 	P.SetColor(Gdiplus::Color(20, 20, 250));
 	if(pDoc->CanBeDivided)
@@ -224,34 +231,45 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			{
 				Pin *Ptemp = NULL;
 				Clock *Ctemp = NULL;
+				Out	*Otemp = NULL;
 				temp = NULL;
 
+				
 				switch (pDoc->objectName)
 				{
 				case PIN:
-					Ptemp = new Pin();
-					Ptemp->objectType = WIRING_TYPE;
-					Ptemp->objectName = PIN;
-					Ptemp->output_line = new LineObject(dec_x, dec_y);
+					Ptemp = new Pin(dec_x, dec_y);
+					
 					pDoc->pinInfo.push_back(Ptemp);
 					temp = Ptemp;
 					break;
 	
 				case CLOCK:
-					Ctemp = new Clock();
-					Ctemp->objectType = WIRING_TYPE;
-					Ctemp->objectName = CLOCK;
-					Ctemp->output_line = new LineObject(dec_x, dec_y);
+					Ctemp = new Clock(dec_x,dec_y);
 					pDoc->clockInfo.push_back(Ctemp);
 					temp = Ctemp;
 					break;
+
+				case OUTPIN:
+					Otemp = new Out(dec_x, dec_y);
+					pDoc->outInfo.push_back(Otemp);
+					temp = Otemp;
+					break;
+					
 				}
 
 				if (temp != NULL) {
 					temp->set_outputCoord(dec_x, dec_y);
 					temp->set_Coord_From_outC(dec_x, dec_y);
 
-					pDoc->lines.push_back(temp->output_line);
+					//출력핀은 출력 선이 없다.
+					//7 seg도 마찬가지임.
+					if (pDoc->objectName != OUTPIN) {
+						pDoc->lines.push_back(temp->output_line);
+					}	else {
+						pDoc->lines.push_back(temp->input_line[0]);
+					}
+
 					pDoc->logicInfo.push_back(temp);
 
 				}
@@ -361,7 +379,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				temp_line[0]->connect_lines.push_back(pDoc->lines.at(i));
 			}
 		}
-		
 	}
 
 	Invalidate();
@@ -452,15 +469,13 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					case CLOCK:
 						pDoc->temp = new Clock();
 						break;
+					case OUTPIN :
+						pDoc->temp = new Out();
+						break;
 					}
 				}
 			}
-			
-			if (pDoc->temp != NULL) {
-				pDoc->temp->draw_shadow(&graphics, &DP);
-				pDoc->temp->set_outputCoord(dec_x, dec_y);
-				pDoc->temp->draw_shadow(&graphics, &P);
-			}
+			Invalidate();
 		}
 
 	} else {

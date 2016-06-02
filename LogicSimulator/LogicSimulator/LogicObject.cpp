@@ -43,7 +43,9 @@ void LogicObject::set_inputCoord(int x, int y)
 			inputCoord[1].y = y + 1 * UNIT;
 		}
 		break;
-
+	case WIRING_TYPE:
+		inputCoord[0].x = x;
+		inputCoord[0].y = y;
 	}
 	
 }

@@ -1,43 +1,40 @@
 #include "stdafx.h"
 #include "Clock.h"
 #include "resource.h"
+#include "LogicSimulator.h"
 
 void Clock::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
-	gp->DrawRectangle(p, outputCoord.x - 2 * UNIT, outputCoord.y - 1 * UNIT, 2 * UNIT, 2 * UNIT);
+	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_WIRING_SHADOW));
+
+	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
+	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
+
+	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
+	if (!output)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2 * UNIT, outputCoord.y - UNIT, 20, 20), 20 * 0, 20 * 0, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2 * UNIT, outputCoord.y - UNIT, 20, 20), 20 * 1, 20 * 0, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+
+	delete pBitmap;
 }
 
 void Clock::draw_main(Gdiplus::Graphics * gp)
 {
-	Gdiplus::Pen *p;
-	Gdiplus::SolidBrush B(Gdiplus::Color(160, 130, 20));
-	
-	//출력 기본값을 FALSE으로 생각하여 검은녹색으로 설정
-	p = new Gdiplus::Pen(Gdiplus::Color(160, 130, 20), 2);
+	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_WIRING));
 
-	//tempPT : ㄹ 자 모양 포인터를 받을 배열
-	Gdiplus::Point tempPT[6] = { Gdiplus::Point(top.x + 5, top.y + 5),
-		Gdiplus::Point(top.x + 5, top.y + 15),
-		Gdiplus::Point(top.x + 10, top.y + 15),
-		Gdiplus::Point(top.x + 10, top.y + 5),
-		Gdiplus::Point(top.x + 15, top.y + 5),
-		Gdiplus::Point(top.x + 15, top.y + 15)
-	};
+	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
+	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
 
-	//결과값이 TRUE일때 초록색 출력 및 ㄹ 생김새 변화
-	if (output) {
-		p->SetColor(Gdiplus::Color(100, 200, 40));
-		tempPT[0].Y += UNIT; tempPT[1].Y -= UNIT;	tempPT[2].Y -= UNIT;
-		tempPT[3].Y += UNIT;	tempPT[4].Y += UNIT;	tempPT[5].Y -= UNIT;
-	}
-	
-	gp->DrawLines(p, tempPT, 6);
+	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
+	if (!output)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 20, 20), 20 * 0, 20 * 0, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 20, 20), 20 * 1, 20 * 0, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
-	//겉모양 그리기
-	p->SetColor(Gdiplus::Color(0, 0, 0));
-	gp->DrawRectangle(p, outputCoord.x - 2 * UNIT, outputCoord.y - 1 * UNIT, 2 * UNIT, 2 * UNIT);
-
-	delete p;
+	delete pBitmap;
 }
 
 void Clock::set_Coord_From_outC(int x, int y)
@@ -67,13 +64,23 @@ void Clock::moveCycle()
 }
 
 
-Clock::Clock() : LogicObject()
+Clock::Clock() : Wiring()
 {
 	cycle = 1000;
 	oriCycle = cycle;
 }
 
+Clock::Clock(int dec_x, int dec_y) :Wiring()
+{
+	cycle = 1000;
+	oriCycle = cycle;
 
+	objectType = WIRING_TYPE;
+	objectName = CLOCK;
+	output_line = new LineObject(dec_x, dec_y);
+	width = 2;
+	height = 2;
+}
 Clock::~Clock()
 {
 }

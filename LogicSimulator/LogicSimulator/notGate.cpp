@@ -27,15 +27,17 @@ void notGate::draw_main(Gdiplus::Graphics* gp)
 
 void notGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
-	Gdiplus::Point andPts[4];
+	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_GATE_SHADOW));
 
-	andPts[0] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y - 3 * UNIT);
-	andPts[1] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT);
-	andPts[2] = Gdiplus::Point(outputCoord.x - 5 * UNIT, outputCoord.y + 3 * UNIT);
-	andPts[3] = Gdiplus::Point(outputCoord.x - 2 * UNIT, outputCoord.y + 3 * UNIT);
+	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
+	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
 
-	gp->DrawArc(p, outputCoord.x - 5 * UNIT, outputCoord.y - 3 * UNIT, 5 * UNIT, 6 * UNIT, 275, 180);
-	gp->DrawLines(p, andPts, 4);
+	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
+
+	gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 3 * UNIT, outputCoord.y -1.5 * UNIT, 30, 30), 30 * 0, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+
+	delete pBitmap;
 }
 
 void notGate::set_Coord_From_outC(int x, int y)

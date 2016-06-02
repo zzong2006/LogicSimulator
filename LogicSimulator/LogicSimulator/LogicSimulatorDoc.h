@@ -13,6 +13,8 @@
 #include "norGate.h"
 #include "Pin.h"
 #include "Clock.h"
+#include "Out.h"
+#include "DFlipFlop.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -35,6 +37,7 @@ public:
 	std::vector <Clock *> clockInfo;
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
+	std::vector <Out *> outInfo;
 	int objectType;
 	int objectName;
 

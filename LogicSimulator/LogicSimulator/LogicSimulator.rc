@@ -91,6 +91,12 @@ IDB_GATE_SHADOW         BITMAP                  "res\\bmp00001.bmp"
 
 IDB_GATE_ORI            BITMAP                  "res\\bmp00002.bmp"
 
+IDB_FLIPFLOP_SHADOW     BITMAP                  "res\\bmp00003.bmp"
+
+IDB_WIRING              BITMAP                  "res\\bitmap4.bmp"
+
+IDB_WIRING_SHADOW       BITMAP                  "res\\bitmap5.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

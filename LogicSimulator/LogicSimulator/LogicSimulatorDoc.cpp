@@ -159,9 +159,11 @@ void CLogicSimulatorDoc::CheckCircuit()
 		lines.at(i)->state = OFF_SIGNAL;
 	}
 	
+	//게이트 ,라이브러리 박스, 출력핀, 플립플롭
 	for (int i = 0; i < gateInfo.size(); i++)
 		gateInfo.at(i)->chk = 0;
-	
+	for (int i = 0; i < outInfo.size(); i++)
+		outInfo.at(i)->chk = 0;
 
 	//입력 Pin/Clock 과 관련된 값만 받기
 	//출력 Pin 같은 경우는 제외해야 한다.
@@ -205,12 +207,28 @@ void CLogicSimulatorDoc::CheckCircuit()
 		for (int i = 0; i < gateInfo.size(); i++)
 		{
 			Gate* temp_gate = gateInfo.at(i);
+			
 
+			//Gate 방문
 			if (temp_gate->isInputSet() && !temp_gate->chk)
 			{
 				temp_gate->chk = TRUE;
 				temp_gate->setOutput();
 				searchLine.push(temp_gate->output_line);
+			}
+
+			
+		}
+
+		//Outpin 방문 (제일 마지막)
+		for (int i = 0; i < outInfo.size(); i++)
+		{
+			Out* temp_out = outInfo.at(i);
+		
+			if (temp_out->isInputSet() && !temp_out->chk)
+			{
+				temp_out->chk = TRUE;
+				temp_out->setOutput();
 			}
 		}
 	}
