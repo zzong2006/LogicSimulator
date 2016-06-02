@@ -36,8 +36,11 @@ public:
 
 	//객체가 선택됬다면 양 끝 모서리에 네모를 표시함.
 	void showSelected(Gdiplus::Graphics* gp);
+	//라벨 표시하기
+	void showLabel(Gdiplus::Graphics* gp);
 	//라벨 이름 설정하기
-	void setLabel(CString input);				
+	void setLabel(CString input);
+	void setFacing(CString input);
 	void set_outputCoord(int x, int y);		//출력 좌표 설정
 	void set_inputCoord(int x, int y);		//입력 좌표 설정
 	

@@ -4,8 +4,9 @@
 #include "stdafx.h"
 #include "LogicSimulator.h"
 #include "PropertyView.h"
-
-
+#include "LogicSimulatorDoc.h"
+#include "CircuitView.h"
+#include "MainFrm.h"
 // CPropertyView
 
 IMPLEMENT_DYNCREATE(CPropertyView, CFormView)
@@ -26,6 +27,7 @@ void CPropertyView::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CPropertyView, CFormView)
+	ON_REGISTERED_MESSAGE(AFX_WM_PROPERTY_CHANGED,OnPropertyChanged)
 END_MESSAGE_MAP()
 
 
@@ -88,7 +90,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.EnableDescriptionArea(FALSE);
 
 	CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("Information"));
-	CMFCPropertyGridProperty* Label = new CMFCPropertyGridProperty(_T("Facing"), tempLO->facing,_T("DWdaw"), 1);
+	CMFCPropertyGridProperty* Label = new CMFCPropertyGridProperty(_T("Facing"), tempLO->facing,_T("Ό³Έν"), 1);
 
 	pGroupInfo->AddSubItem(new CMFCPropertyGridProperty(_T("Label"), tempLO->label, 0));
 
@@ -102,6 +104,32 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.AddProperty(pGroupInfo);
 	
 	m_pGridInfo.UpdateData(FALSE);
+}
+
+LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
+{
+	// wParam - control id, lParam - a pointer to property that changed
+	CMFCPropertyGridProperty* pProperty = (CMFCPropertyGridProperty*)lParam;
+
+	CCircuitView *CVCtrl = (CCircuitView *)((CMainFrame*)AfxGetMainWnd())->m_wndSplitterMain.GetPane(0, 1);
+
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	if (pDoc->currObject.size() == 1) {
+		switch (pProperty->GetData())
+		{
+		case 0:			//Label
+			pDoc->currObject.at(0)->setLabel(pProperty->GetValue());
+			break;
+		case 1:			//Facing
+			pDoc->currObject.at(0)->setFacing(pProperty->GetValue());
+			break;
+		}
+	}
+
+	CVCtrl->Invalidate();
+
+	return 0L;
 }
 
 

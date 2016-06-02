@@ -29,6 +29,7 @@ public:
 	afx_msg void OnUpdateClickMode(CCmdUI *pCmdUI);
 	afx_msg void OnSelectMode();
 	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
+	
 };
 
 

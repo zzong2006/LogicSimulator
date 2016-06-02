@@ -17,9 +17,28 @@ void LogicObject::showSelected(Gdiplus::Graphics * gp)
 	delete p;
 }
 
+void LogicObject::showLabel(Gdiplus::Graphics * gp)
+{
+	Gdiplus::Font F(L"Arial", 15, Gdiplus::FontStyleRegular,Gdiplus::UnitPixel);
+	Gdiplus::PointF P((top.x + bottom.x) / 2, top.y - (UNIT * 1.5));
+	Gdiplus::SolidBrush B(Gdiplus::Color(0, 0, 0));
+	Gdiplus::StringFormat SF;
+
+	SF.SetAlignment(Gdiplus::StringAlignmentCenter);
+	SF.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+
+
+	gp->DrawString(label,-1,&F,P,&SF,&B);
+}
+
 void LogicObject::setLabel(CString input)
 {
 	label = input;
+}
+
+void LogicObject::setFacing(CString input)
+{
+	facing = input;
 }
 
 void LogicObject::set_outputCoord(int x, int y)
