@@ -11,7 +11,6 @@
 #define IDC_CURSOR1                     318
 #define IDB_BITMAP1                     319
 #define IDB_FLIPFLOP                    323
-#define IDB_PNG2                        324
 #define IDB_GATE_SHADOW                 326
 #define IDB_GATE                        327
 #define IDB_GATE_ORI                    327
