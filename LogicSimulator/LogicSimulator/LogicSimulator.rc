@@ -85,6 +85,10 @@ IDB_BITMAP1             BITMAP                  "res\\bitmap2.bmp"
 
 IDB_BITMAP2             BITMAP                  "res\\bitmap1.bmp"
 
+IDB_FLIPFLOP            BITMAP                  "res\\bitmap3.bmp"
+
+IDB_GATE                BITMAP                  "res\\bmp00001.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -283,6 +287,16 @@ END
 //
 
 IDC_CURSOR1             CURSOR                  "res\\cursor1.cur"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDB_PNG1                PNG                     "C:\\Users\\zizi\\Desktop\\image\\gate.png"
+
+IDB_PNG2                PNG                     "C:\\Users\\zizi\\Desktop\\image\\flipflop.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

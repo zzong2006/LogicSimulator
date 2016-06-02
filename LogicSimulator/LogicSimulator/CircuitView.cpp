@@ -188,27 +188,21 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 				case AND_GATE:
 					Gtemp = new andGate(dec_x, dec_y);
-					Gtemp->objectName = AND_GATE;
 					break;
 				case OR_GATE:
 					Gtemp = new orGate(dec_x, dec_y);
-					Gtemp->objectName = OR_GATE;
 					break;
 				case NAND_GATE:
 					Gtemp = new nandGate(dec_x, dec_y);
-					Gtemp->objectName = NAND_GATE;
 					break;
 				case NOR_GATE:
 					Gtemp = new norGate(dec_x, dec_y);
-					Gtemp->objectName = NOR_GATE;
 					break;
 				case XOR_GATE:
 					Gtemp = new xorGate(dec_x, dec_y);
-					Gtemp->objectName = XOR_GATE;
 					break;
 				case NOT_GATE:
 					Gtemp = new notGate(dec_x, dec_y);
-					Gtemp->objectName = NOT_GATE;
 					break;
 				}
 

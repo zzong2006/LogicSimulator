@@ -149,6 +149,10 @@
     <Image Include="res\Toolbar.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\bitmap3.bmp" />
+    <Image Include="..\..\..\..\Desktop\image\gate.png" />
+    <Image Include="..\..\..\..\Desktop\image\flipflop.png" />
+    <Image Include="res\bmp00001.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\cursor1.cur">

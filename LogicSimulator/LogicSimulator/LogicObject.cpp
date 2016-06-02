@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LogicObject.h"
+#include "name_repo.h"
 
 #define UNIT 10
 
@@ -29,17 +30,22 @@ void LogicObject::set_outputCoord(int x, int y)
 
 void LogicObject::set_inputCoord(int x, int y)
 {
-	if (inputNum == 1)			// NOT GATE
-	{
-		inputCoord[0].x = x - 5 * UNIT;
-		inputCoord[0].y = y;
+	switch (objectType) {
+	case GATE_TYPE:
+		if (objectName == NOT_GATE)
+		{
+			inputCoord[0].x = x - 3 * UNIT;
+			inputCoord[0].y = y;
+		}else {
+			inputCoord[0].x = x - 6 * UNIT;
+			inputCoord[0].y = y - 1 * UNIT;
+			inputCoord[1].x = x - 6 * UNIT;
+			inputCoord[1].y = y + 1 * UNIT;
+		}
+		break;
+
 	}
-	else {
-		inputCoord[0].x = x - 5 * UNIT;
-		inputCoord[0].y = y - 1 * UNIT;
-		inputCoord[1].x = x - 5 * UNIT;
-		inputCoord[1].y = y + 1 * UNIT;
-	}
+	
 }
 
 void LogicObject::toggleOutput()

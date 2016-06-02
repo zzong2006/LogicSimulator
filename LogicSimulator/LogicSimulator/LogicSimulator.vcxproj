@@ -243,9 +243,13 @@
     <ResourceCompile Include="LogicSimulator.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\image\flipflop.png" />
+    <Image Include="..\..\..\..\Desktop\image\gate.png" />
     <Image Include="res\andGate.gif" />
     <Image Include="res\bitmap1.bmp" />
     <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\bitmap3.bmp" />
+    <Image Include="res\bmp00001.bmp" />
     <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />
     <Image Include="res\LogicSimulatorDoc.ico" />

@@ -140,7 +140,7 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 	}
 	else if (typeTemp == "NAND Gate")
 	{
-		pDoc->objectName = OR_GATE;
+		pDoc->objectName = NAND_GATE;
 		pDoc->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "NOR Gate")
