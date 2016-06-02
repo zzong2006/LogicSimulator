@@ -7,7 +7,7 @@
 void notGate::draw_main(Gdiplus::Graphics* gp)
 {
 	Gdiplus::Bitmap *pBitmap;		//이미지 불러오기
-	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_GATE));
+	pBitmap = Gdiplus::Bitmap::FromResource(AfxGetInstanceHandle(), (WCHAR*)MAKEINTRESOURCE(IDB_GATE_ORI));
 
 	Gdiplus::ImageAttributes imAtt;		//이미지 투명 처리
 	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);

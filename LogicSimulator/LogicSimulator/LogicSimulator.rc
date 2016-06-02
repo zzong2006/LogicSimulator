@@ -87,7 +87,9 @@ IDB_BITMAP2             BITMAP                  "res\\bitmap1.bmp"
 
 IDB_FLIPFLOP            BITMAP                  "res\\bitmap3.bmp"
 
-IDB_GATE                BITMAP                  "res\\bmp00001.bmp"
+IDB_GATE_SHADOW         BITMAP                  "res\\bmp00001.bmp"
+
+IDB_GATE_ORI            BITMAP                  "res\\bmp00002.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
