@@ -29,7 +29,7 @@
 #define FLIPFLOP_TYPE			30002
 
 #define OFF_SIGNAL					0
-#define ON_SIGNAL						1
+#define ON_SIGNAL					1
 
 #define LINE						100
 #define OBJECT						101

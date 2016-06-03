@@ -38,9 +38,7 @@ void Gate::setOutput()
 		outputCoord[0].second = inputCoord[0].second || inputCoord[1].second;
 		break;
 	case NOT_GATE:
-		if (inputCoord[0].second == 1)
-		outputCoord[0].second = 0;
-		else outputCoord[0].second = 1;
+		outputCoord[0].second = !inputCoord[0].second;
 		break;
 	case NAND_GATE :
 		outputCoord[0].second = !(inputCoord[0].second && inputCoord[1].second);

@@ -6,11 +6,6 @@
 #define VTOH 1
 #define HTOV 2
 
-#define OFF_SIGNAL 0
-#define ON_SIGNAL 1
-#define INPUT_SIGNAL 2
-#define OUTPUT_SIGNAL 3
-
 class LineObject
 {
 protected:

@@ -275,7 +275,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
-					
 					pDoc->pinInfo.push_back(Ptemp);
 					temp = Ptemp;
 					break;

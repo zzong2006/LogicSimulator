@@ -169,7 +169,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 	for (int i = 0; i < lgn; i++)
 	{
 		LogicObject* curLogic = gateInfo.at(i);
-		curLogic->chk = 1;
+		curLogic->chk = 0;
 		int out = curLogic->outputNum, in = curLogic->inputNum;
 
 		//출력핀 초기화
@@ -196,7 +196,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 			if (curline->line[0] == pinos || curline->line[1] == pinos)
 			{
 				curline->chk = 1;
-				curline->state = pinInfo.at(i)->getOutput();
+				curline->state = OFF_SIGNAL;
 				searchLine.push(curline);
 			}
 		}
@@ -247,7 +247,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 					{
 						if (curgate->inputCoord[j].first == temp_line->line[0] || curgate->inputCoord[j].first == temp_line->line[1])
 						{
-							curgate->inputCoord[j].second = 1;
+							curgate->inputCoord[j].second = temp_line->state;
 						}
 					}
 				}
@@ -263,7 +263,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 		{
 			Gate* temp_gate = gateInfo.at(i);
 			//Gate 방문
-			if (temp_gate->isInputSet() && temp_gate->chk == FALSE)
+			if (temp_gate->isInputSet() && temp_gate->chk == 0)
 			{
 				temp_gate->chk = 1;
 				temp_gate->setOutput();
@@ -275,18 +275,17 @@ void CLogicSimulatorDoc::CheckCircuit()
 					LineObject* curline = lines.at(i);
 					if (curline->line[0] == gatpos || curline->line[1] == gatpos)
 					{
-						curline->chk = 1;
-						//if (temp_gate->outputCoord[0].second == 1)
-							curline->state = ON_SIGNAL;
-						//else curline->state = OFF_SIGNAL;
-						searchLine.push(curline);
+							curline->state = temp_gate->outputCoord[0].second;
+
+						if (curline->chk != 1)
+							searchLine.push(curline);
 					}
 				}
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Outpin 방문 (제일 마지막)
-		for (int i = 0; i < outInfo.size(); i++)
+		/*for (int i = 0; i < outInfo.size(); i++)
 		{
 			Out* temp_out = outInfo.at(i);
 		
@@ -295,7 +294,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 				temp_out->chk = 1;
 				temp_out->setOutput();
 			}
-		}
+		}*/
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
