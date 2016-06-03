@@ -97,7 +97,6 @@ void CCircuitView::DrawImage(CDC *pDC)
 	CRect rect;
 	GetClientRect(&rect);
 
-	pDoc->CheckCircuit();
 
 	for (int i = 0; i < pDoc->logicInfo.size(); i++)
 	{
@@ -174,6 +173,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
 
 	//////////////////////////////////////////////////////////////////////분기 검사////////////////////////////////////////////////////////////////////////////
+	int ln = pDoc->lines.size();
 	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
@@ -193,6 +193,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			break;
 		}
 	}
+	/////////////////////////////점 지우기////////////////////////////////////
+	ln = pDoc->lines.size();
+	for (int i = 0; i < ln; i++)
+	{
+		if (pDoc->lines.at(i)->line[0] == pDoc->lines.at(i)->line[1])
+		{
+			pDoc->lines.erase(pDoc->lines.begin() + i);
+			ln--;
+		}
+	}
+	/////////////////////////////////////////////////////////////////////////
+
 
 	//논리 오브젝트들 중에서 선 분기 가능검사
 	for (int i = 0; i < pDoc->logicInfo.size() && object == OBJECT; i++)
@@ -309,7 +321,8 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			pDoc->temp = NULL;
 			pDoc->isSelected = false;
 		}
-
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////클릭 모드/////////////////////////////////////////////////////////////////////////////////
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
 		if (pDoc->clickMode) {
@@ -403,6 +416,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	pDoc->CheckCircuit();
 	Invalidate();
 
 	CView::OnLButtonDown(nFlags, point);
@@ -621,21 +635,50 @@ void CCircuitView::OnMouseLeave()
 void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-
+	dec_x = Rounding(point.x);
+	dec_y = Rounding(point.y);
+	CPoint cur_pos(dec_x, dec_y);
 	//그리기를 마쳤을때 하는 behavior
 	if (object == LINE)
 	{
 		//로직 오브젝트 검색 삭제
-		for (int i = 0; i < pDoc->lines.size(); i++)
+		int ln = pDoc->lines.size();
+		for (int i = 0; i < ln; i++)
 		{
 			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
 			{
-
+				if (pDoc->lines.at(i)->Is_match_IineCoord(point)
+					&& !(pDoc->isSelected) && !(pDoc->clickMode))
+				{
+					//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
+					LineObject* curline = pDoc->lines.at(i);
+					if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
+					{
+						LineObject* newline = new LineObject(cur_pos);
+						newline->line[0] = curline->line[1];
+						curline->line[1] = cur_pos;
+						pDoc->lines.push_back(newline);
+					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////
+					object = LINE;
+					break;
+				}
 			}
 		}
+		/////////////////////////////점 지우기////////////////////////////////////
+		ln = pDoc->lines.size();
+		for (int i = 0; i < ln; i++)
+		{
+			if (pDoc->lines.at(i)->line[0] == pDoc->lines.at(i)->line[1])
+			{
+				pDoc->lines.erase(pDoc->lines.begin() + i);
+				ln--;
+			}
+		}
+		/////////////////////////////////////////////////////////////////////////
 		object = OBJECT;
 	}
-
+	pDoc->CheckCircuit();
 	Invalidate();
 
 	CView::OnLButtonUp(nFlags, point);
@@ -712,7 +755,7 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 	for (int i = 0; i < pDoc->clockInfo.size(); i++) {
 		pDoc->clockInfo.at(i)->moveCycle();
 	}
-
+	pDoc->CheckCircuit();
 	Invalidate();
 	CView::OnTimer(nIDEvent);
 }

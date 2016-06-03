@@ -190,13 +190,13 @@ void CLogicSimulatorDoc::CheckCircuit()
 		CPoint pinos = pinInfo.at(i)->outputCoord[0].first;
 		int lin = lines.size();
 
-		for (int i = 0; i < lin; i++)
+		for (int j = 0; j < lin; j++)
 		{
-			LineObject* curline = lines.at(i);
+			LineObject* curline = lines.at(j);
 			if (curline->line[0] == pinos || curline->line[1] == pinos)
 			{
 				curline->chk = 1;
-				curline->state = OFF_SIGNAL;
+				curline->state = pinInfo.at(i)->getOutput();
 				searchLine.push(curline);
 			}
 		}
@@ -205,6 +205,20 @@ void CLogicSimulatorDoc::CheckCircuit()
 
 	for (int i = 0; i < clockInfo.size(); i++)
 	{
+		CPoint pinos = clockInfo.at(i)->outputCoord[0].first;
+		int lin = lines.size();
+
+		for (int j = 0; j < lin; j++)
+		{
+			LineObject* curline = lines.at(j);
+			if (curline->line[0] == pinos || curline->line[1] == pinos)
+			{
+				curline->chk = 1;
+				curline->state = clockInfo.at(i)->getOutput();
+				searchLine.push(curline);
+			}
+		}
+		clockInfo.at(i)->chk = 1;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -285,7 +299,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Outpin 방문 (제일 마지막)
-		/*for (int i = 0; i < outInfo.size(); i++)
+		for (int i = 0; i < outInfo.size(); i++)
 		{
 			Out* temp_out = outInfo.at(i);
 		
@@ -294,7 +308,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 				temp_out->chk = 1;
 				temp_out->setOutput();
 			}
-		}*/
+		}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
