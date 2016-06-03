@@ -63,32 +63,32 @@ void LogicObject::set_Coord_ByFacing(CString input)
 			switch (facing)
 			{
 			case EAST:
-				inputCoord[0].x = inputCoord[1].x= top.x;
-				inputCoord[0].y = top.y + 2 * UNIT;
-				inputCoord[1].y = top.y + 4 * UNIT;
-				outputCoord.x = bottom.x;
-				outputCoord.y = bottom.y - 3 * UNIT;
+				inputCoord[0].first.x = inputCoord[1].first.x = top.x;
+				inputCoord[0].first.y = top.y + 2 * UNIT;
+				inputCoord[1].first.y = top.y + 4 * UNIT;
+				outputCoord[0].first.x = bottom.x;
+				outputCoord[0].first.y = bottom.y - 3 * UNIT;
 				break;
 			case WEST:
-				inputCoord[0].x = inputCoord[1].x = bottom.x;
-				inputCoord[0].y = bottom.y - 2 * UNIT;
-				inputCoord[1].y = bottom.y - 4 * UNIT;
-				outputCoord.x = top.x;
-				outputCoord.y = top.y + 3 * UNIT;
+				inputCoord[0].first.x = inputCoord[1].first.x = bottom.x;
+				inputCoord[0].first.y = bottom.y - 2 * UNIT;
+				inputCoord[1].first.y = bottom.y - 4 * UNIT;
+				outputCoord[0].first.x = top.x;
+				outputCoord[0].first.y = top.y + 3 * UNIT;
 				break;
 			case SOUTH:
-				inputCoord[0].y = inputCoord[1].y = top.y;
-				inputCoord[0].x = top.x + 2 * UNIT;
-				inputCoord[1].x = top.x + 4 * UNIT;
-				outputCoord.y = bottom.y;
-				outputCoord.x = bottom.x - 3 * UNIT;
+				inputCoord[0].first.y = inputCoord[1].first.y = top.y;
+				inputCoord[0].first.x = top.x + 2 * UNIT;
+				inputCoord[1].first.x = top.x + 4 * UNIT;
+				outputCoord[0].first.y = bottom.y;
+				outputCoord[0].first.x = bottom.x - 3 * UNIT;
 				break;
 			case NORTH:
-				inputCoord[0].y = inputCoord[1].y = bottom.y;
-				inputCoord[0].x = bottom.x - 2 * UNIT;
-				inputCoord[1].x = bottom.x - 4 * UNIT;
-				outputCoord.x = top.x + 3 *UNIT;
-				outputCoord.y = top.y ;
+				inputCoord[0].first.y = inputCoord[1].first.y = bottom.y;
+				inputCoord[0].first.x = bottom.x - 2 * UNIT;
+				inputCoord[1].first.x = bottom.x - 4 * UNIT;
+				outputCoord[0].first.x = top.x + 3 *UNIT;
+				outputCoord[0].first.y = top.y ;
 				break;
 			}
 		}
@@ -96,28 +96,28 @@ void LogicObject::set_Coord_ByFacing(CString input)
 			switch (facing)
 			{
 			case EAST:
-				inputCoord[0].x = top.x;
-				inputCoord[0].y = top.y - 2 * UNIT;
-				outputCoord.x = bottom.x;
-				outputCoord.y = bottom.y - 2  * UNIT;
+				inputCoord[0].first.x = top.x;
+				inputCoord[0].first.y = top.y - 2 * UNIT;
+				outputCoord[0].first.x = bottom.x;
+				outputCoord[0].first.y = bottom.y - 2  * UNIT;
 				break;
 			case WEST:
-				inputCoord[0].x = bottom.x;
-				inputCoord[0].y = bottom.y - 2 * UNIT;
-				outputCoord.x = top.x;
-				outputCoord.y = top.y +2  * UNIT;
+				inputCoord[0].first.x = bottom.x;
+				inputCoord[0].first.y = bottom.y - 2 * UNIT;
+				outputCoord[0].first.x = top.x;
+				outputCoord[0].first.y = top.y +2  * UNIT;
 				break;
 			case SOUTH:
-				inputCoord[0].x = top.x + 2 * UNIT;
-				inputCoord[0].y = top.y;
-				outputCoord.x = bottom.x - 2 * UNIT;
-				outputCoord.y = bottom.y;
+				inputCoord[0].first.x = top.x + 2 * UNIT;
+				inputCoord[0].first.y = top.y;
+				outputCoord[0].first.x = bottom.x - 2 * UNIT;
+				outputCoord[0].first.y = bottom.y;
 				break;
 			case NORTH:
-				inputCoord[0].x = bottom.x - 2 * UNIT;
-				inputCoord[0].y = bottom.y;
-				outputCoord.x = top.x + 2 * UNIT;
-				outputCoord.y = top.y;
+				inputCoord[0].first.x = bottom.x - 2 * UNIT;
+				inputCoord[0].first.y = bottom.y;
+				outputCoord[0].first.x = top.x + 2 * UNIT;
+				outputCoord[0].first.y = top.y;
 				break;
 			}
 		}
@@ -126,11 +126,11 @@ void LogicObject::set_Coord_ByFacing(CString input)
 		switch (facing)
 		{
 		case EAST:
-			inputCoord[0].x = inputCoord[1].x = top.x;
-			inputCoord[0].y = top.y - 2 * UNIT;
-			inputCoord[1].y = top.y - 4 * UNIT;
-			outputCoord.x = bottom.x;
-			outputCoord.y = bottom.y - 3 * UNIT;
+			inputCoord[0].first.x = inputCoord[1].first.x = top.x;
+			inputCoord[0].first.y = top.y - 2 * UNIT;
+			inputCoord[1].first.y = top.y - 4 * UNIT;
+			outputCoord[0].first.x = bottom.x;
+			outputCoord[0].first.y = bottom.y - 3 * UNIT;
 			break;
 		case WEST:
 			break;
@@ -145,15 +145,6 @@ void LogicObject::set_Coord_ByFacing(CString input)
 	}
 	//로직 오브젝트의 입출력 좌표를 이용해
 	//이미 현재 오브젝트에 상속된 line의 좌표를 끊고 새로 만든다.
-
-	for (int i = 0; i < inputNum; i++) {
-		this->input_line[i] = new LineObject(this->inputCoord[i]);
-		pDoc->lines.push_back(input_line[i]);
-	}
-		
-
-	this->output_line = new LineObject(this->outputCoord);
-	pDoc->lines.push_back(output_line);
 }
 
 void LogicObject::move_Coord(long &x, long &change)
@@ -168,8 +159,8 @@ void LogicObject::move_Coord(long &x, long &change)
 
 void LogicObject::set_outputCoord(int x, int y)
 {
-	outputCoord.x = x;
-	outputCoord.y = y;
+	outputCoord[0].first.x = x;
+	outputCoord[0].first.y = y;
 }
 
 void LogicObject::set_inputCoord(int x, int y)
@@ -178,18 +169,18 @@ void LogicObject::set_inputCoord(int x, int y)
 	case GATE_TYPE:
 		if (objectName == NOT_GATE)
 		{
-			inputCoord[0].x = x - 4 * UNIT;
-			inputCoord[0].y = y;
+			inputCoord[0].first.x = x - 4 * UNIT;
+			inputCoord[0].first.y = y;
 		}else {
-			inputCoord[0].x = x - 6 * UNIT;
-			inputCoord[0].y = y - 1 * UNIT;
-			inputCoord[1].x = x - 6 * UNIT;
-			inputCoord[1].y = y + 1 * UNIT;
+			inputCoord[0].first.x = x - 6 * UNIT;
+			inputCoord[0].first.y = y - 1 * UNIT;
+			inputCoord[1].first.x = x - 6 * UNIT;
+			inputCoord[1].first.y = y + 1 * UNIT;
 		}
 		break;
 	case WIRING_TYPE:
-		inputCoord[0].x = x;
-		inputCoord[0].y = y;
+		inputCoord[0].first.x = x;
+		inputCoord[0].first.y = y;
 	}
 	
 }
@@ -212,22 +203,16 @@ POINT LogicObject::get_bottm() const
 
 int LogicObject::isInputSet() const
 {
-	int sum = 0;
-
 	for (int i = 0; i < inputNum; i++)
 	{
-		if (input_line[i]->chk)
-			sum++;
+		if (inputCoord[i].second == -1)
+			return 0;
 	}
-	if (sum == inputNum)
 		return 1;
-
-	return 0;
 }
 
 LogicObject::LogicObject()
 {
-	output = 0;
 	facing = EAST;
 }
 

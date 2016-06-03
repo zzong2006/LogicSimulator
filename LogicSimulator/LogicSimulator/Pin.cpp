@@ -14,9 +14,9 @@ void Pin::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
 	if (!output)
-		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2* UNIT, outputCoord.y - UNIT, 20, 20), 20 * 0, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord[0].first.x - 2* UNIT, outputCoord[0].first.y - UNIT, 20, 20), 20 * 0, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 	else
-		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 2* UNIT, outputCoord.y - UNIT, 20, 20), 20 * 1, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord[0].first.x - 2* UNIT, outputCoord[0].first.y - UNIT, 20, 20), 20 * 1, 20 * 2, 20, 20, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
 	delete pBitmap;
 }
@@ -69,9 +69,7 @@ Pin::Pin(int dec_x, int dec_y) : Wiring()
 	objectName = PIN;
 	inputNum = 1;
 
-	output_line = new LineObject(dec_x, dec_y);
-	width = 2;
-	height = 2;
+	
 }
 
 Pin::~Pin()

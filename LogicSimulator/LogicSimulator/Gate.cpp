@@ -32,28 +32,24 @@ void Gate::setOutput()
 {
 	switch (objectName) {
 	case AND_GATE:
-		output_line->state =
-			input_line[0]->state & input_line[1]->state;
+		outputCoord[0].second = inputCoord[0].second && inputCoord[1].second;
 		break;
 	case OR_GATE:
-		output_line->state =
-			input_line[0]->state | input_line[1]->state;
+		outputCoord[0].second = inputCoord[0].second || inputCoord[1].second;
 		break;
 	case NOT_GATE:
-		output_line->state =
-			!(input_line[0]->state);
+		if (inputCoord[0].second == 1)
+		outputCoord[0].second = 0;
+		else outputCoord[0].second = 1;
 		break;
 	case NAND_GATE :
-		output_line->state =
-			!(input_line[0]->state & input_line[1]->state);
+		outputCoord[0].second = !(inputCoord[0].second && inputCoord[1].second);
 		break;
 	case NOR_GATE :
-		output_line->state =
-			!(input_line[0]->state | input_line[1]->state);
+		outputCoord[0].second = (inputCoord[0].second || inputCoord[1].second);
 		break;
 	case XOR_GATE :
-		output_line->state = 
-			input_line[0]->state^input_line[1]->state;
+		outputCoord[0].second = inputCoord[0].second ^ inputCoord[1].second;
 		break;
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "LineObject.h"
 
+using namespace std;
 #define INPUT_SIZE 2
 
 #define UNIT 10
@@ -12,7 +13,7 @@ protected:
 	POINT labelPos;
 	int width, height;
 
-	bool input[2];
+	//bool input[2];
 	int direct;				//게이트 방향
 				
 
@@ -59,9 +60,8 @@ public:
 
 	//현재 연결된 선들이 모두 방문된 상태인가를 체크함
 	int isInputSet() const;
-
-	LineObject* input_line[10], *output_line;
-	POINT inputCoord[10], outputCoord;
+	//POINT inputCoord[10], outputCoord;
+	pair<CPoint, int> inputCoord[10] , outputCoord[10];
 
 	LogicObject();
 	virtual ~LogicObject();

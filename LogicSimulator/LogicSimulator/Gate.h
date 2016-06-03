@@ -11,7 +11,6 @@ protected:
 	int input_state[INPUT_SIZE], output_state;
 
 public:
-	int chk;
 	Gate();
 	Gate(int dec_x, int dec_y);
 	virtual ~Gate();

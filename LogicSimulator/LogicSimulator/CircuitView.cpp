@@ -165,23 +165,61 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	dec_x = Rounding(point.x);
 	dec_y = Rounding(point.y);
+	CPoint cur_pos(dec_x, dec_y);
 
 	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
 
 	//선 오브젝트에서 선이 분기 될 경우
 	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
+
+	//////////////////////////////////////////////////////////////////////분기 검사////////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
 			&& !(pDoc->isSelected) && !(pDoc->clickMode))
 		{
+			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
+			LineObject* curline = pDoc->lines.at(i);
+			if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
+			{
+				LineObject* newline = new LineObject(cur_pos);
+				newline->line[0] = curline->line[1];
+				curline->line[1] = cur_pos;
+				pDoc->lines.push_back(newline);
+			}
+			///////////////////////////////////////////////////////////////////////////////////////////////////////
 			object = LINE;
 			break;
 		}
 	}
 
+	//논리 오브젝트들 중에서 선 분기 가능검사
+	for (int i = 0; i < pDoc->logicInfo.size() && object == OBJECT; i++)
+	{
+		int n = pDoc->logicInfo.at(i)->inputNum;
+		CPoint out_pos = pDoc->logicInfo.at(i)->outputCoord[0].first;
+		if (dec_x == out_pos.x && dec_y == out_pos.y
+			&& !(pDoc->isSelected) && !(pDoc->clickMode))
+		{
+			object = LINE;
+			break;
+		}
 
+		for (int j = 0; j < n; j++)
+		{
+			CPoint pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
+			if (dec_x == pos.x && dec_y == pos.y
+				&& !(pDoc->isSelected) && !(pDoc->clickMode))
+			{
+				object = LINE;
+				break;
+			}
+		}
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	///////////////////////////////////////////////////////////////////////////논리 오브젝트 생성/////////////////////////////////////////////////////////////////////
 	if (object == OBJECT)
 	{
 		//메뉴에서 선택하고 필드에서 지정 완료될 때
@@ -220,11 +258,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				if (Gtemp != NULL) {
 					Gtemp->set_Coord_From_outC(dec_x, dec_y);
-
-					for (int i = 0; i < Gtemp->inputNum; i++)			//입력선 개수만 큼 push_back
-						pDoc->lines.push_back(Gtemp->input_line[i]);
-
-					pDoc->lines.push_back(Gtemp->output_line);			//출력선 push_back
 
 					pDoc->logicInfo.push_back(Gtemp);
 					pDoc->gateInfo.push_back(Gtemp);
@@ -267,11 +300,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					//출력핀은 출력 선이 없다.
 					//7 seg도 마찬가지임.
-					if (pDoc->objectName != OUTPIN) {
-						pDoc->lines.push_back(temp->output_line);
-					}	else {
-						pDoc->lines.push_back(temp->input_line[0]);
-					}
 
 					pDoc->logicInfo.push_back(temp);
 
@@ -355,6 +383,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////선 생성/////////////////////////////////////////////////////////////////////////////
 	else if(object != OBJECT && !(pDoc->isSelected))
 	{
 		//동그란 표시 지우기
@@ -370,20 +401,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		pDoc->lines.push_back(temp_line[0]);
 		pDoc->lines.push_back(temp_line[1]);
 
-		temp_line[0]->connect_lines.push_back(temp_line[1]);	//두 선 서로 연결
-		temp_line[1]->connect_lines.push_back(temp_line[0]);
 
-		//첫번째 선에게만 오브젝트 연결
-		for (int i = 0; i < pDoc->lines.size(); i++)	
-		{
-			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
-			{
-				pDoc->lines.at(i)->connect_lines.push_back(temp_line[0]);
-				temp_line[0]->connect_lines.push_back(pDoc->lines.at(i));
-			}
-		}
 	}
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Invalidate();
 
 	CView::OnLButtonDown(nFlags, point);
@@ -531,6 +551,35 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				break;
 			}
 		}
+
+		//논리 오브젝트들 중에서 선 분기 가능검사
+		for (int i = 0; i < pDoc->logicInfo.size() && nothingSearched == TRUE; i++)
+		{
+			int n = pDoc->logicInfo.at(i)->inputNum;
+			CPoint out_pos = pDoc->logicInfo.at(i)->outputCoord[0].first;
+			if (dec_x == out_pos.x && dec_y == out_pos.y
+				&& !(pDoc->isSelected) && !(pDoc->clickMode))
+			{
+				pDoc->CanBeDivided = TRUE;
+				nothingSearched = FALSE;
+				Invalidate();
+				break;
+			}
+
+			for (int j = 0; j < n; j++)
+			{
+				CPoint pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
+				if (dec_x == pos.x && dec_y == pos.y
+					&& !(pDoc->isSelected) && !(pDoc->clickMode))
+				{
+					pDoc->CanBeDivided = TRUE;
+					nothingSearched = FALSE;
+					Invalidate();
+					break;
+				}
+			}
+		}
+
 	}
 	
 	if (nothingSearched && pDoc->CanBeDivided) {
@@ -582,8 +631,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
 			{
-				pDoc->lines.at(i)->connect_lines.push_back(pDoc->lines.at(cur_line));
-				pDoc->lines.at(cur_line)->connect_lines.push_back(pDoc->lines.at(i));
+
 			}
 		}
 		object = OBJECT;

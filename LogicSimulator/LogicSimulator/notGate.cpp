@@ -35,7 +35,7 @@ void notGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
 
-	gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 4 * UNIT, (int)(outputCoord.y -2 * UNIT), 40, 40), 40 * 0, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord[0].first.x - 4 * UNIT, (int)(outputCoord[0].first.y - 2 * UNIT), 40, 40), 40 * 0, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
 	delete pBitmap;
 }
@@ -53,7 +53,7 @@ void notGate::turn()
 
 void notGate::set_output()
 {
-	output_line->state = !(input_line[0]->state);
+	
 }
 
 notGate::notGate() : Gate()
@@ -67,8 +67,7 @@ notGate::notGate(int dec_x, int dec_y)
 	objectName = NOT_GATE;
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
-	this->input_line[0] = new LineObject(this->inputCoord[0]);
-	this->output_line = new LineObject(this->outputCoord);
+	
 }
 
 notGate::~notGate()

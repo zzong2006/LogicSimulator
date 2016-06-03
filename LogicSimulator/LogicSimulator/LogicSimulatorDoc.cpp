@@ -74,7 +74,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
-		ar << lines.at(1);
 	}
 	else
 	{
@@ -166,29 +165,52 @@ void CLogicSimulatorDoc::CheckCircuit()
 	}
 	
 	//게이트 ,라이브러리 박스, 출력핀, 플립플롭
-	for (int i = 0; i < gateInfo.size(); i++)
-		gateInfo.at(i)->chk = 0;
-	for (int i = 0; i < outInfo.size(); i++)
-		outInfo.at(i)->chk = 0;
+	int lgn = gateInfo.size();
+	for (int i = 0; i < lgn; i++)
+	{
+		LogicObject* curLogic = gateInfo.at(i);
+		curLogic->chk = FALSE;
+		int out = curLogic->outputNum, in = curLogic->inputNum;
 
+		//출력핀 초기화
+		for (int i = 0; i < 1; i++)
+			curLogic->outputCoord[i].second = -1;
+		//입력핀 초기화
+		for (int i = 0; i < in; i++)
+			curLogic->inputCoord[i].second = -1;			//input chk 초기화
+
+	}
+
+	////////////////////////////////////////////////////////////////출력 시작//////////////////////////////////////////////////////////
 	//입력 Pin/Clock 과 관련된 값만 받기
 	//출력 Pin 같은 경우는 제외해야 한다.
-	for (int i = 0; i < pinInfo.size(); i++)
+	int pn = pinInfo.size();
+	for (int i = 0; i < pn; i++)
 	{
-		LineObject* temp_line = pinInfo.at(i)->output_line;
-		temp_line->state = pinInfo.at(i)->getOutput();
-		searchLine.push(temp_line);
+		CPoint pinos = pinInfo.at(i)->outputCoord[0].first;
+		int lin = lines.size();
+
+		for (int i = 0; i < lin; i++)
+		{
+			LineObject* curline = lines.at(i);
+			if (curline->line[0] == pinos || curline->line[1] == pinos)
+			{
+				//curline->chk = 1;
+				if (pinInfo.at(i)->getOutput() == TRUE)
+				curline->state = ON_SIGNAL;//pinInfo.at(i)->getOutput();
+				else curline->state = OFF_SIGNAL;
+				searchLine.push(curline);
+			}
+		}
+		pinInfo.at(i)->chk = TRUE;
 	}
 
 	for (int i = 0; i < clockInfo.size(); i++)
 	{
-		LineObject* temp_line = clockInfo.at(i)->output_line;
-		temp_line->state = clockInfo.at(i)->getOutput();
-		searchLine.push(temp_line);
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-	//돌기
+	//////////////////////////////////////////////////////////////돌고 돌아///////////////////////////////////////////////////////////
 	while (!searchLine.empty())
 	{
 		//(초반) Pin에 연결된 선을 다 돌면서 검사한다.
@@ -196,36 +218,75 @@ void CLogicSimulatorDoc::CheckCircuit()
 		{
 			LineObject* temp_line = searchLine.front();
 			searchLine.pop();
+			int lin = lines.size();
 
-			temp_line->chk = TRUE;
-			for (int i = 0; i < temp_line->connect_lines.size(); i++)
+			/////////////////////////////////////////////////////연결된 선 체크////////////////////////////////////////////////////
+			for (int i = 0; i < lin; i++)
 			{
-				if (temp_line->connect_lines.at(i)->chk != TRUE)
+				LineObject* curline = lines.at(i);
+				if (curline->chk == FALSE)
 				{
-					temp_line->connect_lines.at(i)->state = temp_line->state;
-					temp_line->connect_lines.at(i)->chk = TRUE;
-					searchLine.push(temp_line->connect_lines.at(i));
+					if (curline->line[0] == temp_line->line[0] || curline->line[1] == temp_line->line[0]
+						|| curline->line[0] == temp_line->line[1] || curline->line[1] == temp_line->line[1])
+					{
+						curline->chk = TRUE;
+						curline->state = temp_line->state;
+						searchLine.push(curline);
+					}
 				}
 			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////게이트 입력선 체크///////////////////////////////////////////////////////
+			int gan = gateInfo.size();
+			for (int i = 0; i < gan; i++)
+			{
+				Gate* curgate = gateInfo.at(i);
+				if (curgate->chk == FALSE)
+				{
+					int ip = curgate->inputNum;
+					for (int j = 0; j < ip; j++)
+					{
+						if (curgate->inputCoord[j].first == temp_line->line[0] || curgate->inputCoord[j].first == temp_line->line[1])
+						{
+							curgate->inputCoord[j].second = TRUE;
+						}
+					}
+				}
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			temp_line->chk = TRUE;
 		}
 
+		//////////////////////////////////////////////게이트 출력선 체크///////////////////////////////////////////////////////
 		//순회 해야될 LogicObject-> gate, flipflop, Library Box 세가지. 로직 오브젝트의 입력 선이 모두 방문되었나? && 이미 방문하였는가?
-		for (int i = 0; i < gateInfo.size(); i++)
+		int gan = gateInfo.size();
+		for (int i = 0; i < gan; i++)
 		{
 			Gate* temp_gate = gateInfo.at(i);
-			
-
 			//Gate 방문
-			if (temp_gate->isInputSet() && !temp_gate->chk)
+			if (temp_gate->isInputSet() && temp_gate->chk == FALSE)
 			{
 				temp_gate->chk = TRUE;
 				temp_gate->setOutput();
-				searchLine.push(temp_gate->output_line);
+				CPoint gatpos = temp_gate->outputCoord[0].first;
+
+				int lin = lines.size();
+				for (int i = 0; i < lin; i++)
+				{
+					LineObject* curline = lines.at(i);
+					if (curline->line[0] == gatpos || curline->line[1] == gatpos)
+					{
+						curline->chk = 1;
+						if (temp_gate->outputCoord[0].second == 1)
+							curline->state = ON_SIGNAL;
+						else curline->state = OFF_SIGNAL;
+						searchLine.push(curline);
+					}
+				}
 			}
-
-			
 		}
-
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Outpin 방문 (제일 마지막)
 		for (int i = 0; i < outInfo.size(); i++)
 		{
@@ -238,4 +299,5 @@ void CLogicSimulatorDoc::CheckCircuit()
 			}
 		}
 	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -77,10 +77,7 @@ void LineObject::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 void LineObject::check_connect()
 {
-	for (int i = 0; i < connect_lines.size(); i++)
-	{
-		connect_lines.at(i)->state = this->state;
-	}
+
 }
 
 LineObject::LineObject(int x, int y)
