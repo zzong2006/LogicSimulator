@@ -25,7 +25,7 @@ public:
 	int inputNum, outputNum;			//입력선 개수, 출력선 개수
 	bool output, isSelected;
 
-	BOOL chk;			//알고리즘 돌때 방문했는가?
+	int chk;			//알고리즘 돌때 방문했는가?
 
 	//그림자 그리기
 	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;	

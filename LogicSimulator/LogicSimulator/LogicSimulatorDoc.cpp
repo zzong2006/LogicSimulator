@@ -169,7 +169,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 	for (int i = 0; i < lgn; i++)
 	{
 		LogicObject* curLogic = gateInfo.at(i);
-		curLogic->chk = FALSE;
+		curLogic->chk = 1;
 		int out = curLogic->outputNum, in = curLogic->inputNum;
 
 		//출력핀 초기화
@@ -181,7 +181,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 
 	}
 
-	////////////////////////////////////////////////////////////////출력 시작//////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////출력 시작////////////////////////////////////////////////////////////
 	//입력 Pin/Clock 과 관련된 값만 받기
 	//출력 Pin 같은 경우는 제외해야 한다.
 	int pn = pinInfo.size();
@@ -195,14 +195,12 @@ void CLogicSimulatorDoc::CheckCircuit()
 			LineObject* curline = lines.at(i);
 			if (curline->line[0] == pinos || curline->line[1] == pinos)
 			{
-				//curline->chk = 1;
-				if (pinInfo.at(i)->getOutput() == TRUE)
-				curline->state = ON_SIGNAL;//pinInfo.at(i)->getOutput();
-				else curline->state = OFF_SIGNAL;
+				curline->chk = 1;
+				curline->state = pinInfo.at(i)->getOutput();
 				searchLine.push(curline);
 			}
 		}
-		pinInfo.at(i)->chk = TRUE;
+		pinInfo.at(i)->chk = 1;
 	}
 
 	for (int i = 0; i < clockInfo.size(); i++)
@@ -224,12 +222,12 @@ void CLogicSimulatorDoc::CheckCircuit()
 			for (int i = 0; i < lin; i++)
 			{
 				LineObject* curline = lines.at(i);
-				if (curline->chk == FALSE)
+				if (curline->chk == 0)
 				{
 					if (curline->line[0] == temp_line->line[0] || curline->line[1] == temp_line->line[0]
 						|| curline->line[0] == temp_line->line[1] || curline->line[1] == temp_line->line[1])
 					{
-						curline->chk = TRUE;
+						curline->chk = 1;
 						curline->state = temp_line->state;
 						searchLine.push(curline);
 					}
@@ -242,20 +240,20 @@ void CLogicSimulatorDoc::CheckCircuit()
 			for (int i = 0; i < gan; i++)
 			{
 				Gate* curgate = gateInfo.at(i);
-				if (curgate->chk == FALSE)
+				if (curgate->chk == 0)
 				{
 					int ip = curgate->inputNum;
 					for (int j = 0; j < ip; j++)
 					{
 						if (curgate->inputCoord[j].first == temp_line->line[0] || curgate->inputCoord[j].first == temp_line->line[1])
 						{
-							curgate->inputCoord[j].second = TRUE;
+							curgate->inputCoord[j].second = 1;
 						}
 					}
 				}
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			temp_line->chk = TRUE;
+			temp_line->chk = 1;
 		}
 
 		//////////////////////////////////////////////게이트 출력선 체크///////////////////////////////////////////////////////
@@ -267,7 +265,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 			//Gate 방문
 			if (temp_gate->isInputSet() && temp_gate->chk == FALSE)
 			{
-				temp_gate->chk = TRUE;
+				temp_gate->chk = 1;
 				temp_gate->setOutput();
 				CPoint gatpos = temp_gate->outputCoord[0].first;
 
@@ -278,9 +276,9 @@ void CLogicSimulatorDoc::CheckCircuit()
 					if (curline->line[0] == gatpos || curline->line[1] == gatpos)
 					{
 						curline->chk = 1;
-						if (temp_gate->outputCoord[0].second == 1)
+						//if (temp_gate->outputCoord[0].second == 1)
 							curline->state = ON_SIGNAL;
-						else curline->state = OFF_SIGNAL;
+						//else curline->state = OFF_SIGNAL;
 						searchLine.push(curline);
 					}
 				}
@@ -294,7 +292,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 		
 			if (temp_out->isInputSet() && !temp_out->chk)
 			{
-				temp_out->chk = TRUE;
+				temp_out->chk = 1;
 				temp_out->setOutput();
 			}
 		}
