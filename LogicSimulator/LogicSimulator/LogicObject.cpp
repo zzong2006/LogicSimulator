@@ -90,4 +90,5 @@ LogicObject::LogicObject()
 
 LogicObject::~LogicObject()
 {
+
 }

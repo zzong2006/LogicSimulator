@@ -176,12 +176,6 @@
     <Image Include="res\bmp00002.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\..\..\..\Desktop\image\flipflop.png">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="..\..\..\..\Desktop\image\gate.png">
-      <Filter>리소스 파일</Filter>
-    </Image>
     <Image Include="res\bitmap4.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
@@ -189,6 +183,12 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="res\bmp00003.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\gate.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\flipflop.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

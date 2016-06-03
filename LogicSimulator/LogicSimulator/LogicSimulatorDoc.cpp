@@ -50,6 +50,11 @@ CLogicSimulatorDoc::~CLogicSimulatorDoc()
 
 BOOL CLogicSimulatorDoc::OnNewDocument()
 {
+	for (int i = 0; i < logicInfo.size(); i++)
+		delete logicInfo.at(i);
+	
+	for (int i = 0; i < lines.size(); i++)
+		delete lines.at(i);
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
@@ -69,6 +74,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
+		ar << lines.at(1);
 	}
 	else
 	{

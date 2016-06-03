@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
@@ -249,8 +249,6 @@
     <ResourceCompile Include="LogicSimulator.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Desktop\image\flipflop.png" />
-    <Image Include="..\..\..\..\Desktop\image\gate.png" />
     <Image Include="res\andGate.gif" />
     <Image Include="res\bitmap1.bmp" />
     <Image Include="res\bitmap2.bmp" />
@@ -260,6 +258,8 @@
     <Image Include="res\bmp00001.bmp" />
     <Image Include="res\bmp00002.bmp" />
     <Image Include="res\bmp00003.bmp" />
+    <Image Include="res\flipflop.png" />
+    <Image Include="res\gate.png" />
     <Image Include="res\icon1.ico" />
     <Image Include="res\LogicSimulator.ico" />
     <Image Include="res\LogicSimulatorDoc.ico" />
