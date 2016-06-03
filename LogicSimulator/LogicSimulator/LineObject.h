@@ -27,6 +27,7 @@ public:
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);		//이동할때 필요한 shadow
 	void draw_main(Gdiplus::Graphics* gp);
 
+	
 	void check_connect();
 
 	BOOL Is_match_IineCoord(CPoint src);

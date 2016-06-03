@@ -105,6 +105,9 @@ void CCircuitView::DrawImage(CDC *pDC)
 		//선택 됬다면 표시해줌
 		if (pDoc->logicInfo.at(i)->isSelected)
 			pDoc->logicInfo.at(i)->showSelected(&graphics);
+		if (pDoc->logicInfo.at(i)->label != "") {
+			pDoc->logicInfo.at(i)->showLabel(&graphics);
+		}
 	}
 	
 	//현재 메뉴에서 아이템 선택한 상태라면 shadowing 그리기

@@ -33,6 +33,7 @@ public:
 
 	CMFCPropertyGridCtrl m_pGridInfo;
 	void InitializePropGrid(LogicObject *);
+	afx_msg LRESULT OnPropertyChanged(WPARAM wParam, LPARAM lParam);
 };
 
 

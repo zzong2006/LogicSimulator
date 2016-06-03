@@ -225,3 +225,4 @@ void CMenuView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 
 	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
 }
+

@@ -4,9 +4,6 @@
     <ClCompile Include="LogicObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="LineObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="LogicSimulatorView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -67,15 +64,15 @@
     <ClCompile Include="PropertyView.cpp">
       <Filter>MainView</Filter>
     </ClCompile>
+    <ClCompile Include="LineObject.cpp">
+      <Filter>Wiring</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="andGate.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="LogicSimulator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LineObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="LogicObject.h">
@@ -143,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="PropertyView.h">
       <Filter>MainView</Filter>
+    </ClInclude>
+    <ClInclude Include="LineObject.h">
+      <Filter>Wiring</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
