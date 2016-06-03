@@ -18,6 +18,12 @@
 #define JK_FF						20031
 #define T_FF						20032
 
+#define EAST						777
+#define SOUTH						778
+#define WEST						779
+#define NORTH						780
+
+
 #define GATE_TYPE					30000
 #define WIRING_TYPE				30001
 #define FLIPFLOP_TYPE			30002

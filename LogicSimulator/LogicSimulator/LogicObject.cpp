@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "LogicObject.h"
 #include "name_repo.h"
+#include "CircuitView.h"
+#include "LogicSimulatorDoc.h"
+#include "MainFrm.h"
 
 #define UNIT 10
 
@@ -38,7 +41,129 @@ void LogicObject::setLabel(CString input)
 
 void LogicObject::setFacing(CString input)
 {
-	facing = input;
+	if (input == "East") 
+		facing = EAST;
+	else if (input == "West") 
+		facing = WEST;
+	else if (input == "South") 
+		facing = SOUTH;
+	else if (input == "North") 
+		facing = NORTH;
+
+}
+
+void LogicObject::set_Coord_ByFacing(CString input)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+
+
+	switch (objectType) {
+	case GATE_TYPE:
+		if (objectName != NOT_GATE) {
+			switch (facing)
+			{
+			case EAST:
+				inputCoord[0].x = inputCoord[1].x= top.x;
+				inputCoord[0].y = top.y + 2 * UNIT;
+				inputCoord[1].y = top.y + 4 * UNIT;
+				outputCoord.x = bottom.x;
+				outputCoord.y = bottom.y - 3 * UNIT;
+				break;
+			case WEST:
+				inputCoord[0].x = inputCoord[1].x = bottom.x;
+				inputCoord[0].y = bottom.y - 2 * UNIT;
+				inputCoord[1].y = bottom.y - 4 * UNIT;
+				outputCoord.x = top.x;
+				outputCoord.y = top.y + 3 * UNIT;
+				break;
+			case SOUTH:
+				inputCoord[0].y = inputCoord[1].y = top.y;
+				inputCoord[0].x = top.x + 2 * UNIT;
+				inputCoord[1].x = top.x + 4 * UNIT;
+				outputCoord.y = bottom.y;
+				outputCoord.x = bottom.x - 3 * UNIT;
+				break;
+			case NORTH:
+				inputCoord[0].y = inputCoord[1].y = bottom.y;
+				inputCoord[0].x = bottom.x - 2 * UNIT;
+				inputCoord[1].x = bottom.x - 4 * UNIT;
+				outputCoord.x = top.x + 3 *UNIT;
+				outputCoord.y = top.y ;
+				break;
+			}
+		}
+		else {
+			switch (facing)
+			{
+			case EAST:
+				inputCoord[0].x = top.x;
+				inputCoord[0].y = top.y - 2 * UNIT;
+				outputCoord.x = bottom.x;
+				outputCoord.y = bottom.y - 2  * UNIT;
+				break;
+			case WEST:
+				inputCoord[0].x = bottom.x;
+				inputCoord[0].y = bottom.y - 2 * UNIT;
+				outputCoord.x = top.x;
+				outputCoord.y = top.y +2  * UNIT;
+				break;
+			case SOUTH:
+				inputCoord[0].x = top.x + 2 * UNIT;
+				inputCoord[0].y = top.y;
+				outputCoord.x = bottom.x - 2 * UNIT;
+				outputCoord.y = bottom.y;
+				break;
+			case NORTH:
+				inputCoord[0].x = bottom.x - 2 * UNIT;
+				inputCoord[0].y = bottom.y;
+				outputCoord.x = top.x + 2 * UNIT;
+				outputCoord.y = top.y;
+				break;
+			}
+		}
+		break;
+	case WIRING_TYPE:
+		switch (facing)
+		{
+		case EAST:
+			inputCoord[0].x = inputCoord[1].x = top.x;
+			inputCoord[0].y = top.y - 2 * UNIT;
+			inputCoord[1].y = top.y - 4 * UNIT;
+			outputCoord.x = bottom.x;
+			outputCoord.y = bottom.y - 3 * UNIT;
+			break;
+		case WEST:
+			break;
+		case SOUTH:
+			break;
+		case NORTH:
+			break;
+		}
+		break;
+	case FLIPFLOP_TYPE:
+		break;
+	}
+	//로직 오브젝트의 입출력 좌표를 이용해
+	//이미 현재 오브젝트에 상속된 line의 좌표를 끊고 새로 만든다.
+
+	for (int i = 0; i < inputNum; i++) {
+		this->input_line[i] = new LineObject(this->inputCoord[i]);
+		pDoc->lines.push_back(input_line[i]);
+	}
+		
+
+	this->output_line = new LineObject(this->outputCoord);
+	pDoc->lines.push_back(output_line);
+}
+
+void LogicObject::move_Coord(long &x, long &change)
+{
+	if ((x > 0 && change > 0) || (x <0 && change <0))
+		x = change; 
+	if (x > 0 && change < 0)
+		x += change;
+	if (x < 0 && change > 0)
+		x -= change;
 }
 
 void LogicObject::set_outputCoord(int x, int y)
@@ -53,7 +178,7 @@ void LogicObject::set_inputCoord(int x, int y)
 	case GATE_TYPE:
 		if (objectName == NOT_GATE)
 		{
-			inputCoord[0].x = x - 3 * UNIT;
+			inputCoord[0].x = x - 4 * UNIT;
 			inputCoord[0].y = y;
 		}else {
 			inputCoord[0].x = x - 6 * UNIT;
@@ -103,7 +228,7 @@ int LogicObject::isInputSet() const
 LogicObject::LogicObject()
 {
 	output = 0;
-	facing = _T("East");
+	facing = EAST;
 }
 
 

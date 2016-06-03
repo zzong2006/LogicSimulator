@@ -13,14 +13,14 @@ void notGate::draw_main(Gdiplus::Graphics* gp)
 	imAtt.SetColorKey(Gdiplus::Color(255, 255, 255), Gdiplus::Color(255, 255, 255), Gdiplus::ColorAdjustTypeBitmap);
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
-	if (facing == _T("East"))
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 30, 30), 30 * 0, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
-	else if (facing == _T("South"))
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 30, 30), 30 * 1, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
-	else if (facing == _T("West"))
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 30, 30), 30 * 2, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
-	else if (facing == _T("North"))
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 30, 30), 30 * 3, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	 if (facing == EAST)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 40, 40), 40 * 0, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else  if (facing == SOUTH)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 40, 40), 40 * 1, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else  if (facing == WEST)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 40, 40), 40 * 2, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	else  if (facing == NORTH)
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 40, 40), 40 * 3, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
 	delete pBitmap;
 }
@@ -35,15 +35,15 @@ void notGate::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
 
-	gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 3 * UNIT, (int)(outputCoord.y -1.5 * UNIT), 30, 30), 30 * 0, 60 * 5, 30, 30, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+	gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord.x - 4 * UNIT, (int)(outputCoord.y -2 * UNIT), 40, 40), 40 * 0, 60 * 5, 40, 40, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
 	delete pBitmap;
 }
 
 void notGate::set_Coord_From_outC(int x, int y)
 {
-	top.x = x - 3 * UNIT; top.y = y - (int)(1.5 * UNIT);
-	bottom.x = x; bottom.y = y + (int)(1.5 * UNIT);
+	top.x = x - 4 * UNIT; top.y = y - (int)(2 * UNIT);
+	bottom.x = x; bottom.y = y + (int)(2 * UNIT);
 }
 
 void notGate::turn()

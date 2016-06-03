@@ -89,8 +89,25 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.SetVSDotNetLook();
 	m_pGridInfo.EnableDescriptionArea(FALSE);
 
+	CString labelName;
+
+	switch (tempLO->facing) {
+	case EAST:
+		labelName = _T("East");
+		break;
+	case WEST:
+		labelName = _T("West");
+		break;
+	case SOUTH:
+		labelName = _T("South");
+		break;
+	case NORTH:
+		labelName = _T("North");
+		break;
+	}
+
 	CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("Information"));
-	CMFCPropertyGridProperty* Label = new CMFCPropertyGridProperty(_T("Facing"), tempLO->facing,_T("설명"), 1);
+	CMFCPropertyGridProperty* Label = new CMFCPropertyGridProperty(_T("Facing"), labelName,_T("설명"), 1);
 
 	pGroupInfo->AddSubItem(new CMFCPropertyGridProperty(_T("Label"), tempLO->label, 0));
 
@@ -123,6 +140,7 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 			break;
 		case 1:			//Facing
 			pDoc->currObject.at(0)->setFacing(pProperty->GetValue());
+			pDoc->currObject.at(0)->set_Coord_ByFacing(pProperty->GetValue());
 			break;
 		}
 	}

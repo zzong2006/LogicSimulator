@@ -17,7 +17,8 @@ protected:
 				
 
 public:
-	CString label, facing;
+	CString label;
+	int facing;
 	int objectType, objectName;
 
 	int inputNum, outputNum;			//입력선 개수, 출력선 개수
@@ -40,7 +41,14 @@ public:
 	void showLabel(Gdiplus::Graphics* gp);
 	//라벨 이름 설정하기
 	void setLabel(CString input);
+	//바라보는쪽 설정하기
 	void setFacing(CString input);
+	//바라보는쪽에 따라 input/output좌표 설정
+	void set_Coord_ByFacing(CString input);
+	//좌표 변경할때 스크린 좌표계에 맞게 변경
+	void move_Coord(long & x, long & change);
+	
+
 	void set_outputCoord(int x, int y);		//출력 좌표 설정
 	void set_inputCoord(int x, int y);		//입력 좌표 설정
 	
@@ -52,8 +60,8 @@ public:
 	//현재 연결된 선들이 모두 방문된 상태인가를 체크함
 	int isInputSet() const;
 
-	LineObject* input_line[2], *output_line;
-	POINT inputCoord[2], outputCoord;
+	LineObject* input_line[10], *output_line;
+	POINT inputCoord[10], outputCoord;
 
 	LogicObject();
 	virtual ~LogicObject();
