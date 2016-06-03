@@ -46,16 +46,6 @@ void notGate::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + (int)(2 * UNIT);
 }
 
-void notGate::turn()
-{
-
-}
-
-void notGate::set_output()
-{
-	output_line->state = !(input_line[0]->state);
-}
-
 notGate::notGate() : Gate()
 {
 	inputNum = 1;

@@ -58,11 +58,6 @@ void Gate::setOutput()
 	}
 }
 
-int Gate::getOutput()
-{
-	return 0;
-}
-
 void Gate::draw_main(Gdiplus::Graphics* gp)
 {
 	Gdiplus::Point andPts[4];

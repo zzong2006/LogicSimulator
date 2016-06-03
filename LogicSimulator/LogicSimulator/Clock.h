@@ -15,8 +15,7 @@ public:
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	void draw_main(Gdiplus::Graphics* gp);
 	void set_Coord_From_outC(int x, int y);
-	void turn();
-	void toggleOutput();
+
 	void moveCycle();	//시뮬레이터 시작후 사이클을 돌린다.
 
 	Clock();
