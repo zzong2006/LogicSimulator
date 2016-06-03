@@ -47,12 +47,6 @@ void orGate::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 3 * UNIT;
 }
 
-void orGate::turn()
-{
-
-}
-
-
 orGate::orGate() : Gate()
 {
 	inputNum = 2;

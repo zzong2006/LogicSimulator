@@ -41,23 +41,9 @@ void Out::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 1 * UNIT;
 }
 
-void Out::turn()
-{
-}
-
-void Out::toggleOutput()
-{
-	output = !output;
-}
-
 void Out::setOutput()
 {
 	output = input_line[0]->state;
-}
-
-int Out::getOutput()
-{
-	return output;
 }
 
 Out::Out() : Wiring()

@@ -45,17 +45,6 @@ void Pin::set_Coord_From_outC(int x, int y)
 
 }
 
-void Pin::turn()
-{
-
-}
-
-void Pin::toggleOutput()
-{
-	output = !output;
-}
-
-
 Pin::Pin() : Wiring()
 {
 	width = 2;

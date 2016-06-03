@@ -13,8 +13,6 @@ protected:
 	int width, height;
 
 	bool input[2];
-	int direct;				//게이트 방향
-				
 
 public:
 	CString label;
@@ -30,8 +28,7 @@ public:
 	virtual void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p) = 0;	
 	//실제로 그리기
 	virtual void draw_main(Gdiplus::Graphics* gp) = 0;		
-	//객체 방향 지정하여 돌리기
-	virtual void turn() = 0;						
+	
 	//출력 좌표를 이용하여 로직 객체 전체(top/bottom)의 좌표를 정함.
 	virtual void set_Coord_From_outC(int x, int y) = 0;	
 

@@ -97,7 +97,6 @@ void CCircuitView::DrawImage(CDC *pDC)
 	CRect rect;
 	GetClientRect(&rect);
 
-	pDoc->CheckCircuit();
 
 	for (int i = 0; i < pDoc->logicInfo.size(); i++)
 	{
@@ -383,6 +382,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 	}
+	pDoc->CheckCircuit();
 
 	Invalidate();
 
@@ -588,6 +588,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 		object = OBJECT;
 	}
+	pDoc->CheckCircuit();
 
 	Invalidate();
 
@@ -665,6 +666,7 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 	for (int i = 0; i < pDoc->clockInfo.size(); i++) {
 		pDoc->clockInfo.at(i)->moveCycle();
 	}
+	pDoc->CheckCircuit();
 
 	Invalidate();
 	CView::OnTimer(nIDEvent);
