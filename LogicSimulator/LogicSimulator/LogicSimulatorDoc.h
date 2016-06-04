@@ -16,6 +16,37 @@
 #include "Out.h"
 #include "DFlipFlop.h"
 
+class Action
+{
+public :
+	Action(LineObject* line)
+	{
+		lines.push_back(line);
+		Type = LINE;
+	}
+	Action(LineObject** line)
+	{
+		lines.push_back(line[0]);
+		lines.push_back(line[1]);
+		Type = LINE;
+	}
+	Action(LogicObject* clock)
+	{
+		logicInfo.push_back(clock);
+		Type = OBJECT;
+	}
+	Action()
+	{
+
+	}
+	enum{
+		line_add
+	};
+	int Type;
+	std::vector <LogicObject *> logicInfo;
+	std::vector <LineObject *> lines;
+};
+
 class CLogicSimulatorDoc : public CDocument
 {
 protected: // serialization에서만 만들어집니다.
@@ -38,11 +69,21 @@ public:
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
 	std::vector <Out *> outInfo;
+
 	int objectType;
 	int objectName;
 
 	int gateNum;
 	LogicObject* temp;
+
+	// undo/redo
+	CList <Action> mUndo;
+	CList <Action> mRedo;
+
+	BOOL CanUndo();
+	BOOL CanRedo();
+	void Undo();
+	void Redo();
 // 작업입니다.
 public:
 

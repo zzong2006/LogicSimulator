@@ -33,3 +33,6 @@
 
 #define LINE						100
 #define OBJECT						101
+
+#define MAX_UNDO					10
+#define MAX_REDO					10

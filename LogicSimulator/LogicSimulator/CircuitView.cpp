@@ -49,6 +49,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_COMMAND(ID_ON_SIMULATE, &CCircuitView::OnOnSimulate)
 	ON_UPDATE_COMMAND_UI(ID_ON_SIMULATE, &CCircuitView::OnUpdateOnSimulate)
 	ON_WM_TIMER()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 
@@ -187,6 +188,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				newline->line[0] = curline->line[1];
 				curline->line[1] = cur_pos;
 				pDoc->lines.push_back(newline);
+				pDoc->mUndo.AddHead(Action(newline));
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////
 			object = LINE;
@@ -273,6 +275,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					pDoc->logicInfo.push_back(Gtemp);
 					pDoc->gateInfo.push_back(Gtemp);
+					pDoc->mUndo.AddHead(Action(temp));
 				}
 			}
 			else if (pDoc->objectType == WIRING_TYPE)
@@ -311,7 +314,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					//출력핀은 출력 선이 없다.
 					//7 seg도 마찬가지임.
-
+					pDoc->mUndo.AddHead(Action(temp));
 					pDoc->logicInfo.push_back(temp);
 
 				}
@@ -412,6 +415,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		cur_line = (int)pDoc->lines.size() + 1;
 		pDoc->lines.push_back(temp_line[0]);
 		pDoc->lines.push_back(temp_line[1]);
+		pDoc->mUndo.AddHead(Action(temp_line));
 
 
 	}
@@ -658,6 +662,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 						newline->line[0] = curline->line[1];
 						curline->line[1] = cur_pos;
 						pDoc->lines.push_back(newline);
+						pDoc->mUndo.AddHead(Action(newline));
 					}
 					///////////////////////////////////////////////////////////////////////////////////////////////////////
 					object = LINE;
@@ -760,3 +765,33 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 	CView::OnTimer(nIDEvent);
 }
 
+
+void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	//////////////////////////CONTROL Z예약되어 있음////////////////////////////////
+	if (GetKeyState(VK_CONTROL) & 0x8000)
+	{
+		switch (nChar)
+		{
+		case 'A' :
+			if (pDoc->CanUndo())
+			pDoc->Undo();
+			Beep(800, 50);
+			break;
+		case 'Q' :
+			if (pDoc->CanRedo())
+			pDoc->Redo();
+			Beep(300, 50);
+			break;
+
+		}
+
+	}
+
+	Invalidate();
+
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}

@@ -312,3 +312,54 @@ void CLogicSimulatorDoc::CheckCircuit()
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+
+BOOL CLogicSimulatorDoc::CanUndo()
+{
+	return (mUndo.GetCount() > 0);
+}
+
+void CLogicSimulatorDoc::Undo()
+{
+	Action temp;
+	temp = mUndo.RemoveHead();
+	int lin = temp.lines.size();
+
+	switch (temp.Type)
+	{
+	case LINE :
+		for (int i = 0; i < lin; i++)
+		{
+			lines.pop_back();
+		}
+		break;
+	case OBJECT :
+		logicInfo.pop_back();
+		break;
+	}
+	mRedo.AddHead(temp);
+}
+
+BOOL CLogicSimulatorDoc::CanRedo()
+{
+	return (mRedo.GetCount() > 0);
+}
+
+void CLogicSimulatorDoc::Redo()
+{
+	Action temp;
+	temp = mRedo.RemoveHead();
+	int lin = temp.lines.size();
+	switch (temp.Type)
+	{
+	case LINE : 
+		for (int i = 0; i < lin; i++)
+		{
+			lines.push_back(temp.lines.at(i));
+		}
+		break;
+	case OBJECT:
+		logicInfo.push_back(temp.logicInfo.at(0));
+		break;
+	}
+	mUndo.AddHead(temp);
+}
