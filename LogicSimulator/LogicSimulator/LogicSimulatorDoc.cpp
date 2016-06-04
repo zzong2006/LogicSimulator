@@ -321,14 +321,41 @@ BOOL CLogicSimulatorDoc::CanUndo()
 void CLogicSimulatorDoc::Undo()
 {
 	Action temp;
+	CPoint stp, edp;
+
 	temp = mUndo.RemoveHead();
 	int lin = temp.lines.size();
+	int ln = lines.size();
 
 	switch (temp.Type)
 	{
 	case LINE :
+		stp = CPoint(temp.lines.at(0)->line[0]);
+		if (lin > 1)
+			edp = CPoint(temp.lines.at(1)->line[1]);
+
 		for (int i = 0; i < lin; i++)
 		{
+
+			////////////////////////////////////////////////병합///////////////////////////////////////////////////////
+			for (int j = 1; j < ln - 1; j++)
+			{
+				if (lines.at(j)->line[0] == stp && lines.at(j - 1)->line[1] == stp &&
+					(lines.at(j)->shape == lines.at(j - 1)->shape) && lines.at(j)->shape != temp.lines.at(i)->shape)
+				{
+					lines.at(j)->line[0] = lines.at(j - 1)->line[0];
+					lines.erase(lines.begin() + j - 1);
+					ln--;
+				}
+				if (lines.at(j)->line[0] == edp && lines.at(j - 1)->line[1] == edp &&
+					(lines.at(j)->shape == lines.at(j - 1)->shape) && lines.at(j)->shape != temp.lines.at(i)->shape)
+				{
+					lines.at(j)->line[0] = lines.at(j - 1)->line[0];
+					lines.erase(lines.begin() + j - 1);
+					ln--;
+				}
+			}
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			lines.pop_back();
 		}
 		break;
@@ -347,13 +374,59 @@ BOOL CLogicSimulatorDoc::CanRedo()
 void CLogicSimulatorDoc::Redo()
 {
 	Action temp;
+	CPoint stp, edp;
+
 	temp = mRedo.RemoveHead();
 	int lin = temp.lines.size();
+	int ln = lines.size();
+
 	switch (temp.Type)
 	{
 	case LINE : 
+		stp = CPoint(temp.lines.at(0)->line[0]);
+		if (lin > 1)
+		edp = CPoint(temp.lines.at(1)->line[1]);
+
 		for (int i = 0; i < lin; i++)
 		{
+			////////////////////////////////////////////////다시 쪼개기///////////////////////////////////////////////////////
+			for (int i = 0; i < lines.size(); i++)
+			{
+				if (lines.at(i)->Is_match_IineCoord(stp))
+				{
+					//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
+					LineObject* curline = lines.at(i);
+					if (curline->line[0] != stp && curline->line[1] != stp)
+					{
+						LineObject* newline = new LineObject(stp);
+
+						newline->line[0] = curline->line[0];
+						newline->line[1] = stp;
+						curline->line[0] = stp;
+						newline->shape = curline->shape;
+
+						lines.insert(lines.begin() + i, newline);
+					}
+				}
+
+				if (lines.at(i)->Is_match_IineCoord(edp))
+				{
+					LineObject* curline = lines.at(i);
+					if (curline->line[0] != edp && curline->line[1] != edp)
+					{
+						LineObject* newline = new LineObject(edp);
+
+						newline->line[0] = curline->line[0];
+						newline->line[1] = edp;
+						curline->line[0] = edp;
+						newline->shape = curline->shape;
+
+						lines.insert(lines.begin() + i, newline);
+					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////
+				}
+			}
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			lines.push_back(temp.lines.at(i));
 		}
 		break;

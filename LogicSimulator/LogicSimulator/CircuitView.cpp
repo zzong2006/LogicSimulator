@@ -175,6 +175,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	//////////////////////////////////////////////////////////////////////분기 검사////////////////////////////////////////////////////////////////////////////
 	int ln = pDoc->lines.size();
+
 	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
@@ -185,27 +186,20 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 			{
 				LineObject* newline = new LineObject(cur_pos);
-				newline->line[0] = curline->line[1];
-				curline->line[1] = cur_pos;
-				pDoc->lines.push_back(newline);
-				pDoc->mUndo.AddHead(Action(newline));
+
+				newline->line[0] = curline->line[0];
+				newline->line[1] = cur_pos;
+				curline->line[0] = cur_pos;
+				newline->shape = curline->shape;
+
+				pDoc->lines.insert(pDoc->lines.begin() + i, newline);
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 			object = LINE;
 			break;
 		}
 	}
-	/////////////////////////////점 지우기////////////////////////////////////
-	ln = pDoc->lines.size();
-	for (int i = 0; i < ln; i++)
-	{
-		if (pDoc->lines.at(i)->line[0] == pDoc->lines.at(i)->line[1])
-		{
-			pDoc->lines.erase(pDoc->lines.begin() + i);
-			ln--;
-		}
-	}
-	/////////////////////////////////////////////////////////////////////////
 
 
 	//논리 오브젝트들 중에서 선 분기 가능검사
@@ -415,9 +409,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		cur_line = (int)pDoc->lines.size() + 1;
 		pDoc->lines.push_back(temp_line[0]);
 		pDoc->lines.push_back(temp_line[1]);
-		pDoc->mUndo.AddHead(Action(temp_line));
-
-
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	pDoc->CheckCircuit();
@@ -533,7 +524,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 			if (sp == cp)
 			{
 				temp_line[0]->line[1] = dec;
-
 			}
 			else
 			{
@@ -596,7 +586,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 				}
 			}
 		}
-
 	}
 	
 	if (nothingSearched && pDoc->CanBeDivided) {
@@ -642,11 +631,42 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	dec_x = Rounding(point.x);
 	dec_y = Rounding(point.y);
 	CPoint cur_pos(dec_x, dec_y);
+
 	//그리기를 마쳤을때 하는 behavior
 	if (object == LINE)
 	{
+		LineObject* temp_line[2];				//클릭할 때 만들어둔 선 두개 받기
+		int curline = pDoc->lines.size() - 1;
+		temp_line[0] = pDoc->lines.at(cur_line - 1);
+		temp_line[1] = pDoc->lines.at(cur_line);
 		//로직 오브젝트 검색 삭제
+
 		int ln = pDoc->lines.size();
+
+		////////////////////////////////선 속성 추가 //////////////////////////////
+		if (temp_line[0]->line[1].x == temp_line[0]->line[0].x)
+			temp_line[0]->shape = VERTICAL;
+		else
+			temp_line[0]->shape = HORIZONTAL;
+
+		if (temp_line[0]->shape == HORIZONTAL)
+			temp_line[1]->shape = VERTICAL;
+		else temp_line[1]->shape = HORIZONTAL;
+		/////////////////////////////////////////////////////////////////////////
+
+		/////////////////////////////점 지우기////////////////////////////////////
+		Action mk_line = Action(temp_line);
+		for (int i = 0; i < 2; i++)
+		{
+			if (temp_line[i]->line[0] == temp_line[i]->line[1])
+			{
+				pDoc->lines.pop_back();
+				mk_line.lines.pop_back();
+			}
+		}
+		pDoc->mUndo.AddHead(mk_line);
+		/////////////////////////////////////////////////////////////////////////
+
 		for (int i = 0; i < ln; i++)
 		{
 			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
@@ -659,10 +679,13 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 					if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 					{
 						LineObject* newline = new LineObject(cur_pos);
-						newline->line[0] = curline->line[1];
-						curline->line[1] = cur_pos;
-						pDoc->lines.push_back(newline);
-						pDoc->mUndo.AddHead(Action(newline));
+
+						newline->line[0] = curline->line[0];
+						newline->line[1] = cur_pos;
+						curline->line[0] = cur_pos;
+
+						newline->shape = curline->shape;
+						pDoc->lines.insert(pDoc->lines.begin() + i, newline);
 					}
 					///////////////////////////////////////////////////////////////////////////////////////////////////////
 					object = LINE;
@@ -670,17 +693,6 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				}
 			}
 		}
-		/////////////////////////////점 지우기////////////////////////////////////
-		ln = pDoc->lines.size();
-		for (int i = 0; i < ln; i++)
-		{
-			if (pDoc->lines.at(i)->line[0] == pDoc->lines.at(i)->line[1])
-			{
-				pDoc->lines.erase(pDoc->lines.begin() + i);
-				ln--;
-			}
-		}
-		/////////////////////////////////////////////////////////////////////////
 		object = OBJECT;
 	}
 	pDoc->CheckCircuit();
@@ -780,15 +792,15 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			if (pDoc->CanUndo())
 			pDoc->Undo();
 			Beep(800, 50);
+			Invalidate();
 			break;
 		case 'Q' :
 			if (pDoc->CanRedo())
 			pDoc->Redo();
 			Beep(300, 50);
+			Invalidate();
 			break;
-
 		}
-
 	}
 
 	Invalidate();

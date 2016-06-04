@@ -36,3 +36,6 @@
 
 #define MAX_UNDO					10
 #define MAX_REDO					10
+
+#define VERTICAL					0
+#define HORIZONTAL					1
