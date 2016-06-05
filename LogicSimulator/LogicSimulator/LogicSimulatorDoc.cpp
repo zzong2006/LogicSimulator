@@ -586,9 +586,64 @@ void CLogicSimulatorDoc::Redo()
 
 void CLogicSimulatorDoc::OnFileSave()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	AfxMessageBox(_T("123"));
+	CFileDialog dlg(FALSE, L"circ", L"default.circ", OFN_HIDEREADONLY| OFN_OVERWRITEPROMPT, L"LogicSimulator Files (*.circ)|*.circ|All Files (*.*)|*.*|");
 
+	dlg.m_ofn.lpstrTitle = L"파일을 저장하세요.";
+	dlg.m_ofn.lStructSize = sizeof(OPENFILENAME) + 12;
+
+	if (dlg.DoModal() == IDOK) {
+		CString Temp;
+		Temp.Format(L"%s", dlg.GetPathName());
+
+		HANDLE hFile;
+		DWORD dwRead;
+		DWORD dwWritten;
+
+		//파일 저장 시작
+		CString con;
+
+		hFile = CreateFile(Temp, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(hFile, L"FWEFEW", sizeof(int), &dwRead, NULL);
+
+		CloseHandle(hFile);
+
+		//CString Temp;
+		//Temp.Format(_T("%s"), dlg.GetPathName());
+
+		//int data1 = 5;
+		//double data2 = 12.3;
+		//CString data3 = _T("문자열입니다!!!!");
+
+		//CFile  file;
+		//// 파일을 쓰기모드로 연다.
+		//if (file.Open(Temp, CFile::modeCreate | CFile::modeWrite)) {
+		//	// 정상적으로 열린 파일을 CArchive 에 저장하기 모드로 전달한다.
+		//	CArchive ar(&file, CArchive::store);
+
+		//	try {
+		//		// 상수를 저장한다.
+		//		ar << 123;
+		//		// int 형 데이터를 저장한다.
+		//		ar << data1;
+		//		// double 형 데이터를 저장한다.
+		//		ar << data2;
+		//		// 문자열 데이터를 저장한다. char 배열은 << 연산자를 사용할 수 없다.
+		//		ar << data3;
+		//	}
+		//	catch (CFileException *fe) {
+		//		// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+		//		fe->ReportError();
+		//	}
+		//	catch (CArchiveException *ae) {
+		//		// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+		//		ae->ReportError();
+		//	}
+		//	// CArchive 를 닫는다.
+		//	ar.Close();
+		//	// 파일을 닫는다.
+		//	file.Close();
+	}
 
 }
 
