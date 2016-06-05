@@ -89,7 +89,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.SetVSDotNetLook();
 	m_pGridInfo.EnableDescriptionArea(FALSE);
 
-	CString labelName;
+	CString labelName, trigger;
 
 	switch (tempLO->facing) {
 	case EAST:
@@ -107,6 +107,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	}
 
 	CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("Information"));
+
 	CMFCPropertyGridProperty* Label = new CMFCPropertyGridProperty(_T("Facing"), labelName,_T("설명"), 1);
 
 	pGroupInfo->AddSubItem(new CMFCPropertyGridProperty(_T("Label"), tempLO->label, 0));
@@ -117,6 +118,21 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	Label->AddOption(_T("South"));
 	Label->AllowEdit(FALSE);
 	pGroupInfo->AddSubItem(Label);
+
+	if (tempLO->objectType == FLIPFLOP_TYPE)
+	{
+		FlipFlop* FFtemp = (FlipFlop *) tempLO;
+		if (FFtemp->GetTrigger())
+			trigger = _T("Rising Edge");
+		else trigger = _T("Falling Edge");
+
+		CMFCPropertyGridProperty* triggerEdge = new CMFCPropertyGridProperty(_T("Trigger"), trigger, _T("설명"), 2);
+	
+		triggerEdge->AddOption(_T("Rising Edge"));
+		triggerEdge->AddOption(_T("Falling Edge"));
+
+		pGroupInfo->AddSubItem(triggerEdge);
+	}
 
 	m_pGridInfo.AddProperty(pGroupInfo);
 	
@@ -141,6 +157,10 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 		case 1:			//Facing
 			pDoc->currObject.at(0)->setFacing(pProperty->GetValue());
 			pDoc->currObject.at(0)->set_Coord_ByFacing(pProperty->GetValue());
+			break;
+		case 2:
+			FlipFlop *FFtemp = (FlipFlop*) pDoc->currObject.at(0);
+			FFtemp->SetTrigger(pProperty->GetValue());
 			break;
 		}
 	}

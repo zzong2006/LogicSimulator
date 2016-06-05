@@ -60,7 +60,7 @@ void LineObject::draw_main(Gdiplus::Graphics *gp)
 		p->SetColor(Gdiplus::Color(0, 250, 0));
 		break;
 	default:
-		p->SetColor(Gdiplus::Color(255, 40, 60));
+		p->SetColor(Gdiplus::Color(120, 120, 124));
 		break;
 
 	}

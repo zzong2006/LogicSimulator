@@ -318,6 +318,7 @@ void CLogicSimulatorDoc::Dump(CDumpContext& dc) const
 void CLogicSimulatorDoc::CheckCircuit()
 {
 	std::queue <LineObject *> searchLine;
+	LogicObject* curLogic;
 
 	//초기화
 	for (int i = 0; i < lines.size(); i++)
@@ -329,15 +330,12 @@ void CLogicSimulatorDoc::CheckCircuit()
 	//게이트 ,라이브러리 박스, 출력핀, 플립플롭
 	for (int i = 0; i < gateInfo.size(); i++)
 	{
-		LogicObject* curLogic = gateInfo.at(i);
+		curLogic = gateInfo.at(i);
 
 		curLogic->chk = 0;
 
 		int out = curLogic->outputNum, in = curLogic->inputNum;
 
-		//출력핀 초기화
-		for (int i = 0; i < 1; i++)
-			curLogic->outputCoord[i].second = -1;
 		//입력핀 초기화
 		for (int i = 0; i < in; i++)
 			curLogic->inputCoord[i].second = -1;			//input chk 초기화
@@ -345,15 +343,25 @@ void CLogicSimulatorDoc::CheckCircuit()
 
 	for (int i = 0; i < outInfo.size(); i++)
 	{
-		LogicObject* curLogic = outInfo.at(i);
+		curLogic = outInfo.at(i);
 
 		curLogic->chk = 0;
 
 		int out = curLogic->outputNum, in = curLogic->inputNum;
 
-		//출력핀 초기화
-		for (int i = 0; i < out; i++)
-			curLogic->outputCoord[i].second = -1;
+		//입력핀 초기화
+		for (int i = 0; i < in; i++)
+			curLogic->inputCoord[i].second = -1;			//input chk 초기화
+	}
+
+	for (int i = 0; i < FFInfo.size(); i++)
+	{
+		curLogic = FFInfo.at(i);
+
+		curLogic->chk = 0;
+
+		int out = curLogic->outputNum, in = curLogic->inputNum;
+
 		//입력핀 초기화
 		for (int i = 0; i < in; i++)
 			curLogic->inputCoord[i].second = -1;			//input chk 초기화
@@ -406,10 +414,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 			LineObject* temp_line = searchLine.front();
 			searchLine.pop();
 			
-
-			//게이트 ,라이브러리 박스, 출력핀, 플립플롭
-
-			//////////////////////////연결된 선 체크////////////////////////
+			/////////연결된 선 체크////////////////////////
 			int lin = (int)lines.size();
 			for (int i = 0; i < lin; i++)
 			{
@@ -425,6 +430,9 @@ void CLogicSimulatorDoc::CheckCircuit()
 					}
 				}
 			}
+
+
+			//게이트 ,라이브러리 박스, 출력핀, 플립플롭
 
 			for (int i = 0; i < gateInfo.size(); i++)
 			{
@@ -442,6 +450,22 @@ void CLogicSimulatorDoc::CheckCircuit()
 				}
 			}
 					
+			for (int i = 0; i < FFInfo.size(); i++)
+			{
+				FlipFlop* curFF = FFInfo.at(i);
+				if (curFF->chk == 0)
+				{
+					int ip = curFF->inputNum;
+					for (int j = 0; j < ip; j++)
+					{
+						if (curFF->inputCoord[j].first == temp_line->line[0] || curFF->inputCoord[j].first == temp_line->line[1])
+						{
+							curFF->inputCoord[j].second = temp_line->state;
+						}
+					}
+				}
+			}
+
 			for (int i = 0; i < outInfo.size(); i++)
 			{
 				Out* curout = outInfo.at(i);
@@ -450,7 +474,6 @@ void CLogicSimulatorDoc::CheckCircuit()
 					int ip = curout->inputNum;
 					for (int j = 0; j < ip; j++)
 					{
-						TRACE(L"일치한다\n");
 						if (curout->inputCoord[j].first == temp_line->line[0] || curout->inputCoord[j].first == temp_line->line[1])
 						{
 							curout->inputCoord[j].second = temp_line->state;
@@ -468,7 +491,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 		{
 			Gate* temp_gate = gateInfo.at(i);
 			//Gate 방문
-			if (temp_gate->isInputSet() && temp_gate->chk == 0)
+			if (temp_gate->chk == 0 && temp_gate->isInputSet() )
 			{
 				temp_gate->chk = 1;
 				temp_gate->setOutput();
@@ -487,6 +510,36 @@ void CLogicSimulatorDoc::CheckCircuit()
 					}
 				}
 			}
+		}
+
+		for (int i = 0; i < FFInfo.size(); i++)
+		{
+			FlipFlop* temp_FF = FFInfo.at(i);
+			//Gate 방문
+			if (temp_FF->chk == 0 && temp_FF->isInputSet())
+			{
+				temp_FF->chk = 1;
+				temp_FF->setOutput();
+
+				//플립플롭 출력선은 두개
+				for (int j = 0; j < 2; j++)
+				{
+					CPoint gatpos = temp_FF->outputCoord[j].first;
+
+					int lin = (int)lines.size();
+					for (int i = 0; i < lin; i++)
+					{
+						LineObject* curline = lines.at(i);
+						if (curline->line[0] == gatpos || curline->line[1] == gatpos)
+						{
+							curline->state = temp_FF->outputCoord[j].second;
+
+							if (curline->chk != 1)
+								searchLine.push(curline);
+					}
+				}
+			}
+		}
 		}
 		
 		//Outpin 방문 (제일 마지막)
