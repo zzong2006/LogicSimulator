@@ -34,8 +34,8 @@
 #define LINE						100
 #define OBJECT						101
 
-#define MAX_UNDO					10
-#define MAX_REDO					10
+#define MAX_UNDO					100
+#define MAX_REDO					100
 
 #define VERTICAL					0
 #define HORIZONTAL					1

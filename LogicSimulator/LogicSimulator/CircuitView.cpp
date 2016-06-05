@@ -27,7 +27,6 @@ inline int Rounding(int x)
 CCircuitView::CCircuitView()
 {
 	object = OBJECT;
-	
 }
 
 CCircuitView::~CCircuitView()
@@ -187,12 +186,15 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			{
 				LineObject* newline = new LineObject(cur_pos);
 
-				newline->line[0] = curline->line[0];
-				newline->line[1] = cur_pos;
-				curline->line[0] = cur_pos;
+				newline->line[1] = curline->line[1];
+				curline->line[1] = cur_pos;
 				newline->shape = curline->shape;
 
-				pDoc->lines.insert(pDoc->lines.begin() + i, newline);
+				pDoc->lines.push_back(newline);
+				//pDoc->mUndo.GetHead().lines.push_back(newline);
+				pDoc->mUndo.GetHead().line_num++;
+				pDoc->mUndo.GetHead().lineked_line.push_back(curline);
+				pDoc->mUndo.GetHead().lineked_line.push_back(newline);
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -654,19 +656,22 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		else temp_line[1]->shape = HORIZONTAL;
 		/////////////////////////////////////////////////////////////////////////
 
-		/////////////////////////////점 지우기////////////////////////////////////
-		Action mk_line = Action(temp_line);
-		for (int i = 0; i < 2; i++)
+		/////////////////////////////점 지우기 & 메모리에 추가////////////////////////////////////
+
+		Action mk_line = Action(LINE);
+
+		for (int i = 1; i > -1; i--)
 		{
 			if (temp_line[i]->line[0] == temp_line[i]->line[1])
 			{
 				pDoc->lines.pop_back();
-				mk_line.lines.pop_back();
+				mk_line.line_num--;
 			}
 		}
-		pDoc->mUndo.AddHead(mk_line);
-		/////////////////////////////////////////////////////////////////////////
 
+		///////////////////////////////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 		for (int i = 0; i < ln; i++)
 		{
 			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
@@ -674,25 +679,31 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				if (pDoc->lines.at(i)->Is_match_IineCoord(point)
 					&& !(pDoc->isSelected) && !(pDoc->clickMode))
 				{
-					//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 					LineObject* curline = pDoc->lines.at(i);
 					if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 					{
 						LineObject* newline = new LineObject(cur_pos);
 
-						newline->line[0] = curline->line[0];
-						newline->line[1] = cur_pos;
-						curline->line[0] = cur_pos;
+						newline->line[1] = curline->line[1];
+						curline->line[1] = cur_pos;
 
 						newline->shape = curline->shape;
-						pDoc->lines.insert(pDoc->lines.begin() + i, newline);
+
+						mk_line.lineked_line.push_back(curline);
+						mk_line.lineked_line.push_back(newline);
+						mk_line.line_num++;
+
+						pDoc->lines.push_back(newline);
 					}
-					///////////////////////////////////////////////////////////////////////////////////////////////////////
 					object = LINE;
 					break;
 				}
 			}
 		}
+
+		if (mk_line.line_num > 0)
+			pDoc->mUndo.AddHead(mk_line);
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		object = OBJECT;
 	}
 	pDoc->CheckCircuit();

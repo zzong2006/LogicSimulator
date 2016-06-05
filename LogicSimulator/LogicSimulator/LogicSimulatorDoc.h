@@ -35,6 +35,14 @@ public :
 		logicInfo.push_back(clock);
 		Type = OBJECT;
 	}
+	Action(int type)
+	{
+		if (type == LINE)
+		{
+			Type = type;
+			line_num = 2;
+		}
+	}
 	Action()
 	{
 
@@ -42,7 +50,10 @@ public :
 	enum{
 		line_add
 	};
+
 	int Type;
+	int line_num;
+	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
 };
@@ -74,6 +85,7 @@ public:
 	int objectName;
 
 	int gateNum;
+
 	LogicObject* temp;
 
 	// undo/redo
