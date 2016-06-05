@@ -451,6 +451,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 					int ip = curout->inputNum;
 					for (int j = 0; j < ip; j++)
 					{
+						TRACE(L"일치한다\n");
 						if (curout->inputCoord[j].first == temp_line->line[0] || curout->inputCoord[j].first == temp_line->line[1])
 						{
 							curout->inputCoord[j].second = temp_line->state;

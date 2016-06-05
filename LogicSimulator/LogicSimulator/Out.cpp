@@ -68,7 +68,7 @@ Out::Out() : Wiring()
 
 Out::Out(int dec_x, int dec_y) : Wiring()
 {
-	inputNum = 1;
+	outputNum = 0;
 
 	objectType = WIRING_TYPE;
 	objectName = OUTPIN;
