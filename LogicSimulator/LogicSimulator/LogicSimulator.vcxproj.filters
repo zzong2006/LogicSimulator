@@ -70,6 +70,12 @@
     <ClCompile Include="FlipFlop.cpp">
       <Filter>FlipFlop</Filter>
     </ClCompile>
+    <ClCompile Include="JKFlipFlop.cpp">
+      <Filter>FlipFlop</Filter>
+    </ClCompile>
+    <ClCompile Include="TFlipFlop.cpp">
+      <Filter>FlipFlop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogicSimulator.h">
@@ -148,6 +154,12 @@
       <Filter>Gate</Filter>
     </ClInclude>
     <ClInclude Include="FlipFlop.h">
+      <Filter>FlipFlop</Filter>
+    </ClInclude>
+    <ClInclude Include="JKFlipFlop.h">
+      <Filter>FlipFlop</Filter>
+    </ClInclude>
+    <ClInclude Include="TFlipFlop.h">
       <Filter>FlipFlop</Filter>
     </ClInclude>
   </ItemGroup>

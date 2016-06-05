@@ -15,6 +15,8 @@
 #include "Clock.h"
 #include "Out.h"
 #include "DFlipFlop.h"
+#include "JKFlipFlop.h"
+#include "TFlipFlop.h"
 
 class Action
 {
