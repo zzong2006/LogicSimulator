@@ -205,17 +205,21 @@ void LogicObject::set_inputCoord(int x, int y)
 		inputCoord[0].first.y = y;
 		break;
 	case FLIPFLOP_TYPE:
-		//플립플롭은 input 좌표 말고도 clock input 좌표 역시 설정해 줘야 함을 잊지말자.
 		if (objectName == JK_FF)
 		{
 			inputCoord[0].first.x = x - 6 * UNIT; // K
 			inputCoord[0].first.y = y - 2 * UNIT;
-			inputCoord[1].first.x = x - 6 * UNIT; // J
-			inputCoord[1].first.y = y + 2 * UNIT;
+			inputCoord[1].first.x = x - 6 * UNIT; // C
+			inputCoord[1].first.y = y * UNIT;
+			inputCoord[2].first.x = x - 6 * UNIT; // J
+			inputCoord[2].first.y = y + 2* UNIT;
+
 		}
 		else {
-			inputCoord[0].first.x = x - 6 * UNIT;
+			inputCoord[0].first.x = x - 6 * UNIT;	//D,T
 			inputCoord[0].first.y = y - 2 * UNIT;
+			inputCoord[1].first.x = x - 6 * UNIT;	// C
+			inputCoord[1].first.y = y + 2 * UNIT;
 		}
 		break;
 	}
