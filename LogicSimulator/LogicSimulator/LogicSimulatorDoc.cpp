@@ -91,13 +91,16 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		clock_num = clockInfo.size();
 
 		ar << line_num;
+		ar << gate_num;
+		ar << pin_num;
+		ar << out_num;
+		ar << clock_num;
+
 		//선 위치 1번 -> 2번
 		for (int i = 0; i < line_num; i++)
 		{
 			ar << lines.at(i)->line[0] << lines.at(i)->line[1];
 		}
-
-		ar << gate_num;
 		//타입 -> 이릅 -> 위치
 		for (int i = 0; i < gate_num; i++)
 		{
@@ -108,8 +111,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			ar << tempgate->objectName << find_pos;
 		}
 
-		ar << pin_num;
-
 		for (int i = 0; i < pin_num; i++)
 		{
 			Pin * tempin = pinInfo.at(i);
@@ -119,8 +120,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			ar<< find_pos;
 		}
 
-		ar << out_num;
-
 		for (int i = 0; i < out_num; i++)
 		{
 			Out * temout = outInfo.at(i);
@@ -129,8 +128,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			find_pos.y = (temout->get_top().y + temout->get_bottm().y) / 2;
 			ar<< find_pos;
 		}
-
-		ar << clock_num;
 
 		for (int i = 0; i < clock_num; i++)
 		{
@@ -153,16 +150,18 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		5. 클럭 (개수 -> 정보)
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 		ar >> line_num;
+		ar >> gate_num;
+		ar >> pin_num;
+		ar >> out_num;
+		ar >> clock_num;
 
 		for (int i = 0; i < line_num; i++)
 		{
-			int pos1, pos2;
+			CPoint pos1, pos2;
 			ar >> pos1 >> pos2;
 			LineObject* templine = new LineObject(pos1, pos2);
 			lines.push_back(templine);
 		}
-
-		ar >> gate_num;
 
 		for (int i = 0; i < gate_num; i++)
 		{
@@ -198,11 +197,8 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 
 				logicInfo.push_back(Gtemp);
 				gateInfo.push_back(Gtemp);
-				mUndo.AddHead(Action(temp));
 			}
 		}
-
-		ar >> pin_num;
 
 		for (int i = 0; i < pin_num; i++)
 		{
@@ -212,10 +208,10 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			ar >> find_pos;
 			Ptemp = new Pin(find_pos.x, find_pos.y);
 			logicInfo.push_back(Ptemp);
+			Ptemp->set_outputCoord(find_pos.x, find_pos.y);
+			Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 			pinInfo.push_back(Ptemp);
 		}
-
-		ar >> out_num;
 
 		for (int i = 0; i < out_num; i++)
 		{
@@ -224,11 +220,11 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			Otemp = NULL;
 			ar >> find_pos;
 			Otemp = new Out(find_pos.x, find_pos.y);
+			Otemp->set_outputCoord(find_pos.x, find_pos.y);
+			Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 			logicInfo.push_back(Otemp);
 			outInfo.push_back(Otemp);
 		}
-
-		ar >> clock_num;
 
 		for (int i = 0; i < clock_num; i++)
 		{
@@ -237,6 +233,8 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			Ctemp = NULL;
 			ar >> find_pos;
 			Ctemp = new Clock(find_pos.x, find_pos.y);
+			Ctemp->set_outputCoord(find_pos.x, find_pos.y);
+			Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 			logicInfo.push_back(Ctemp);
 			clockInfo.push_back(Ctemp);
 		}
@@ -665,38 +663,28 @@ void CLogicSimulatorDoc::OnFileSave()
 		//CString Temp;
 		//Temp.Format(_T("%s"), dlg.GetPathName());
 
-		//int data1 = 5;
-		//double data2 = 12.3;
-		//CString data3 = _T("문자열입니다!!!!");
+		CFile  file;
+		// 파일을 쓰기모드로 연다.
+		if (file.Open(Temp, CFile::modeCreate | CFile::modeWrite)) {
+			// 정상적으로 열린 파일을 CArchive 에 저장하기 모드로 전달한다.
+			CArchive ar(&file, CArchive::store);
 
-		//CFile  file;
-		//// 파일을 쓰기모드로 연다.
-		//if (file.Open(Temp, CFile::modeCreate | CFile::modeWrite)) {
-		//	// 정상적으로 열린 파일을 CArchive 에 저장하기 모드로 전달한다.
-		//	CArchive ar(&file, CArchive::store);
-
-		//	try {
-		//		// 상수를 저장한다.
-		//		ar << 123;
-		//		// int 형 데이터를 저장한다.
-		//		ar << data1;
-		//		// double 형 데이터를 저장한다.
-		//		ar << data2;
-		//		// 문자열 데이터를 저장한다. char 배열은 << 연산자를 사용할 수 없다.
-		//		ar << data3;
-		//	}
-		//	catch (CFileException *fe) {
-		//		// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
-		//		fe->ReportError();
-		//	}
-		//	catch (CArchiveException *ae) {
-		//		// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
-		//		ae->ReportError();
-		//	}
-		//	// CArchive 를 닫는다.
-		//	ar.Close();
-		//	// 파일을 닫는다.
-		//	file.Close();
+			try {
+				Serialize(ar);
+			}
+			catch (CFileException *fe) {
+				// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+				fe->ReportError();
+			}
+			catch (CArchiveException *ae) {
+				// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+				ae->ReportError();
+			}
+			// CArchive 를 닫는다.
+			ar.Close();
+			// 파일을 닫는다.
+			file.Close();
+		}
 	}
 
 }
@@ -705,4 +693,36 @@ void CLogicSimulatorDoc::OnFileSave()
 void CLogicSimulatorDoc::OnFileOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CFileDialog dlg(FALSE, L"circ", L"default.circ", OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, L"LogicSimulator Files (*.circ)|*.circ|All Files (*.*)|*.*|");
+	dlg.m_ofn.lpstrTitle = L"파일을 불러오세요.";
+	dlg.m_ofn.lStructSize = sizeof(OPENFILENAME) + 12;
+
+	if (dlg.DoModal() == IDOK)
+	{
+		CString Temp;
+		Temp.Format(L"%s", dlg.GetPathName());
+
+		CFile  file;
+		if (file.Open(Temp, CFile::modeRead | CFile::shareExclusive)) {
+			// 정상적으로 열린 파일을 CArchive 에 저장하기 모드로 전달한다.
+			CArchive ar(&file, CArchive::load | CArchive::bNoFlushOnDelete);
+
+			try {
+				Serialize(ar);
+			}
+			catch (CFileException *fe) {
+				// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+				fe->ReportError();
+			}
+			catch (CArchiveException *ae) {
+				// 예외가 발생하면 메세지박스를 통하여 사용자에게 알린다.
+				ae->ReportError();
+			}
+			// CArchive 를 닫는다.
+			ar.Close();
+			// 파일을 닫는다.
+			file.Close();
+		}
+	}
+
 }
