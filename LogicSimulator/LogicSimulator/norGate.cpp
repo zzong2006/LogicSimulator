@@ -59,6 +59,7 @@ void norGate::set_output()
 norGate::norGate()
 {
 	inputNum = 2;
+	outputNum = 1;
 }
 
 norGate::norGate(int dec_x, int dec_y)

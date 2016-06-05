@@ -59,6 +59,7 @@ void nandGate::set_output()
 nandGate::nandGate()
 {
 	inputNum = 2;
+	outputNum = 1;
 }
 
 nandGate::nandGate(int dec_x, int dec_y)

@@ -59,6 +59,7 @@ void andGate::set_output()
 andGate::andGate()
 {
 	inputNum = 2;
+	outputNum = 1;
 }
 
 andGate::andGate(int dec_x, int dec_y) : Gate()

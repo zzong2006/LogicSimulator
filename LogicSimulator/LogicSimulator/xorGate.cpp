@@ -59,6 +59,7 @@ void xorGate::set_output()
 xorGate::xorGate()
 {
 	inputNum = 2;
+	outputNum = 1;
 }
 
 xorGate::xorGate(int dec_x, int dec_y)
