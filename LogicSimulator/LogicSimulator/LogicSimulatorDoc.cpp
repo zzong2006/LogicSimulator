@@ -26,6 +26,7 @@ IMPLEMENT_DYNCREATE(CLogicSimulatorDoc, CDocument)
 BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE, &CLogicSimulatorDoc::OnFileSave)
 	ON_COMMAND(ID_FILE_OPEN, &CLogicSimulatorDoc::OnFileOpen)
+	ON_COMMAND(ID_FILE_NEW, &CLogicSimulatorDoc::OnFileNew)
 END_MESSAGE_MAP()
 
 
@@ -672,4 +673,36 @@ void CLogicSimulatorDoc::OnFileOpen()
 		}
 	}
 
+}
+
+
+void CLogicSimulatorDoc::OnFileNew()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	int Answer;
+	Answer = AfxMessageBox(_T("저장 하시겠습니까?"), MB_YESNOCANCEL);
+	switch (Answer)
+	{
+	case IDYES:
+		OnFileSave();
+		clearAll();
+		break;
+	case IDNO :
+		clearAll();
+		break;
+	case IDCANCEL :
+		break;
+	}
+}
+
+void CLogicSimulatorDoc::clearAll()
+{
+	lines.clear();
+	logicInfo.clear();
+	gateInfo.clear();
+	pinInfo.clear();
+	outInfo.clear();
+	clockInfo.clear();
+	mUndo.RemoveAll();
+	mRedo.RemoveAll();
 }

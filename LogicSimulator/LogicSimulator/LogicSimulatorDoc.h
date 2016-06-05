@@ -121,6 +121,7 @@ protected:
 
 // 생성된 메시지 맵 함수
 protected:
+	void clearAll();
 	DECLARE_MESSAGE_MAP()
 
 #ifdef SHARED_HANDLERS
@@ -131,4 +132,5 @@ public:
 	void CheckCircuit();
 	afx_msg void OnFileSave();
 	afx_msg void OnFileOpen();
+	afx_msg void OnFileNew();
 };
