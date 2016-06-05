@@ -77,10 +77,11 @@ public:
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
 	std::vector <Clock *> clockInfo;
+	std::vector <FlipFlop *> FFInfo;
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
 	std::vector <Out *> outInfo;
-
+	
 	int objectType;
 	int objectName;
 

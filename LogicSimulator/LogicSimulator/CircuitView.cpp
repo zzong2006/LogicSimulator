@@ -174,7 +174,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	//선 오브젝트에서 선이 분기 될 경우
 	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
 
-	//////////////////////////////////////////////////////////////////////분기 검사////////////////////////////////////////////////////////////////////////////
+	////////분기 검사//////
 	int ln = pDoc->lines.size();
 
 	for (int i = 0; i < pDoc->lines.size(); i++)		
@@ -198,7 +198,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				pDoc->mUndo.GetHead().lineked_line.push_back(newline);
 				object = LINE;
 			}
-			///////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 			object = LINE;
 			break;
 		}
@@ -228,9 +228,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////////////////////////////////논리 오브젝트 생성/////////////////////////////////////////////////////////////////////
+
+	////////////논리 오브젝트 생성/////////////////
 	if (object == OBJECT)
 	{
 		//메뉴에서 선택하고 필드에서 지정 완료될 때
@@ -282,7 +282,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				Out	*Otemp = NULL;
 				temp = NULL;
 
-				
 				switch (pDoc->objectName)
 				{
 				case PIN:
@@ -316,13 +315,38 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				}
 			}
+			else if (pDoc->objectType == FLIPFLOP_TYPE)
+			{
+				FlipFlop *Ftemp = NULL;
+
+				switch (pDoc->objectName)
+				{
+				case D_FF:
+					Ftemp = new DFlipFlop(dec_x, dec_y);
+					break;
+				case JK_FF:
+					break;
+				case T_FF:
+					break;
+				}
+
+				if (Ftemp != NULL) {
+					Ftemp->set_Coord_From_outC(dec_x, dec_y);
+
+					pDoc->logicInfo.push_back(Ftemp);
+					pDoc->FFInfo.push_back(Ftemp);
+					pDoc->mUndo.AddHead(Action(Ftemp));
+				}
+			}
 
 			delete pDoc->temp;
 			pDoc->temp = NULL;
 			pDoc->isSelected = false;
 		}
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////클릭 모드/////////////////////////////////////////////////////////////////////////////////
+		
+		////클릭 모드///////////
+		//////////////////////
+
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
 		if (pDoc->clickMode) {
@@ -395,9 +419,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//////////////////////////////////////////////////////////////////////////////선 생성/////////////////////////////////////////////////////////////////////////////
+	/////////선 생성/////////////////////////////
 	else if(object != OBJECT && !(pDoc->isSelected))
 	{
 		//동그란 표시 지우기
@@ -413,7 +435,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		pDoc->lines.push_back(temp_line[0]);
 		pDoc->lines.push_back(temp_line[1]);
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	pDoc->CheckCircuit();
 	Invalidate();
 
@@ -505,6 +527,15 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 						break;
 					case OUTPIN :
 						pDoc->temp = new Out();
+						break;
+					}
+				}
+				else if (pDoc->objectType == FLIPFLOP_TYPE)
+				{
+					switch (pDoc->objectName)
+					{
+					case D_FF:
+						pDoc->temp = new DFlipFlop();
 						break;
 					}
 				}
@@ -646,7 +677,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 		int ln = pDoc->lines.size();
 
-		////////////////////////////////선 속성 추가 //////////////////////////////
+		/////////////////선 속성 추가 ////////////////
 		if (temp_line[0]->line[1].x == temp_line[0]->line[0].x)
 			temp_line[0]->shape = VERTICAL;
 		else
@@ -655,7 +686,6 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		if (temp_line[0]->shape == HORIZONTAL)
 			temp_line[1]->shape = VERTICAL;
 		else temp_line[1]->shape = HORIZONTAL;
-		/////////////////////////////////////////////////////////////////////////
 
 		/////////////////////////////점 지우기 & 메모리에 추가////////////////////////////////////
 

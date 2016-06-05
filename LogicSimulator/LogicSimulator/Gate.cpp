@@ -4,7 +4,8 @@
 
 Gate::Gate() : LogicObject()
 {
-	//test input_size
+	outputNum = 1;
+
 	for (int i = 0; i < INPUT_SIZE; i++)
 	{
 		input_state[i] = 2;
@@ -16,7 +17,8 @@ Gate::Gate() : LogicObject()
 
 Gate::Gate(int dec_x, int dec_y)
 {
-	//test input_size
+	outputNum = 1;
+	
 	for (int i = 0; i < INPUT_SIZE; i++)
 	{
 		input_state[i] = 2;

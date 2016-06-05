@@ -189,6 +189,7 @@
     <ClInclude Include="CircuitView.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="DFlipFlop.h" />
+    <ClInclude Include="FlipFlop.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="CircuitView.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="DFlipFlop.cpp" />
+    <ClCompile Include="FlipFlop.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />

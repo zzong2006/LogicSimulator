@@ -13,34 +13,10 @@
     <ClCompile Include="LogicSimulator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="andGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="MainFrm.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="orGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Gate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="notGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="xorGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="nandGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="norGate.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DFlipFlop.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Out.cpp">
@@ -67,18 +43,39 @@
     <ClCompile Include="LineObject.cpp">
       <Filter>Wiring</Filter>
     </ClCompile>
+    <ClCompile Include="DFlipFlop.cpp">
+      <Filter>FlipFlop</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="andGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="nandGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="norGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="notGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="orGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="xorGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="FlipFlop.cpp">
+      <Filter>FlipFlop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="andGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="LogicSimulator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="LogicObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Gate.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -100,24 +97,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="LogicSimulatorView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="orGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="notGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="xorGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="nandGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="norGate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DFlipFlop.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Out.h">
@@ -143,6 +122,33 @@
     </ClInclude>
     <ClInclude Include="LineObject.h">
       <Filter>Wiring</Filter>
+    </ClInclude>
+    <ClInclude Include="DFlipFlop.h">
+      <Filter>FlipFlop</Filter>
+    </ClInclude>
+    <ClInclude Include="orGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="notGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="nandGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="norGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="andGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="xorGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="FlipFlop.h">
+      <Filter>FlipFlop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +227,12 @@
     </Filter>
     <Filter Include="MainView">
       <UniqueIdentifier>{4b030a4d-c5f9-46ea-bdca-0918bf48fbfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FlipFlop">
+      <UniqueIdentifier>{000d137a-bdc8-453a-b298-cba06709f313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gate">
+      <UniqueIdentifier>{d62886ef-2bad-44fb-8035-7ca2cfa90f7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

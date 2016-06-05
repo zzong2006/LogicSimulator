@@ -141,6 +141,16 @@ void LogicObject::set_Coord_ByFacing(CString input)
 		}
 		break;
 	case FLIPFLOP_TYPE:
+		switch (facing) {
+		case EAST:
+			break;
+		case WEST:
+			break;
+		case SOUTH:
+			break;
+		case NORTH:
+			break;
+		}
 		break;
 	}
 	//로직 오브젝트의 입출력 좌표를 이용해
@@ -159,8 +169,19 @@ void LogicObject::move_Coord(long &x, long &change)
 
 void LogicObject::set_outputCoord(int x, int y)
 {
-	outputCoord[0].first.x = x;
-	outputCoord[0].first.y = y;
+	if (objectType == FLIPFLOP_TYPE)
+	{
+		outputCoord[0].first.x = x ;		//Q
+		outputCoord[0].first.y = y - 2 * UNIT;
+		outputCoord[1].first.x = x;		//Q'
+		outputCoord[1].first.y = y + 2 * UNIT;
+	}
+	else
+	{
+		outputCoord[0].first.x = x;
+		outputCoord[0].first.y = y;
+	}
+	
 }
 
 void LogicObject::set_inputCoord(int x, int y)
@@ -181,6 +202,19 @@ void LogicObject::set_inputCoord(int x, int y)
 	case WIRING_TYPE:
 		inputCoord[0].first.x = x;
 		inputCoord[0].first.y = y;
+	case FLIPFLOP_TYPE:
+		//플립플롭은 input 좌표 말고도 clock input 좌표 역시 설정해 줘야 함을 잊지말자.
+		if (objectName == JK_FF)
+		{
+			inputCoord[0].first.x = x - 5 * UNIT; // K
+			inputCoord[0].first.y = y - 2 * UNIT;
+			inputCoord[1].first.x = x - 5 * UNIT; // J
+			inputCoord[1].first.y = y + 2 * UNIT;
+		}
+		else {
+			inputCoord[0].first.x = x - 5 * UNIT;
+			inputCoord[0].first.y = y - 2 * UNIT;
+		}
 	}
 	
 }
@@ -215,6 +249,7 @@ LogicObject::LogicObject()
 {
 	output = 0;
 	facing = EAST;
+	bottom.x = bottom.y = top.y = top.x = -INT_MAX;
 }
 
 
