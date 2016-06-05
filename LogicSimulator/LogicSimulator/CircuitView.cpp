@@ -48,7 +48,9 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_COMMAND(ID_ON_SIMULATE, &CCircuitView::OnOnSimulate)
 	ON_UPDATE_COMMAND_UI(ID_ON_SIMULATE, &CCircuitView::OnUpdateOnSimulate)
 	ON_WM_TIMER()
-	ON_WM_KEYDOWN()
+//	ON_WM_KEYDOWN()
+	ON_COMMAND(ID_EDIT_UNDO, &CCircuitView::OnEditUndo)
+	ON_COMMAND(ID_EDIT_REDO, &CCircuitView::OnEditRedo)
 END_MESSAGE_MAP()
 
 
@@ -668,8 +670,6 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////////////
-
 		//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 		for (int i = 0; i < ln; i++)
 		{
@@ -700,7 +700,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 		//if (mk_line.line_num > 0)
 			pDoc->mUndo.AddHead(mk_line);
-		///////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		object = OBJECT;
 	}
 	pDoc->CheckCircuit();
@@ -786,32 +786,24 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 }
 
 
-void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+
+void CCircuitView::OnEditUndo()
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	//////////////////////////CONTROL Z예약되어 있음////////////////////////////////
-	if (GetKeyState(VK_CONTROL) & 0x8000)
-	{
-		switch (nChar)
-		{
-		case 'A' :
-			if (pDoc->CanUndo())
-			pDoc->Undo();
-			Beep(800, 50);
-			Invalidate();
-			break;
-		case 'Q' :
-			if (pDoc->CanRedo())
-			pDoc->Redo();
-			Beep(300, 50);
-			Invalidate();
-			break;
-		}
-	}
-
+	if(pDoc->CanUndo())
+		pDoc->Undo();
+	Beep(800, 50);
 	Invalidate();
+}
 
-	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+
+void CCircuitView::OnEditRedo()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+
+	if (pDoc->CanRedo())
+		pDoc->Redo();
+	Beep(300, 50);
+	Invalidate();
 }
