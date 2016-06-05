@@ -128,4 +128,6 @@ protected:
 #endif // SHARED_HANDLERS
 public:
 	void CheckCircuit();
+	afx_msg void OnFileSave();
+	afx_msg void OnFileOpen();
 };

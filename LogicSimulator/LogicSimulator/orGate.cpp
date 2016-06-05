@@ -56,6 +56,7 @@ void orGate::turn()
 orGate::orGate() : Gate()
 {
 	inputNum = 2;
+	outputNum = 1;
 }
 
 orGate::orGate(int dec_x, int dec_y)

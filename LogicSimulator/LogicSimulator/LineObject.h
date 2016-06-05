@@ -29,6 +29,7 @@ public:
 
 	LineObject(int x, int y);
 	LineObject(CPoint point);
+	LineObject(CPoint fpos, CPoint spos);
 	LineObject();
 	~LineObject();
 };

@@ -94,6 +94,12 @@ LineObject::LineObject(CPoint point)
 	state = OFF_SIGNAL;
 }
 
+LineObject::LineObject(CPoint fpos, CPoint spos)
+{
+	this->line[0] = fpos;
+	this->line[1] = spos;
+	state = OFF_SIGNAL;
+}
 
 LineObject::~LineObject()
 {

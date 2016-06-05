@@ -24,6 +24,8 @@
 IMPLEMENT_DYNCREATE(CLogicSimulatorDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
+	ON_COMMAND(ID_FILE_SAVE, &CLogicSimulatorDoc::OnFileSave)
+	ON_COMMAND(ID_FILE_OPEN, &CLogicSimulatorDoc::OnFileOpen)
 END_MESSAGE_MAP()
 
 
@@ -68,16 +70,177 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 
 
 // CLogicSimulatorDoc serialization
-
 void CLogicSimulatorDoc::Serialize(CArchive& ar)
 {
+	int line_num, gate_num, pin_num, out_num, clock_num;
+
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
+		/*/////////////////////////////////////////////////////////저장 순서//////////////////////////////////////////////////////////
+		1. 선 ( 개수 -> 정보)
+		2. 게이트 (개수 -> 정보)
+		3. 입력핀 (개수 -> 정보)
+		4. 출력핀 (개수 -> 정보)
+		5. 클럭 (개수 -> 정보)
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+		line_num = lines.size();
+		gate_num = gateInfo.size();
+		pin_num = pinInfo.size();
+		out_num = outInfo.size();
+		clock_num = clockInfo.size();
+
+		ar << line_num;
+		//선 위치 1번 -> 2번
+		for (int i = 0; i < line_num; i++)
+		{
+			ar << lines.at(i)->line[0] << lines.at(i)->line[1];
+		}
+
+		ar << gate_num;
+		//타입 -> 이릅 -> 위치
+		for (int i = 0; i < gate_num; i++)
+		{
+			Gate* tempgate = gateInfo.at(i);
+			CPoint find_pos;
+			find_pos.x = tempgate->get_bottm().x;
+			find_pos.y = (tempgate->get_top().y + tempgate->get_bottm().y)/2;
+			ar << tempgate->objectName << find_pos;
+		}
+
+		ar << pin_num;
+
+		for (int i = 0; i < pin_num; i++)
+		{
+			Pin * tempin = pinInfo.at(i);
+			CPoint find_pos;
+			find_pos.x = tempin->get_bottm().x;
+			find_pos.y = (tempin->get_top().y + tempin->get_bottm().y) / 2;
+			ar<< find_pos;
+		}
+
+		ar << out_num;
+
+		for (int i = 0; i < out_num; i++)
+		{
+			Out * temout = outInfo.at(i);
+			CPoint find_pos;
+			find_pos.x = temout->get_bottm().x;
+			find_pos.y = (temout->get_top().y + temout->get_bottm().y) / 2;
+			ar<< find_pos;
+		}
+
+		ar << clock_num;
+
+		for (int i = 0; i < clock_num; i++)
+		{
+			Clock * tempclock = clockInfo.at(i);
+			CPoint find_pos;
+			find_pos.x = tempclock->get_bottm().x;
+			find_pos.y = (tempclock->get_top().y + tempclock->get_bottm().y) / 2;
+			ar << find_pos;
+		}
+
 	}
 	else
 	{
 		// TODO: 여기에 로딩 코드를 추가합니다.
+		/*/////////////////////////////////////////////////////////로딩 순서//////////////////////////////////////////////////////////
+		1. 선 ( 개수 -> 정보)
+		2. 게이트 (개수 -> 정보)
+		3. 입력핀 (개수 -> 정보)
+		4. 출력핀 (개수 -> 정보)
+		5. 클럭 (개수 -> 정보)
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+		ar >> line_num;
+
+		for (int i = 0; i < line_num; i++)
+		{
+			int pos1, pos2;
+			ar >> pos1 >> pos2;
+			LineObject* templine = new LineObject(pos1, pos2);
+			lines.push_back(templine);
+		}
+
+		ar >> gate_num;
+
+		for (int i = 0; i < gate_num; i++)
+		{
+			int oName;
+			CPoint find_pos;
+			Gate *Gtemp;
+			Gtemp = NULL;
+			ar >> oName >> find_pos;
+			switch (oName)
+			{
+			case AND_GATE:
+				Gtemp = new andGate(find_pos.x, find_pos.y);
+				break;
+			case OR_GATE:
+				Gtemp = new orGate(find_pos.x, find_pos.y);
+				break;
+			case NAND_GATE:
+				Gtemp = new nandGate(find_pos.x, find_pos.y);
+				break;
+			case NOR_GATE:
+				Gtemp = new norGate(find_pos.x, find_pos.y);
+				break;
+			case XOR_GATE:
+				Gtemp = new xorGate(find_pos.x, find_pos.y);
+				break;
+			case NOT_GATE:
+				Gtemp = new notGate(find_pos.x, find_pos.y);
+				break;
+			}
+
+			if (Gtemp != NULL) {
+				Gtemp->set_Coord_From_outC(find_pos.x, find_pos.y);
+
+				logicInfo.push_back(Gtemp);
+				gateInfo.push_back(Gtemp);
+				mUndo.AddHead(Action(temp));
+			}
+		}
+
+		ar >> pin_num;
+
+		for (int i = 0; i < pin_num; i++)
+		{
+			CPoint find_pos;
+			Pin *Ptemp;
+			Ptemp = NULL;
+			ar >> find_pos;
+			Ptemp = new Pin(find_pos.x, find_pos.y);
+			logicInfo.push_back(Ptemp);
+			pinInfo.push_back(Ptemp);
+		}
+
+		ar >> out_num;
+
+		for (int i = 0; i < out_num; i++)
+		{
+			CPoint find_pos;
+			Out *Otemp;
+			Otemp = NULL;
+			ar >> find_pos;
+			Otemp = new Out(find_pos.x, find_pos.y);
+			logicInfo.push_back(Otemp);
+			outInfo.push_back(Otemp);
+		}
+
+		ar >> clock_num;
+
+		for (int i = 0; i < clock_num; i++)
+		{
+			CPoint find_pos;
+			Clock *Ctemp;
+			Ctemp = NULL;
+			ar >> find_pos;
+			Ctemp = new Clock(find_pos.x, find_pos.y);
+			logicInfo.push_back(Ctemp);
+			clockInfo.push_back(Ctemp);
+		}
+
 	}
 }
 
@@ -391,4 +554,18 @@ void CLogicSimulatorDoc::Redo()
 		break;
 	}
 	mUndo.AddHead(temp);
+}
+
+void CLogicSimulatorDoc::OnFileSave()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	AfxMessageBox(_T("123"));
+
+
+}
+
+
+void CLogicSimulatorDoc::OnFileOpen()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }

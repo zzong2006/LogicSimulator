@@ -59,6 +59,7 @@ void notGate::set_output()
 notGate::notGate() : Gate()
 {
 	inputNum = 1;
+	outputNum = 1;
 }
 
 notGate::notGate(int dec_x, int dec_y)

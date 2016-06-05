@@ -168,6 +168,8 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	dec_y = Rounding(point.y);
 	CPoint cur_pos(dec_x, dec_y);
 
+	pDoc->mRedo.RemoveAll();
+
 	//선을 선택했을 경우는 LINE , 기본값은 OBJECT로 함.
 	object = OBJECT;
 
