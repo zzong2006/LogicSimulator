@@ -191,13 +191,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				newline->shape = curline->shape;
 
 				pDoc->lines.push_back(newline);
-				//pDoc->mUndo.GetHead().lines.push_back(newline);
 				pDoc->mUndo.GetHead().line_num++;
 				pDoc->mUndo.GetHead().lineked_line.push_back(curline);
 				pDoc->mUndo.GetHead().lineked_line.push_back(newline);
+				object = LINE;
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 			object = LINE;
 			break;
 		}
@@ -664,8 +663,8 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			if (temp_line[i]->line[0] == temp_line[i]->line[1])
 			{
-				pDoc->lines.pop_back();
-				mk_line.line_num--;
+				//pDoc->lines.pop_back();
+				//mk_line.line_num--;
 			}
 		}
 
@@ -689,19 +688,17 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 						newline->shape = curline->shape;
 
+						mk_line.line_num++;
 						mk_line.lineked_line.push_back(curline);
 						mk_line.lineked_line.push_back(newline);
-						mk_line.line_num++;
 
 						pDoc->lines.push_back(newline);
 					}
-					object = LINE;
-					break;
 				}
 			}
 		}
 
-		if (mk_line.line_num > 0)
+		//if (mk_line.line_num > 0)
 			pDoc->mUndo.AddHead(mk_line);
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		object = OBJECT;
