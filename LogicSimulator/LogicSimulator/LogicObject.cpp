@@ -173,6 +173,7 @@ void LogicObject::set_outputCoord(int x, int y)
 	{
 		outputCoord[0].first.x = x ;		//Q
 		outputCoord[0].first.y = y - 2 * UNIT;
+
 		outputCoord[1].first.x = x;		//Q'
 		outputCoord[1].first.y = y + 2 * UNIT;
 	}
@@ -206,13 +207,13 @@ void LogicObject::set_inputCoord(int x, int y)
 		//플립플롭은 input 좌표 말고도 clock input 좌표 역시 설정해 줘야 함을 잊지말자.
 		if (objectName == JK_FF)
 		{
-			inputCoord[0].first.x = x - 5 * UNIT; // K
+			inputCoord[0].first.x = x - 6 * UNIT; // K
 			inputCoord[0].first.y = y - 2 * UNIT;
-			inputCoord[1].first.x = x - 5 * UNIT; // J
+			inputCoord[1].first.x = x - 6 * UNIT; // J
 			inputCoord[1].first.y = y + 2 * UNIT;
 		}
 		else {
-			inputCoord[0].first.x = x - 5 * UNIT;
+			inputCoord[0].first.x = x - 6 * UNIT;
 			inputCoord[0].first.y = y - 2 * UNIT;
 		}
 	}

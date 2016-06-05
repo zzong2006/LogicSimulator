@@ -80,6 +80,8 @@ Clock::Clock(int dec_x, int dec_y) :Wiring()
 	
 	width = 2;
 	height = 2;
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
 }
 Clock::~Clock()
 {

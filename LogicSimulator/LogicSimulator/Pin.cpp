@@ -67,9 +67,10 @@ Pin::Pin(int dec_x, int dec_y) : Wiring()
 {
 	objectType = WIRING_TYPE;
 	objectName = PIN;
-	inputNum = 1;
 
-	
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
+	inputNum = 1;
 }
 
 Pin::~Pin()

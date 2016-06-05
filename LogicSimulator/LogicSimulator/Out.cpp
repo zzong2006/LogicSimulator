@@ -52,7 +52,7 @@ void Out::toggleOutput()
 
 void Out::setOutput()
 {
-	
+	output = inputCoord[0].second;
 }
 
 int Out::getOutput()
@@ -74,7 +74,6 @@ Out::Out(int dec_x, int dec_y) : Wiring()
 	objectName = OUTPIN;
 
 	this->set_inputCoord(dec_x, dec_y);
-	
 
 	width = 2;
 	height = 2;

@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CLogicSimulatorView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+//	ON_COMMAND(ID_EDIT_COPY, &CLogicSimulatorView::OnEditCopy)
 END_MESSAGE_MAP()
 
 // CLogicSimulatorView 생성/소멸
@@ -103,3 +104,10 @@ CLogicSimulatorDoc* CLogicSimulatorView::GetDocument() const // 디버그되지 않은 
 
 
 // CLogicSimulatorView 메시지 처리기
+
+
+//void CLogicSimulatorView::OnEditCopy()
+//{
+//	AfxMessageBox(L"test");
+//	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+//}

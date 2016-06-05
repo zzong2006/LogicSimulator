@@ -14,7 +14,7 @@ void DFlipFlop::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
 	if (top.x == -INT_MAX) {
-		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord[0].first.x - 5 * UNIT, outputCoord[0].first.y - UNIT, 50, 50), 50 * 0, 50 * 0, 50, 50, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(outputCoord[0].first.x - 5 * UNIT, outputCoord[0].first.y - UNIT, 60, 60), 60 * 0, 60 * 0, 60, 60, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 	}
 	else {
 		
@@ -34,13 +34,13 @@ void DFlipFlop::draw_main(Gdiplus::Graphics * gp)
 
 	//Rect :: 필드상에서 표시될 위치 & 옆의 좌표는 이미지에서 잘라올 좌표
 	if (facing == EAST)
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 50, 50), 50 * 0, 50 * 0, 50, 50, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 60, 60), 60 * 0, 60 * 0, 60, 60, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 	else if (facing == SOUTH)
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 50, 50), 50 * 1, 50 * 0, 50, 50, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 60, 60), 60 * 1, 60 * 0, 60, 60, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 	else  if (facing == WEST)
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 50, 50), 50 * 2, 50 * 0, 50, 50, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 60, 60), 60 * 2, 60 * 0, 60, 60, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 	else  if (facing == NORTH)
-		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 50, 50), 50 * 3, 50 * 0, 50, 50, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
+		gp->DrawImage(pBitmap, Gdiplus::Rect(top.x, top.y, 60, 60), 60 * 3, 60 * 0, 60, 60, Gdiplus::UnitPixel, &imAtt, NULL, NULL);
 
 	delete pBitmap;
 

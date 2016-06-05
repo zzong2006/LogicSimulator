@@ -175,7 +175,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	// + 메뉴에서 선택이 안됬을 경우 라인 모드 진입
 
 	////////분기 검사//////
-	int ln = pDoc->lines.size();
+	int ln = (int)pDoc->lines.size();
 
 	for (int i = 0; i < pDoc->lines.size(); i++)		
 	{
@@ -208,18 +208,26 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	//논리 오브젝트들 중에서 선 분기 가능검사
 	for (int i = 0; i < pDoc->logicInfo.size() && object == OBJECT; i++)
 	{
-		int n = pDoc->logicInfo.at(i)->inputNum;
-		CPoint out_pos = pDoc->logicInfo.at(i)->outputCoord[0].first;
-		if (dec_x == out_pos.x && dec_y == out_pos.y
-			&& !(pDoc->isSelected) && !(pDoc->clickMode))
-		{
-			object = LINE;
-			break;
-		}
+		int in = pDoc->logicInfo.at(i)->inputNum;
+		int on = pDoc->logicInfo.at(i)->outputNum;
 
-		for (int j = 0; j < n; j++)
+		CPoint pos;
+
+		for (int j = 0; j < on; j++)
 		{
-			CPoint pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
+			pos = pDoc->logicInfo.at(i)->outputCoord[j].first;
+
+			if (dec_x == pos.x && dec_y == pos.y
+				&& !(pDoc->isSelected) && !(pDoc->clickMode))
+			{
+				object = LINE;
+				break;
+			}
+		}
+		
+		for (int j = 0; j < in; j++)
+		{
+			pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
 			if (dec_x == pos.x && dec_y == pos.y
 				&& !(pDoc->isSelected) && !(pDoc->clickMode))
 			{
@@ -344,8 +352,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			pDoc->isSelected = false;
 		}
 		
-		////클릭 모드///////////
-		//////////////////////
+		////클릭 모드///////////////////////////////
 
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
@@ -594,24 +601,28 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 
 		//논리 오브젝트들 중에서 선 분기 가능검사
-		for (int i = 0; i < pDoc->logicInfo.size() && nothingSearched == TRUE; i++)
+		//앞의 선 검사에서 오케이 됬으면 더이상 검사 안함.
+		for (int i = 0; i < pDoc->logicInfo.size() && nothingSearched; i++)
 		{
-			int n = pDoc->logicInfo.at(i)->inputNum;
-			CPoint out_pos = pDoc->logicInfo.at(i)->outputCoord[0].first;
-			if (dec_x == out_pos.x && dec_y == out_pos.y
-				&& !(pDoc->isSelected) && !(pDoc->clickMode))
+			int in = pDoc->logicInfo.at(i)->inputNum;
+			int on = pDoc->logicInfo.at(i)->outputNum;
+			CPoint pos;
+			for (int j = 0; j < on && nothingSearched; j++)
 			{
-				pDoc->CanBeDivided = TRUE;
-				nothingSearched = FALSE;
-				Invalidate();
-				break;
+				pos = pDoc->logicInfo.at(i)->outputCoord[j].first;
+				if (dec_x == pos.x && dec_y == pos.y)
+				{
+					pDoc->CanBeDivided = TRUE;
+					nothingSearched = FALSE;
+					Invalidate();
+					break;
+				}
 			}
-
-			for (int j = 0; j < n; j++)
+			
+			for (int j = 0; j < in && nothingSearched; j++)
 			{
-				CPoint pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
-				if (dec_x == pos.x && dec_y == pos.y
-					&& !(pDoc->isSelected) && !(pDoc->clickMode))
+				pos = pDoc->logicInfo.at(i)->inputCoord[j].first;
+				if (dec_x == pos.x && dec_y == pos.y)
 				{
 					pDoc->CanBeDivided = TRUE;
 					nothingSearched = FALSE;
