@@ -86,12 +86,12 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		5. 클럭 (개수 -> 정보)
 		6. 플립플롭 (개수 -> 정보)
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-		line_num = lines.size();
-		gate_num = gateInfo.size();
-		pin_num = pinInfo.size();
-		out_num = outInfo.size();
-		clock_num = clockInfo.size();
-		flipflop_num = FFInfo.size();
+		line_num = (int)lines.size();
+		gate_num = (int)gateInfo.size();
+		pin_num = (int)pinInfo.size();
+		out_num = (int)outInfo.size();
+		clock_num = (int)clockInfo.size();
+		flipflop_num = (int)FFInfo.size();
 
 		ar << line_num;
 		ar << gate_num;
@@ -658,7 +658,7 @@ void CLogicSimulatorDoc::Undo()
 			}
 		}
 		break;
-	case DELETE :
+	case REMOVE:
 		
 		break;
 	case MOVE :
@@ -686,7 +686,7 @@ void CLogicSimulatorDoc::Redo()
 	CPoint stp, edp;
 
 	temp = mRedo.RemoveHead();
-	int lkedn = temp.lineked_line.size();
+	int lkedn = (int)temp.lineked_line.size();
 
 	switch (temp.Act)
 	{
@@ -758,7 +758,6 @@ void CLogicSimulatorDoc::OnFileSave()
 
 		HANDLE hFile;
 		DWORD dwRead;
-		DWORD dwWritten;
 
 		//파일 저장 시작
 		CString con;
