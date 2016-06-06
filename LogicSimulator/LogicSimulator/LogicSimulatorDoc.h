@@ -26,9 +26,8 @@ public :
 		Type = type;
 		Act = act;
 		if (type == LINE)
-		{
 			line_num = 2;
-		}
+
 	}
 	Action()
 	{
@@ -44,11 +43,6 @@ public :
 	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
-	std::vector <Clock *> clockInfo;
-	std::vector <FlipFlop *> FFInfo;
-	std::vector <Gate *> gateInfo;
-	std::vector <Pin *> pinInfo;
-	std::vector <Out *> outInfo;
 };
 
 class CLogicSimulatorDoc : public CDocument
@@ -69,11 +63,6 @@ public:
 	std::vector <LogicObject *> currObject;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
-	std::vector <Clock *> clockInfo;
-	std::vector <FlipFlop *> FFInfo;
-	std::vector <Gate *> gateInfo;
-	std::vector <Pin *> pinInfo;
-	std::vector <Out *> outInfo;
 	
 	int objectType;
 	int objectName;
@@ -85,6 +74,10 @@ public:
 	// undo/redo
 	CList <Action> mUndo;
 	CList <Action> mRedo;
+
+	BOOL IsInput(LogicObject* lo);
+	BOOL IsGate(LogicObject* lo);
+	BOOL IsOutput(LogicObject* lo);
 
 	BOOL CanUndo();
 	BOOL CanRedo();
@@ -111,7 +104,6 @@ public:
 #endif
 
 protected:
-
 // 생성된 메시지 맵 함수
 protected:
 	void clearAll();

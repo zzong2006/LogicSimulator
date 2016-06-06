@@ -66,6 +66,7 @@ xorGate::xorGate(int dec_x, int dec_y)
 {
 	inputNum = 2;
 	objectName = XOR_GATE;
+	objectType = GATE_TYPE;
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
 }

@@ -351,6 +351,34 @@ int LogicObject::isInputSet() const
 		return 1;
 }
 
+//주어진 input state을 활용해 output line state를 설정한다.
+void LogicObject::setOutput()
+{
+	switch (objectName) {
+	case AND_GATE:
+		outputCoord[0].second = inputCoord[0].second && inputCoord[1].second;
+		break;
+	case OR_GATE:
+		outputCoord[0].second = inputCoord[0].second || inputCoord[1].second;
+		break;
+	case NOT_GATE:
+		outputCoord[0].second = !inputCoord[0].second;
+		break;
+	case NAND_GATE:
+		outputCoord[0].second = !(inputCoord[0].second && inputCoord[1].second);
+		break;
+	case NOR_GATE:
+		outputCoord[0].second = (inputCoord[0].second || inputCoord[1].second);
+		break;
+	case XOR_GATE:
+		outputCoord[0].second = inputCoord[0].second ^ inputCoord[1].second;
+		break;
+	case OUTPIN :
+		output = inputCoord[0].second;
+		break;
+	}
+}
+
 LogicObject::LogicObject()
 {
 	output = 0;
