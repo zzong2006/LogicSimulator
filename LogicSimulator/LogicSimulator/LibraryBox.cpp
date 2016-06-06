@@ -197,17 +197,17 @@ void LibraryBox::set_Coord_From_outC(int x, int y)
 
 BOOL LibraryBox::IsInput(LogicObject * lo)
 {
-	return lo->objectName == PIN || CLOCK;
+	return lo->objectName == PIN || lo->objectName == CLOCK;
 }
 
 BOOL LibraryBox::IsGate(LogicObject * lo)
 {
-	return lo->objectType == GATE_TYPE || FLIPFLOP_TYPE;
+	return lo->objectType == GATE_TYPE || lo->objectName == FLIPFLOP_TYPE;
 }
 
 BOOL LibraryBox::IsOutput(LogicObject * lo)
 {
-	return lo->objectType == OUTPIN || SEG7;
+	return lo->objectType == OUTPIN || lo->objectName == SEG7;
 }
 
 BOOL LibraryBox::CanUndo()
