@@ -2,6 +2,9 @@
 #include "Clock.h"
 #include "resource.h"
 #include "LogicSimulator.h"
+#include "CircuitView.h"
+#include "MainFrm.h""
+#include "LogicSimulatorDoc.h"
 
 void Clock::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
@@ -54,13 +57,28 @@ void Clock::toggleOutput()
 
 void Clock::moveCycle()
 {
-	cycle -= 1000;
+
+	cycle -= 1;
 	
 	if (cycle == 0)
 	{
+		CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+		CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)pFrame->GetActiveDocument();
+		CCircuitView *CVCtrl = (CCircuitView *)(pFrame->m_wndSplitterMain.GetPane(0, 1));
+
 		cycle = oriCycle;
 		toggleOutput();
+		
+		pDoc->CheckCircuit();
+		CVCtrl->Invalidate();
 	}
+
+}
+
+void Clock::setCycle(int input)
+{
+	cycle = oriCycle = (int)(1000 / input);
 }
 
 
@@ -82,6 +100,9 @@ Clock::Clock(int dec_x, int dec_y) :Wiring()
 	height = 2;
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
+
+	outputNum = 1;
+	inputNum = 0;
 }
 Clock::~Clock()
 {

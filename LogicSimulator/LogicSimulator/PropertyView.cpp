@@ -89,7 +89,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.SetVSDotNetLook();
 	m_pGridInfo.EnableDescriptionArea(FALSE);
 
-	CString labelName, trigger;
+	CString labelName, trigger ,cycleHz;
 
 	switch (tempLO->facing) {
 	case EAST:
@@ -134,6 +134,15 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 		pGroupInfo->AddSubItem(triggerEdge);
 	}
 
+	if (tempLO->objectName == CLOCK)
+	{
+		Clock* Ctemp = (Clock *)tempLO;
+		cycleHz.Format(_T("%f"), (double)(1000/Ctemp->getOricycle()));
+
+		pGroupInfo->AddSubItem(new CMFCPropertyGridProperty(_T("Clock(Hz)"), cycleHz, _T("Ό³Έν"),3));
+
+	}
+
 	m_pGridInfo.AddProperty(pGroupInfo);
 	
 	m_pGridInfo.UpdateData(FALSE);
@@ -159,12 +168,23 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 			pDoc->currObject.at(0)->set_Coord_ByFacing(pProperty->GetValue());
 			break;
 		case 2:
-			FlipFlop *FFtemp = (FlipFlop*) pDoc->currObject.at(0);
+		{
+			FlipFlop *FFtemp = (FlipFlop*)pDoc->currObject.at(0);
 			FFtemp->SetTrigger(pProperty->GetValue());
+
+		}
+			break;
+		case 3:
+		{
+			Clock *Ctemp = (Clock *)pDoc->currObject.at(0);
+			CString cycle = pProperty->GetValue();
+			Ctemp->setCycle(_ttoi(cycle));
+		}
+			AfxMessageBox(L"Dwdaw");
 			break;
 		}
 	}
-
+	pDoc->CheckCircuit();
 	CVCtrl->Invalidate();
 
 	return 0L;

@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CMenuView, CTreeView)
 	ON_UPDATE_COMMAND_UI(ID_CLICK_MODE, &CMenuView::OnUpdateClickMode)
 	ON_COMMAND(ID_SELECT_MODE, &CMenuView::OnSelectMode)
 	ON_UPDATE_COMMAND_UI(ID_SELECT_MODE, &CMenuView::OnUpdateSelectMode)
+	ON_NOTIFY_REFLECT(NM_DBLCLK, &CMenuView::OnNMDblclk)
 END_MESSAGE_MAP()
 
 
@@ -85,6 +86,10 @@ void CMenuView::OnInitialUpdate()
 	treeCtrl.InsertItem(_T("D Flip-Flop"), 11, 11, hFF, TVI_LAST);
 	treeCtrl.InsertItem(_T("JK Flip-Flop"), 12, 12, hFF, TVI_LAST);
 	treeCtrl.InsertItem(_T("T Flip-Flop"), 13, 13, hFF, TVI_LAST);
+
+	HTREEITEM hLibrary = treeCtrl.InsertItem(_T("Library"), 0, 0, TVI_ROOT, TVI_LAST);
+
+	treeCtrl.InsertItem(_T("Library Box"), 14, 14, hLibrary, TVI_LAST);
 }
 
 
@@ -236,3 +241,45 @@ void CMenuView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
 }
 
+
+
+void CMenuView::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+	CTreeCtrl& treeCtrl = GetTreeCtrl();
+
+	TV_HITTESTINFO p;
+	//화면 상에서 마우스의 위치를 얻는다.
+	GetCursorPos(&p.pt);
+
+	//얻은 마우스 좌표를 트리 컨트롤 기준의 좌표로 변경한다.
+	::ScreenToClient(treeCtrl.m_hWnd, &p.pt);
+
+	//현재 마우스 좌표가 위치한 항목 정보를 얻는다..
+	HTREEITEM current_item = treeCtrl.HitTest(&p);
+
+	if (current_item != NULL) {
+		treeCtrl.Select(current_item, TVGN_CARET);
+		pDoc->isSelected = TRUE;
+	}
+
+	//항목 정보의 이름을 얻는다.
+	CString typeTemp = treeCtrl.GetItemText(current_item);
+	
+	//라이브러리를 더블클릭하면 해당	파일의
+	//로직도를 보여준다.
+	if (typeTemp == "Library Box")
+	{
+		AfxMessageBox(L"gewgew");
+	}
+	else {
+		pDoc->isSelected = FALSE;
+	}
+
+	if (pDoc->temp != NULL) {
+		delete pDoc->temp;
+		pDoc->temp = NULL;
+	}
+
+	*pResult = 0;
+}

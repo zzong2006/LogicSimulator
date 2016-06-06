@@ -30,6 +30,7 @@ public:
 	afx_msg void OnSelectMode();
 	afx_msg void OnUpdateSelectMode(CCmdUI *pCmdUI);
 	
+	afx_msg void OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 

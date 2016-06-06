@@ -806,7 +806,7 @@ void CCircuitView::OnOnSimulate()
 	}
 	else {
 		pDoc->simulateMode = TRUE;
-		SetTimer(0, 1000, NULL);
+		SetTimer(0, 1, NULL);
 	}
 		
 }
@@ -827,12 +827,11 @@ void CCircuitView::OnUpdateOnSimulate(CCmdUI *pCmdUI)
 void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-
+	
 	for (int i = 0; i < pDoc->clockInfo.size(); i++) {
 		pDoc->clockInfo.at(i)->moveCycle();
 	}
-	pDoc->CheckCircuit();
-	Invalidate();
+
 	CView::OnTimer(nIDEvent);
 }
 

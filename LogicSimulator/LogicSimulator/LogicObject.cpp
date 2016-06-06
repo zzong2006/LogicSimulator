@@ -123,33 +123,132 @@ void LogicObject::set_Coord_ByFacing(CString input)
 		}
 		break;
 	case WIRING_TYPE:
-		switch (facing)
+		if (objectName == SEG7)
 		{
-		case EAST:
-			inputCoord[0].first.x = inputCoord[1].first.x = top.x;
-			inputCoord[0].first.y = top.y - 2 * UNIT;
-			inputCoord[1].first.y = top.y - 4 * UNIT;
-			outputCoord[0].first.x = bottom.x;
-			outputCoord[0].first.y = bottom.y - 3 * UNIT;
-			break;
-		case WEST:
-			break;
-		case SOUTH:
-			break;
-		case NORTH:
-			break;
+			
+		}
+		else if(objectName == OUTPIN) {
+			switch (facing)
+			{
+			case EAST:
+				inputCoord[0].first.x = bottom.x;
+				inputCoord[0].first.y = bottom.y - UNIT;
+				break;
+			case WEST:
+				inputCoord[0].first.x = top.x;
+				inputCoord[0].first.y = top.y + UNIT;
+				break;
+			case SOUTH:
+				inputCoord[0].first.x = bottom.x - UNIT;
+				inputCoord[0].first.y = bottom.y;
+				break;
+			case NORTH:
+				inputCoord[0].first.x = top.x + UNIT;
+				inputCoord[0].first.y = top.y;
+				break;
+
+			}
+		}
+		else {
+			switch (facing)
+			{
+			case EAST:
+				outputCoord[0].first.x = bottom.x;
+				outputCoord[0].first.y = bottom.y - UNIT;
+				break;
+			case WEST:
+				outputCoord[0].first.x = top.x;
+				outputCoord[0].first.y = top.y + UNIT;
+				break;
+			case SOUTH:
+				outputCoord[0].first.x = bottom.x - UNIT;
+				outputCoord[0].first.y = bottom.y;
+				break;
+			case NORTH:
+				outputCoord[0].first.x = top.x + UNIT;
+				outputCoord[0].first.y = top.y;
+				break;
+
+			}
 		}
 		break;
 	case FLIPFLOP_TYPE:
-		switch (facing) {
-		case EAST:
-			break;
-		case WEST:
-			break;
-		case SOUTH:
-			break;
-		case NORTH:
-			break;
+		if (objectName == JK_FF)
+		{
+			switch (facing) {
+			case EAST:
+				outputCoord[0].first.x = outputCoord[1].first.x = bottom.x;
+				outputCoord[1].first.y = bottom.y - 1 * UNIT;
+				outputCoord[0].first.y = bottom.y - 5 * UNIT;
+				inputCoord[0].first.x = inputCoord[1].first.x = inputCoord[2].first.x=  top.x;
+				inputCoord[0].first.y = top.y - UNIT;		//K
+				inputCoord[1].first.y = top.y - 3 * UNIT;	//C
+				inputCoord[2].first.y = top.y - 5 * UNIT;	//J
+				break;
+			case WEST:
+				outputCoord[0].first.x = outputCoord[1].first.x = top.x;
+				inputCoord[0].first.x = inputCoord[1].first.x = inputCoord[2].first.x =  bottom.x;
+				outputCoord[0].first.y = top.y + 5 * UNIT;
+				outputCoord[1].first.y = top.y + UNIT;	//Q' 이쪽이 위에
+				inputCoord[0].first.y = bottom.y - UNIT;	 //K
+				inputCoord[1].first.y = bottom.y - 3 * UNIT; // C
+				inputCoord[2].first.y = bottom.y - 5 * UNIT; //J
+				break;
+			case SOUTH:
+				outputCoord[0].first.y = outputCoord[1].first.y = bottom.y;
+				inputCoord[0].first.y = inputCoord[1].first.y = inputCoord[2].first.y = top.y;
+				outputCoord[0].first.x = top.x + 5 * UNIT;	//Q
+				outputCoord[1].first.x = top.x + UNIT;		//Q'
+				inputCoord[0].first.x = bottom.x - UNIT; //K
+				inputCoord[1].first.x = bottom.x - 3 * UNIT;	//C
+				inputCoord[2].first.x = bottom.x - 5 * UNIT; // J
+				break;
+			case NORTH:
+				outputCoord[0].first.y = outputCoord[1].first.y = top.y;
+				inputCoord[0].first.y = inputCoord[1].first.y = inputCoord[2].first.y =  bottom.y;
+				outputCoord[0].first.x = top.x + UNIT;
+				outputCoord[1].first.x = top.x + 5 * UNIT;
+				inputCoord[0].first.x = bottom.x - 5 * UNIT;	//k
+				inputCoord[1].first.x = bottom.x - 3 * UNIT;	//C
+				inputCoord[2].first.x = bottom.x - UNIT;		//J
+				break;
+			}
+		}
+		else {
+			switch (facing) {
+			case EAST:
+				outputCoord[0].first.x = outputCoord[1].first.x = bottom.x;
+				outputCoord[1].first.y = bottom.y - 1 * UNIT;
+				outputCoord[0].first.y = bottom.y - 5 * UNIT;
+				inputCoord[0].first.x = inputCoord[1].first.x = top.x;
+				inputCoord[0].first.y = top.y - UNIT;
+				inputCoord[1].first.y = top.y - 5 * UNIT;
+				break;
+			case WEST:
+				outputCoord[0].first.x = outputCoord[1].first.x = top.x;
+				inputCoord[0].first.x = inputCoord[1].first.x = bottom.x;
+				outputCoord[0].first.y = top.y + 5 * UNIT;
+				outputCoord[1].first.y = top.y + UNIT;	//Q' 이쪽이 위에
+				inputCoord[0].first.y = bottom.y - UNIT;
+				inputCoord[1].first.y = bottom.y - 5 * UNIT;
+				break;
+			case SOUTH:
+				outputCoord[0].first.y = outputCoord[1].first.y = bottom.y;
+				inputCoord[0].first.y = inputCoord[1].first.y = top.y;
+				outputCoord[0].first.x = top.x + 5 * UNIT;
+				outputCoord[1].first.x = top.x + UNIT;
+				inputCoord[0].first.x = bottom.x - 5 * UNIT;
+				inputCoord[1].first.x = bottom.x - UNIT;
+				break;
+			case NORTH:
+				outputCoord[0].first.y = outputCoord[1].first.y = top.y;
+				inputCoord[0].first.y = inputCoord[1].first.y = bottom.y;
+				outputCoord[0].first.x = top.x + UNIT;
+				outputCoord[1].first.x = top.x + 5 * UNIT;
+				inputCoord[0].first.x = bottom.x - 5 * UNIT;
+				inputCoord[1].first.x = bottom.x - UNIT;
+				break;
+			}
 		}
 		break;
 	}

@@ -192,6 +192,7 @@
     <ClInclude Include="FlipFlop.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="JKFlipFlop.h" />
+    <ClInclude Include="LibraryBox.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
     <ClInclude Include="LogicSimulator.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="FlipFlop.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="JKFlipFlop.cpp" />
+    <ClCompile Include="LibraryBox.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />

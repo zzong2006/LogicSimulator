@@ -55,11 +55,6 @@ void Out::setOutput()
 	output = inputCoord[0].second;
 }
 
-int Out::getOutput()
-{
-	return output;
-}
-
 Out::Out() : Wiring()
 {
 	width = 2;
@@ -69,8 +64,7 @@ Out::Out() : Wiring()
 Out::Out(int dec_x, int dec_y) : Wiring()
 {
 	outputNum = 0;
-
-	objectType = WIRING_TYPE;
+	inputNum = 1;
 	objectName = OUTPIN;
 
 	this->set_inputCoord(dec_x, dec_y);

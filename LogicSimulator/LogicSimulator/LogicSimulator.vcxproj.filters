@@ -76,6 +76,9 @@
     <ClCompile Include="TFlipFlop.cpp">
       <Filter>FlipFlop</Filter>
     </ClCompile>
+    <ClCompile Include="LibraryBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogicSimulator.h">
@@ -84,16 +87,10 @@
     <ClInclude Include="LogicObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="name_repo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="MainFrm.h">
@@ -161,6 +158,15 @@
     </ClInclude>
     <ClInclude Include="TFlipFlop.h">
       <Filter>FlipFlop</Filter>
+    </ClInclude>
+    <ClInclude Include="LibraryBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="name_repo.h">
+      <Filter>리소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

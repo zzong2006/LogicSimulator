@@ -5,6 +5,7 @@
 Wiring::Wiring() : LogicObject()
 {
 	objectType = WIRING_TYPE;
+	if(objectName)
 	inputNum = 1;
 	outputNum = 1;
 }

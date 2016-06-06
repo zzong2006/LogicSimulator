@@ -18,7 +18,10 @@ public:
 	virtual void turn();
 	void toggleOutput();
 
-	void moveCycle();	//시뮬레이터 시작후 사이클을 돌린다.
+	void moveCycle();
+	void setCycle(int input);
+	int getOricycle() { return oriCycle; };
+	//시뮬레이터 시작후 사이클을 돌린다.
 
 	Clock();
 	Clock(int dec_x, int dec_y);
