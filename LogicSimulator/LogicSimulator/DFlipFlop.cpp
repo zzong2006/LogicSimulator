@@ -55,7 +55,7 @@ DFlipFlop::DFlipFlop() : FlipFlop()
 DFlipFlop::DFlipFlop(int dec_x, int dec_y) : FlipFlop()
 {
 	objectName = D_FF;
-
+	objectType = FLIPFLOP_TYPE;
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
 }

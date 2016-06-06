@@ -53,6 +53,7 @@ JKFlipFlop::JKFlipFlop()
 JKFlipFlop::JKFlipFlop(int dec_x, int dec_y) : FlipFlop()
 {
 	objectName = JK_FF;
+	objectType = FLIPFLOP_TYPE;
 	inputNum = 3;
 
 	this->set_outputCoord(dec_x, dec_y);

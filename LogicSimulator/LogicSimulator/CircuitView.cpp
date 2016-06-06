@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 //	ON_WM_KEYDOWN()
 	ON_COMMAND(ID_EDIT_UNDO, &CCircuitView::OnEditUndo)
 	ON_COMMAND(ID_EDIT_REDO, &CCircuitView::OnEditRedo)
+	ON_WM_DELETEITEM()
 END_MESSAGE_MAP()
 
 
@@ -281,7 +282,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					Gtemp->set_Coord_From_outC(dec_x, dec_y);
 
 					pDoc->logicInfo.push_back(Gtemp);
-					pDoc->gateInfo.push_back(Gtemp);
 					pDoc->mUndo.AddHead(Action(GATE_TYPE, NEW));
 				}
 			}
@@ -297,7 +297,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
-					pDoc->pinInfo.push_back(Ptemp);
 					temp = Ptemp;
 
 					pDoc->mUndo.AddHead(Action(PIN, NEW));
@@ -305,7 +304,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	
 				case CLOCK:
 					Ctemp = new Clock(dec_x,dec_y);
-					pDoc->clockInfo.push_back(Ctemp);
 					temp = Ctemp;
 
 					pDoc->mUndo.AddHead(Action(CLOCK, NEW));
@@ -313,14 +311,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
-					pDoc->outInfo.push_back(Otemp);
 					temp = Otemp;
 
 					pDoc->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 				case SEG7:
 					Stemp = new Sevenseg(dec_x, dec_y);
-					pDoc->segInfo.push_back(Stemp);
 					temp = Stemp;
 
 					pDoc->mUndo.AddHead(Action(SEG7, NEW));
@@ -357,7 +353,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					Ftemp->set_Coord_From_outC(dec_x, dec_y);
 
 					pDoc->logicInfo.push_back(Ftemp);
-					pDoc->FFInfo.push_back(Ftemp);
 					pDoc->mUndo.AddHead(Action(FLIPFLOP_TYPE, NEW));
 				}
 			}
@@ -374,27 +369,19 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		if (pDoc->clickMode) {
 			POINT temp_top, temp_bottom;
 
-			for (int i = 0; i < pDoc->pinInfo.size(); i++)
+			for (int i = 0; i < pDoc->logicInfo.size(); i++)
 			{
-				
-				temp_top = pDoc->pinInfo.at(i)->get_top();
-				temp_bottom = pDoc->pinInfo.at(i)->get_bottm();
+				LogicObject* tempLogic = pDoc->logicInfo.at(i);
+				if (pDoc->IsInput(tempLogic))
+				{
+					temp_top = tempLogic->get_top();
+					temp_bottom = tempLogic->get_bottm();
 
-				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
+					CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-				if (PtInRect(rect, point)) 
-					pDoc->pinInfo.at(i)->toggleOutput();
-			}
-
-			for (int i = 0; i < pDoc->clockInfo.size(); i++)
-			{
-				temp_top = pDoc->clockInfo.at(i)->get_top();
-				temp_bottom = pDoc->clockInfo.at(i)->get_bottm();
-
-				CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
-
-				if (PtInRect(rect, point))
-					pDoc->clockInfo.at(i)->toggleOutput();
+					if (PtInRect(rect, point))
+						tempLogic->toggleOutput();
+				}
 			}
 		}
 		else {	//클릭 모드 상태에서만 객체 선택 가능
@@ -842,8 +829,13 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	
-	for (int i = 0; i < pDoc->clockInfo.size(); i++) {
-		pDoc->clockInfo.at(i)->moveCycle();
+	for (int i = 0; i < pDoc->logicInfo.size(); i++) {
+		LogicObject* tempLogic = pDoc->logicInfo.at(i);
+		if (tempLogic->objectName == CLOCK){
+			Clock* Ctemp = (Clock*)tempLogic;
+			Ctemp->moveCycle();
+		}
+			
 	}
 
 	CView::OnTimer(nIDEvent);
@@ -870,4 +862,28 @@ void CCircuitView::OnEditRedo()
 		pDoc->Redo();
 	Beep(300, 50);
 	Invalidate();
+}
+
+
+void CCircuitView::OnDeleteItem(int nIDCtl, LPDELETEITEMSTRUCT lpDeleteItemStruct)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+	int lin = pDoc->lines.size();
+	int lon = pDoc->logicInfo.size();
+
+	for (int i = 0; i < lin; i++)
+	{
+		
+	}
+
+	for (int i = 0; i < lon; i++)
+	{
+		if (pDoc->logicInfo.at(i)->isSelected == TRUE)
+		{
+
+		}
+	}
+
+	CView::OnDeleteItem(nIDCtl, lpDeleteItemStruct);
 }

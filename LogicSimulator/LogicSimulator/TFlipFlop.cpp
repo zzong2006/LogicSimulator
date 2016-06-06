@@ -52,6 +52,7 @@ TFlipFlop::TFlipFlop()
 TFlipFlop::TFlipFlop(int dec_x, int dec_y) : FlipFlop()
 {
 	objectName = T_FF;
+	objectType = FLIPFLOP_TYPE;
 
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);

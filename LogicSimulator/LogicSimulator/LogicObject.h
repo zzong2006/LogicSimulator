@@ -25,6 +25,10 @@ public:
 	int inputNum, outputNum;			//입력선 개수, 출력선 개수
 	bool output, isSelected;
 
+	int state;
+	int cycle;			//주기 1000이 1초임. (초기값 1000)
+	int oriCycle;		//보관용 주기 사이클 (cycle은 계속 빼면서 체크)
+
 	int chk;			//알고리즘 돌때 방문했는가?
 
 	//그림자 그리기
@@ -46,6 +50,10 @@ public:
 	void set_Coord_ByFacing(CString input);
 	//좌표 변경할때 스크린 좌표계에 맞게 변경
 	void move_Coord(long & x, long & change);
+
+	void setOutput();
+
+	void moveCycle();
 	
 
 	void set_outputCoord(int x, int y);		//출력 좌표 설정

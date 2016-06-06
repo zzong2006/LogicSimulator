@@ -55,11 +55,17 @@ void Clock::toggleOutput()
 	output = !output;
 }
 
+
+void Clock::setCycle(int input)
+{
+	cycle = oriCycle = (int)(1000 / input);
+}
+
 void Clock::moveCycle()
 {
 
 	cycle -= 10;
-	
+
 	if (cycle == 0)
 	{
 		CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
@@ -69,18 +75,12 @@ void Clock::moveCycle()
 
 		cycle = oriCycle;
 		toggleOutput();
-		
+
 		pDoc->CheckCircuit();
 		CVCtrl->Invalidate();
 	}
 
 }
-
-void Clock::setCycle(int input)
-{
-	cycle = oriCycle = (int)(1000 / input);
-}
-
 
 Clock::Clock() : Wiring()
 {

@@ -63,6 +63,7 @@ Out::Out(int dec_x, int dec_y) : Wiring()
 	outputNum = 0;
 	inputNum = 1;
 	objectName = OUTPIN;
+	objectType = WIRING_TYPE;
 
 	this->set_inputCoord(dec_x, dec_y);
 
