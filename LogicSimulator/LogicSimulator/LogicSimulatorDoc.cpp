@@ -215,12 +215,11 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					break;
 				}
 				break;
-			case BOX:
+			case LIB:
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 
 				currBox->logicInfo.push_back(Btemp);
-				currBox->mUndo.AddHead(Action(LIB, NEW));
 				break;
 			}
 		}
