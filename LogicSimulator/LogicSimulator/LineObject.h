@@ -27,7 +27,7 @@ public:
 	void check_connect();
 
 	BOOL Is_match_IineCoord(CPoint src);
-
+	BOOL Is_match_CLICK(CPoint src);
 	LineObject(int x, int y);
 	LineObject(CPoint point);
 	LineObject(CPoint fpos, CPoint spos);

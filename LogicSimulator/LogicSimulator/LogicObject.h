@@ -9,7 +9,6 @@ using namespace std;
 class LogicObject
 {
 protected:
-	POINT top, bottom; // left top / bottom
 	POINT labelPos;
 	int width, height;
 
@@ -19,6 +18,7 @@ protected:
 
 public:
 	CString label;
+	POINT top, bottom; // left top / bottom
 	int facing;
 	int objectType, objectName;
 

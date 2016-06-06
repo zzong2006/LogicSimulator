@@ -26,7 +26,6 @@ public:
 		Act = act;
 		if (type == LINE)
 			line_num = 2;
-
 	}
 	Action()
 	{
@@ -46,6 +45,16 @@ public:
 	std::vector <LineObject *> lines;
 	std::vector <int> lineIndex;
 	std::vector <int> logicIndex;
+
+};
+
+class Store
+{
+public :
+	std::vector <int > type, name;
+	int logicNum;
+	CPoint dec;
+	std::vector <LineObject > lines;
 };
 
 class LibraryBox 
@@ -62,6 +71,7 @@ public:
 	std::vector <LineObject *> lines;
 
 	LogicObject* temp;
+	Store store;
 
 	// undo/redo
 	CList <Action> mUndo;

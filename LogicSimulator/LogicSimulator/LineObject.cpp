@@ -10,7 +10,7 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	max.x = MAX(line[0].x, line[1].x);
 	max.y = MAX(line[0].y, line[1].y);
 
-	CRect area(min.x - 5, min.y - 5, max.x + 5, max.y + 5);
+	CRect area(min.x - 1, min.y - 1, max.x + 1, max.y + 1);
 
 	if (area.PtInRect(src))
 		return TRUE;
@@ -18,6 +18,21 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	return FALSE;
 }
 
+BOOL LineObject::Is_match_CLICK(CPoint src)
+{
+	POINT max, min;
+	min.x = MIN(line[0].x, line[1].x);
+	min.y = MIN(line[0].y, line[1].y);
+	max.x = MAX(line[0].x, line[1].x);
+	max.y = MAX(line[0].y, line[1].y);
+
+	CRect area(min.x - 5, min.y - 5, max.x + 5, max.y + 5);
+	CRect coord_area(min.x - 1, min.y - 1, max.x + 1, max.y + 1);
+	if (area.PtInRect(src) && !coord_area.PtInRect(src))
+		return TRUE;
+
+	return FALSE;
+}
 
 /*선의 색은...
 	Pin(Wiring) 과 연결안됬을 경우 -> 파란색

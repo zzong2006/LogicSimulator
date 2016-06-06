@@ -132,6 +132,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			Pin *Ptemp;
 			Clock *Ctemp;
 			Out *Otemp;
+			Box *Btemp;
 
 			switch (objectType)
 			{
@@ -212,6 +213,13 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					currBox->logicInfo.push_back(Otemp);
 					break;
 				}
+				break;
+			case BOX:
+				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
+				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
+
+				currBox->logicInfo.push_back(Btemp);
+				currBox->mUndo.AddHead(Action(LIB, NEW));
 				break;
 			}
 		}
