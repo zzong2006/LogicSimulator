@@ -137,7 +137,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	if (tempLO->objectName == CLOCK)
 	{
 		Clock* Ctemp = (Clock *)tempLO;
-		cycleHz.Format(_T("%f"), (double)(1000/Ctemp->getOricycle()));
+		cycleHz.Format(_T("%.0f"), (double)(1000/Ctemp->getOricycle()));
 
 		pGroupInfo->AddSubItem(new CMFCPropertyGridProperty(_T("Clock(Hz)"), cycleHz, _T("Ό³Έν"),3));
 
@@ -180,7 +180,6 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 			CString cycle = pProperty->GetValue();
 			Ctemp->setCycle(_ttoi(cycle));
 		}
-			AfxMessageBox(L"Dwdaw");
 			break;
 		}
 	}

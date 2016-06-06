@@ -806,7 +806,7 @@ void CCircuitView::OnOnSimulate()
 	}
 	else {
 		pDoc->simulateMode = TRUE;
-		SetTimer(0, 1, NULL);
+		SetTimer(0, 10, NULL);
 	}
 		
 }

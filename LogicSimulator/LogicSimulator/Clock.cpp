@@ -3,7 +3,7 @@
 #include "resource.h"
 #include "LogicSimulator.h"
 #include "CircuitView.h"
-#include "MainFrm.h""
+#include "MainFrm.h"
 #include "LogicSimulatorDoc.h"
 
 void Clock::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
@@ -58,7 +58,7 @@ void Clock::toggleOutput()
 void Clock::moveCycle()
 {
 
-	cycle -= 1;
+	cycle -= 10;
 	
 	if (cycle == 0)
 	{
