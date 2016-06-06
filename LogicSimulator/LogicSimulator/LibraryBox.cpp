@@ -97,6 +97,7 @@ void LibraryBox::CheckCircuit()
 
 
 			//게이트 ,라이브러리 박스, 출력핀, 플립플롭
+			
 			for (int i = 0; i < logicInfo.size(); i++)
 			{
 				LogicObject* curLogic = logicInfo.at(i);
@@ -125,13 +126,19 @@ void LibraryBox::CheckCircuit()
 		for (int i = 0; i < logicInfo.size(); i++)
 		{
 			LogicObject* curLogic = logicInfo.at(i);
-			//Gate 방문
+			//Gate & FlipFlop 방문
 			if (IsGate(curLogic))
 			{
 				if (curLogic->chk == 0 && curLogic->isInputSet())
 				{
 					curLogic->chk = 1;
-					curLogic->setOutput();
+					if (curLogic->objectType == FLIPFLOP_TYPE) {
+						FlipFlop* fftemp = (FlipFlop *)curLogic;
+						fftemp->setOutput();
+					}
+					else {
+						curLogic->setOutput();
+					}
 
 					//플립플롭 출력선은 두개
 					for (int j = 0; j < curLogic->outputNum; j++)
@@ -202,12 +209,12 @@ BOOL LibraryBox::IsInput(LogicObject * lo)
 
 BOOL LibraryBox::IsGate(LogicObject * lo)
 {
-	return lo->objectType == GATE_TYPE || lo->objectName == FLIPFLOP_TYPE;
+	return lo->objectType == GATE_TYPE || lo->objectType == FLIPFLOP_TYPE;
 }
 
 BOOL LibraryBox::IsOutput(LogicObject * lo)
 {
-	return lo->objectType == OUTPIN || lo->objectName == SEG7;
+	return lo->objectName == OUTPIN || lo->objectName == SEG7;
 }
 
 BOOL LibraryBox::CanUndo()
