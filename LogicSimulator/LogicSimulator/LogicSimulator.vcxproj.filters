@@ -85,6 +85,7 @@
     <ClCompile Include="Box.cpp">
       <Filter>Library</Filter>
     </ClCompile>
+    <ClCompile Include="Graph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogicSimulator.h">
@@ -180,6 +181,7 @@
     <ClInclude Include="Box.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="Graph.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\LogicSimulatorDoc.ico">

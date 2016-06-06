@@ -14,6 +14,7 @@
 #include "Box.h"
 #include "MainFrm.h"
 #include "CircuitView.h"
+#include "Graph.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -69,4 +70,5 @@ public:
 	afx_msg void OnFileSave();
 	afx_msg void OnFileOpen();
 	afx_msg void OnFileNew();
+	afx_msg void OnOutputGraph();
 };

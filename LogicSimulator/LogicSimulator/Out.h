@@ -16,6 +16,7 @@ public:
 
 	Out();
 	Out(int dec_x, int dec_y);
+	Out(int dec_x, int dec_y, int ConNum);
 	virtual ~Out();
 };
 

@@ -192,6 +192,7 @@
     <ClInclude Include="DFlipFlop.h" />
     <ClInclude Include="FlipFlop.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="JKFlipFlop.h" />
     <ClInclude Include="LibraryBox.h" />
     <ClInclude Include="LineObject.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="DFlipFlop.cpp" />
     <ClCompile Include="FlipFlop.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="JKFlipFlop.cpp" />
     <ClCompile Include="LibraryBox.cpp" />
     <ClCompile Include="LineObject.cpp" />

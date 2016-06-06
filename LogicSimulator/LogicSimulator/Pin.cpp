@@ -3,6 +3,8 @@
 #include <string>
 #include "resource.h"
 #include "LogicSimulator.h"
+#include "MainFrm.h"
+#include "LogicSimulatorDoc.h"
 
 void Pin::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
@@ -70,6 +72,10 @@ Pin::Pin() : Wiring()
 
 Pin::Pin(int dec_x, int dec_y) : Wiring()
 {
+	CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)pFrame->GetActiveDocument();
+
 	objectType = WIRING_TYPE;
 	objectName = PIN;
 
@@ -78,6 +84,30 @@ Pin::Pin(int dec_x, int dec_y) : Wiring()
 
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
+
+	pDoc->currBox->NumInput++;
+	this->setConNum(pDoc->currBox->FindEmpty(0));
+}
+
+Pin::Pin(int dec_x, int dec_y, int ConNum) :Wiring()
+{
+	CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)pFrame->GetActiveDocument();
+
+	objectType = WIRING_TYPE;
+	objectName = PIN;
+
+	outputNum = 1;
+	inputNum = 0;
+
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
+
+	if (ConNum >= 0)
+		pDoc->currBox->ConnInput[ConNum] = TRUE;
+
+	setConNum(ConNum);
 }
 
 Pin::~Pin()

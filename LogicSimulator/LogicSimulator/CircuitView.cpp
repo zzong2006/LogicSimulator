@@ -297,9 +297,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
 					temp = Ptemp;
-					pDoc->currBox->NumInput++;
 					//라이브러리 상자에 대한 입력 위치를 찾아준다.
-					Ptemp->setConNum(pDoc->currBox->FindEmpty(0));
 					pDoc->currBox->mUndo.AddHead(Action(PIN, NEW));
 					break;
 	
@@ -313,9 +311,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
 					temp = Otemp;
-					pDoc->currBox->NumOuput++;
-					//라이브러리 상자에 대한 출력 위치를 찾아준다.
-					Otemp->setConNum(pDoc->currBox->FindEmpty(1));
 					pDoc->currBox->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 				case SEG7:
@@ -455,10 +450,10 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						sdis.y = dec_y - pDoc->currBox->lines.at(i)->line[0].y;
 						edis.x = dec_x - pDoc->currBox->lines.at(i)->line[1].x;
 						edis.y = dec_y - pDoc->currBox->lines.at(i)->line[1].y;
-					}
-				}
-
 			}
+		}
+
+	}
 		}
 	}
 
@@ -802,12 +797,12 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 			Action mk_line = Action(LINE, NEW);
 
 			for (int i = 1; i > -1; i--)
-			{
+		{
 				if (temp_line[i]->line[0] == temp_line[i]->line[1])
 				{
-					pDoc->currBox->lines.pop_back();
+			pDoc->currBox->lines.pop_back();
 					mk_line.line_num--;
-				}
+		}
 			}
 
 			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
@@ -827,19 +822,19 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 						pDoc->currBox->lines.push_back(newline);
 						pDoc->currBox->mUndo.GetHead().line_num++;
 						pDoc->currBox->mUndo.GetHead().lineked_line.push_back(curline);
-					}
+	}
 					break;
 				}
 			}
 
 
 			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
-			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
-			{
+	for (int i = 0; i < pDoc->currBox->lines.size(); i++)
+	{
 				if (i != cur_line && pDoc->currBox->lines.at(i)->Is_match_IineCoord(point))
 				{
-					if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point))
-					{
+		if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point))
+		{
 						LineObject* curline = pDoc->currBox->lines.at(i);
 						if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 						{
@@ -855,8 +850,8 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 							mk_line.lineked_line.push_back(newline);
 
 							pDoc->currBox->lines.push_back(newline);
-						}
-					}
+		}
+	}
 				}
 			}
 			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
@@ -1005,6 +1000,7 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 				temp.lines.push_back(pDoc->currBox->lines.at(i));
 				temp.lineIndex.push_back(i);
+				//delete pDoc->currBox->lines.at(i);
 				pDoc->currBox->lines.erase(pDoc->currBox->lines.begin() + i);
 				lin--;
 			}
@@ -1016,6 +1012,25 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 				temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
 				temp.logicIndex.push_back(i);
+				
+				//OUT & INPIN 특별 취급
+				if (pDoc->currBox->logicInfo.at(i)->objectName == PIN) {
+					Pin* TP = (Pin*)pDoc->currBox->logicInfo.at(i);
+					if (TP->getConNum() >= 0)
+						pDoc->currBox->ConnInput[TP->getConNum()] = FALSE;
+
+					pDoc->currBox->NumInput--;
+				}
+				else if (pDoc->currBox->logicInfo.at(i)->objectName == OUTPIN) {
+					Out* TO = (Out*)pDoc->currBox->logicInfo.at(i);
+					if (TO->getConNum() >= 0)
+						pDoc->currBox->ConnOutput[TO->getConNum()] = FALSE;
+
+					pDoc->currBox->NumOuput--;
+				}
+
+				//delete pDoc->currBox->logicInfo.at(i);
+				
 				pDoc->currBox->logicInfo.erase(pDoc->currBox->logicInfo.begin() + i);
 				lon--;
 			}

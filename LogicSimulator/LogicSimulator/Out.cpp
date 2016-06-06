@@ -2,6 +2,8 @@
 #include "Out.h"
 #include "resource.h"
 #include "LogicSimulator.h"
+#include "MainFrm.h"
+#include "LogicSimulatorDoc.h"
 
 void Out::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
 {
@@ -65,6 +67,10 @@ Out::Out() : Wiring()
 
 Out::Out(int dec_x, int dec_y) : Wiring()
 {
+	CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)pFrame->GetActiveDocument();
+
 	outputNum = 0;
 	inputNum = 1;
 	objectName = OUTPIN;
@@ -74,8 +80,30 @@ Out::Out(int dec_x, int dec_y) : Wiring()
 
 	width = 2;
 	height = 2;
+
+	//라이브러리 상자에 대한 출력 위치를 찾아준다.
+	pDoc->currBox->NumOuput++;
+	this->setConNum(pDoc->currBox->FindEmpty(1));
 }
 
+Out::Out(int dec_x, int dec_y, int ConNum) :Wiring()
+{
+	CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)pFrame->GetActiveDocument();
+
+	outputNum = 0;
+	inputNum = 1;
+	objectName = OUTPIN;
+	objectType = WIRING_TYPE;
+
+	this->set_outputCoord(dec_x, dec_y);
+	this->set_inputCoord(dec_x, dec_y);
+
+	if(ConNum >= 0)
+		pDoc->currBox->ConnOutput[ConNum] = TRUE;
+	setConNum(ConNum);
+}
 
 Out::~Out()
 {

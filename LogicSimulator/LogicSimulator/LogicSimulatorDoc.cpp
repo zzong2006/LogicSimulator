@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE, &CLogicSimulatorDoc::OnFileSave)
 	ON_COMMAND(ID_FILE_OPEN, &CLogicSimulatorDoc::OnFileOpen)
 	ON_COMMAND(ID_FILE_NEW, &CLogicSimulatorDoc::OnFileNew)
+	ON_COMMAND(ID_OUTPUT_GRAPH, &CLogicSimulatorDoc::OnOutputGraph)
 END_MESSAGE_MAP()
 
 
@@ -419,8 +420,24 @@ void CLogicSimulatorDoc::clearAll()
 	currBox->mUndo.RemoveAll();
 	currBox->mRedo.RemoveAll();
 
-	currBox->NumInput = 0;
-	currBox->NumOuput = 0;
+	currBox->CanBeDivided = false;
+	currBox->isOnFocus = false;
+	currBox->NumOuput = currBox->NumInput = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		currBox->ConnInput[i] = currBox->ConnOutput[i] = FALSE;
+	}
 
 	CVCtrl->Invalidate();
+}
+
+
+void CLogicSimulatorDoc::OnOutputGraph()
+{
+	Graph dlg;
+	Graph *pDlg = new Graph;
+	pDlg->Create(IDD_DIALOG1);
+	pDlg->ShowWindow(SW_SHOW);
+
 }
