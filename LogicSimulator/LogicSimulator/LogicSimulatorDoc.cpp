@@ -396,3 +396,4 @@ void CLogicSimulatorDoc::clearAll()
 	currBox->mUndo.RemoveAll();
 	currBox->mRedo.RemoveAll();
 }
+

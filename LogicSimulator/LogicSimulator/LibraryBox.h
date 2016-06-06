@@ -38,9 +38,12 @@ public:
 
 
 	std::vector <LineObject *> lineked_line;
+
 	std::vector <LogicObject *> logicInfo;
 	std::vector <Sevenseg *> segInfo;
 	std::vector <LineObject *> lines;
+	std::vector <int> lineIndex;
+	std::vector <int> logicIndex;
 };
 
 class LibraryBox : public LogicObject
@@ -69,6 +72,7 @@ public:
 
 	//method
 	void CheckCircuit();
+	void LineCheck();
 	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
 	void draw_main(Gdiplus::Graphics* gp);
 	void set_Coord_From_outC(int x, int y);
@@ -76,6 +80,10 @@ public:
 	BOOL IsInput(LogicObject* lo);
 	BOOL IsGate(LogicObject* lo);
 	BOOL IsOutput(LogicObject* lo);
+
+	BOOL IsConflict(LineObject* st, LineObject* ed, CPoint& pos);
+	BOOL IsConnect(CPoint p, LineObject* ed);
+
 
 	BOOL CanUndo();
 	BOOL CanRedo();

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "LibraryBox.h"
 #include <queue>
+#include <math.h>
 
 LibraryBox::LibraryBox()
 {
@@ -242,31 +243,25 @@ void LibraryBox::Undo()
 
 	temp = mUndo.RemoveHead();
 	int lkedn = temp.lineked_line.size();
+	int line_num = temp.lineIndex.size(), object_num = temp.logicIndex.size();
 
 	switch (temp.Act)
 	{
 	case NEW:
-		if (temp.Type == LINE)
-		{
-
-			for (int i = lkedn - 1; i > 0; i -= 2)
-			{
-				temp.lineked_line.at(i - 1)->line[1] = temp.lineked_line.at(i)->line[1];
-				lines.pop_back();
-			}
-
-			for (int i = 0; i < 2; i++)
-			{
-				temp.lines.push_back(lines.at(lines.size() - 1));
-				lines.pop_back();
-			}
-		}
-		else {
 			temp.logicInfo.push_back(logicInfo.at(logicInfo.size() - 1));
 			logicInfo.pop_back();
-		}
+			LineCheck();
 		break;
-	case DELETE:
+	case REMOVE:
+
+		for (int i = 0; i < line_num; i++)
+		{
+			lines.insert(lines.begin() + temp.lineIndex.at(i), temp.lines.at(i));
+		}
+		for (int i = 0; i < object_num; i++)
+		{
+			logicInfo.insert(logicInfo.begin() + temp.logicIndex.at(i), temp.logicInfo.at(i));
+		}
 
 		break;
 	case MOVE:
@@ -286,30 +281,24 @@ void LibraryBox::Redo()
 
 	temp = mRedo.RemoveHead();
 	int lkedn = temp.lineked_line.size();
+	int line_num = temp.lineIndex.size(), object_num = temp.logicIndex.size();
 
 	switch (temp.Act)
 	{
 	case NEW:
-		if (temp.Type == LINE)
-		{
-			for (int i = 1; i > -1; i--)
-			{
-				lines.push_back(temp.lines.at(i));
-				temp.lines.pop_back();
-			}
-
-			for (int i = 0; i < lkedn; i += 2)
-			{
-				temp.lineked_line.at(i)->line[1] = temp.lineked_line.at(i + 1)->line[0];
-				lines.push_back(temp.lineked_line.at(i + 1));
-			}
-		}
-		else {
-			logicInfo.push_back(temp.logicInfo.at(0));
-			temp.logicInfo.pop_back();
-		}
+		logicInfo.push_back(temp.logicInfo.at(0));
+		LineCheck();
+		temp.logicInfo.pop_back();
 		break;
-	case DELETE:
+	case REMOVE:
+		for (int i = 0; i < line_num; i++)
+		{
+			lines.erase(lines.begin() + temp.lineIndex.at(i));
+		}
+		for (int i = 0; i < object_num; i++)
+		{
+			logicInfo.erase(logicInfo.begin() + temp.logicIndex.at(i));
+		}
 		break;
 	case MOVE:
 		break;
@@ -319,4 +308,146 @@ void LibraryBox::Redo()
 		break;
 	}
 	mUndo.AddHead(temp);
+}
+
+
+void  LibraryBox::LineCheck()
+{
+	for (int i = 0; i < lines.size(); i++)
+	{
+		LineObject* stline = lines.at(i);
+		vector<int> sp, ep, erase;
+		CPoint temp, edge;
+		int ed1 = -1, ed2;
+		int cur_shape = stline->shape;
+
+		for (int j = 0; j < lines.size(); j++)
+		{
+			if (i == j) continue;
+
+			LineObject* edline = lines.at(j);
+			CPoint conpos;
+			if (IsConflict(stline, edline, conpos))
+			{
+				LineObject* newline = new LineObject(conpos.x, conpos.y);
+				newline->line[1] = stline->line[1];
+				if (newline->line[0].x == newline->line[1].x) newline->shape = VERTICAL;
+				else newline->shape = HORIZONTAL;
+				stline->line[1] = conpos;
+				lines.insert(lines.begin() + j, newline);
+			}
+			if (IsConnect(stline->line[0], edline)) 
+				sp.push_back(j);
+			if (IsConnect(stline->line[1], edline)) 
+				ep.push_back(j);
+		}
+
+		BOOL connect = FALSE;
+		edge = stline->line[0];
+		for (int j = 0; j < sp.size(); j++)
+		{
+			if (stline->shape != lines.at(sp.at(j))->shape)
+			{
+				connect = FALSE;
+				break;
+			}
+			else{
+				connect = TRUE;
+				if (lines.at(sp.at(j))->line[0] == stline->line[0])
+					temp = lines.at(sp.at(j))->line[1];
+				else temp = lines.at(sp.at(j))->line[0];
+
+				if (cur_shape == VERTICAL)
+				{
+					if (abs(temp.y - stline->line[0].y) > abs(edge.y - stline->line[0].y))
+					{
+						ed1 = sp.at(j);
+						edge = temp;
+					}
+				}
+				else
+				{
+					if (abs(temp.x - stline->line[0].x) > abs(edge.x - stline->line[0].x))
+					{
+						ed1 = sp.at(j);
+						edge = temp;
+					}
+				}
+			}
+		}
+
+		if (connect)
+		{
+			stline->line[0] = edge;
+			lines.erase(lines.begin() + ed1);
+		}
+
+		connect = FALSE;
+		edge = stline->line[1];
+		for (int j = 0; j < ep.size(); j++)
+		{
+			if (stline->shape != lines.at(ep.at(j))->shape)
+			{
+				connect = FALSE;
+				break;
+			}
+			else
+			{
+				connect = TRUE;
+				if (lines.at(ep.at(j))->line[0] == stline->line[1])
+					temp = lines.at(ep.at(j))->line[1];
+				else temp = lines.at(ep.at(j))->line[0];
+
+				if (cur_shape == VERTICAL)
+				{
+					if (abs(temp.y - stline->line[1].y) > abs(edge.y - stline->line[1].y))
+					{
+						ed2 = ep.at(j);
+						edge = temp;
+					}
+				}
+				else
+				{
+					if (abs(temp.x - stline->line[1].x) > abs(edge.x - stline->line[1].x))
+					{
+						ed2 = ep.at(j);
+						edge = temp;
+					}
+				}
+			}
+		}
+
+		if (connect)
+		{
+			stline->line[1] = edge;
+			if (ed1 != ed2)
+			{
+				lines.erase(lines.begin() + ed2);
+			}
+		}
+	}
+}
+
+BOOL LibraryBox::IsConflict(LineObject* st, LineObject* ed , CPoint& pos)
+{
+	if (st->shape != ed->shape)
+	if (st->Is_match_IineCoord(ed->line[0]))
+	{
+		pos = ed->line[0];
+		return (st->line[0] != ed->line[0] && st->line[0] != ed->line[1] && st->line[1] != ed->line[0] && st->line[1] != ed->line[1]);
+	}
+	else if (st->Is_match_IineCoord(ed->line[1]))
+	{
+		pos = ed->line[1];
+		return (st->line[0] != ed->line[0] && st->line[0] != ed->line[1] && st->line[1] != ed->line[0] && st->line[1] != ed->line[1]);
+	}
+
+	return FALSE;
+}
+
+BOOL LibraryBox::IsConnect(CPoint p, LineObject* ed)
+{
+	if (p == ed->line[0] || p == ed->line[1])
+		return TRUE;
+	return FALSE;
 }
