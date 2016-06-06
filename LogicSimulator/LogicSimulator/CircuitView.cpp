@@ -293,9 +293,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
 					temp = Ptemp;
-					pDoc->currBox->NumInput++;
 					//라이브러리 상자에 대한 입력 위치를 찾아준다.
-					Ptemp->setConNum(pDoc->currBox->FindEmpty(0));
 					pDoc->currBox->mUndo.AddHead(Action(PIN, NEW));
 					break;
 	
@@ -309,9 +307,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
 					temp = Otemp;
-					pDoc->currBox->NumOuput++;
-					//라이브러리 상자에 대한 출력 위치를 찾아준다.
-					Otemp->setConNum(pDoc->currBox->FindEmpty(1));
 					pDoc->currBox->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 				case SEG7:
@@ -887,6 +882,7 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 				temp.lines.push_back(pDoc->currBox->lines.at(i));
 				temp.lineIndex.push_back(i);
+				//delete pDoc->currBox->lines.at(i);
 				pDoc->currBox->lines.erase(pDoc->currBox->lines.begin() + i);
 				lin--;
 			}
@@ -898,6 +894,25 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 				temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
 				temp.logicIndex.push_back(i);
+				
+				//OUT & INPIN 특별 취급
+				if (pDoc->currBox->logicInfo.at(i)->objectName == PIN) {
+					Pin* TP = (Pin*)pDoc->currBox->logicInfo.at(i);
+					if (TP->getConNum() >= 0)
+						pDoc->currBox->ConnInput[TP->getConNum()] = FALSE;
+
+					pDoc->currBox->NumInput--;
+				}
+				else if (pDoc->currBox->logicInfo.at(i)->objectName == OUTPIN) {
+					Out* TO = (Out*)pDoc->currBox->logicInfo.at(i);
+					if (TO->getConNum() >= 0)
+						pDoc->currBox->ConnOutput[TO->getConNum()] = FALSE;
+
+					pDoc->currBox->NumOuput--;
+				}
+
+				//delete pDoc->currBox->logicInfo.at(i);
+				
 				pDoc->currBox->logicInfo.erase(pDoc->currBox->logicInfo.begin() + i);
 				lon--;
 			}

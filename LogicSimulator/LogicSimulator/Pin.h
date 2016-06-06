@@ -18,5 +18,6 @@ public:
 
 	Pin();
 	Pin(int dec_x, int dec_y);
+	Pin(int dec_x, int dec_y, int ConNum);
 	~Pin();
 };

@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE, &CLogicSimulatorDoc::OnFileSave)
 	ON_COMMAND(ID_FILE_OPEN, &CLogicSimulatorDoc::OnFileOpen)
 	ON_COMMAND(ID_FILE_NEW, &CLogicSimulatorDoc::OnFileNew)
+	ON_COMMAND(ID_OUTPUT_GRAPH, &CLogicSimulatorDoc::OnOutputGraph)
 END_MESSAGE_MAP()
 
 
@@ -411,8 +412,20 @@ void CLogicSimulatorDoc::clearAll()
 	currBox->mUndo.RemoveAll();
 	currBox->mRedo.RemoveAll();
 
-	currBox->NumInput = 0;
-	currBox->NumOuput = 0;
+	currBox->CanBeDivided = false;
+	currBox->isOnFocus = false;
+	currBox->NumOuput = currBox->NumInput = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		currBox->ConnInput[i] = currBox->ConnOutput[i] = FALSE;
+	}
 
 	CVCtrl->Invalidate();
+}
+
+
+void CLogicSimulatorDoc::OnOutputGraph()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }

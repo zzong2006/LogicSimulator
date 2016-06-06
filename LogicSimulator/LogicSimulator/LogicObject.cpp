@@ -301,38 +301,48 @@ void LogicObject::set_Coord_ByFacing(CString input)
 			for (int i = 0; i < outputNum; i++)
 			{
 				outputCoord[i].first.x = bottom.x;
-				outputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				outputCoord[i].first.y = top.y + 1 * UNIT + i * UNIT;
 			}
 			for (int i = 0; i < inputNum; i++)
 			{
 				inputCoord[i].first.x = top.x;
-				inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				inputCoord[i].first.y = top.y + 1 * UNIT + i * UNIT;
 			}
 			break;
 		case WEST:
 			for (int i = 0; i < outputNum; i++)
 			{
-				inputCoord[i].first.x = top.x;
-				inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				outputCoord[i].first.x = top.x;
+				outputCoord[i].first.y = top.y + 1 * UNIT + i * UNIT;
 			}
 			for (int i = 0; i < inputNum; i++)
 			{
-				outputCoord[i].first.x = bottom.x;
-				outputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				inputCoord[i].first.x = bottom.x;
+				inputCoord[i].first.y = top.y + 1 * UNIT + i * UNIT;
 			}
 			break;
 		case SOUTH:
+			for (int i = 0; i < outputNum; i++)
+			{
+				outputCoord[i].first.x = top.x + 1 * UNIT + i * UNIT;
+				outputCoord[i].first.y = bottom.y;
+			}
 			for (int i = 0; i < inputNum; i++)
 			{
-				inputCoord[i].first.x = top.x + i * UNIT;
-				inputCoord[i].first.y = bottom.y;
+				inputCoord[i].first.x = top.x + 1 * UNIT + i * UNIT;
+				inputCoord[i].first.y = top.y;
 			}
 			break;
 		case NORTH:
+			for (int i = 0; i < outputNum; i++)
+			{
+				outputCoord[i].first.x = top.x + 1 * UNIT + i * UNIT;
+				outputCoord[i].first.y = top.y;
+			}
 			for (int i = 0; i < inputNum; i++)
 			{
-				inputCoord[i].first.x = top.x + i * UNIT;
-				inputCoord[i].first.y = top.y;
+				inputCoord[i].first.x = top.x + 1 * UNIT + i * UNIT;
+				inputCoord[i].first.y = bottom.y;
 			}
 			break;
 
