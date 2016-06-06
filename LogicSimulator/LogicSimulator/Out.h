@@ -9,7 +9,6 @@ public:
 	void set_Coord_From_outC(int x, int y);
 	void toggleOutput();
 	void setOutput();
-	virtual void turn();
 	int getOutput();
 
 	Out();

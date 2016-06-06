@@ -209,6 +209,7 @@
     <ClInclude Include="Pin.h" />
     <ClInclude Include="PropertyView.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sevenseg.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TFlipFlop.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="Out.cpp" />
     <ClCompile Include="Pin.cpp" />
     <ClCompile Include="PropertyView.cpp" />
+    <ClCompile Include="Sevenseg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -266,6 +268,7 @@
     <Image Include="res\bmp00001.bmp" />
     <Image Include="res\bmp00002.bmp" />
     <Image Include="res\bmp00003.bmp" />
+    <Image Include="res\bmp00004.bmp" />
     <Image Include="res\flipflop.png" />
     <Image Include="res\gate.png" />
     <Image Include="res\icon1.ico" />

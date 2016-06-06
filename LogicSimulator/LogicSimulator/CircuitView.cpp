@@ -290,6 +290,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				Pin *Ptemp = NULL;
 				Clock *Ctemp = NULL;
 				Out	*Otemp = NULL;
+				Sevenseg *Stemp = NULL;
 				temp = NULL;
 
 				switch (pDoc->objectName)
@@ -317,7 +318,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					pDoc->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
-					
+				case SEG7:
+					Stemp = new Sevenseg(dec_x, dec_y);
+					pDoc->segInfo.push_back(Stemp);
+					temp = Stemp;
+
+					pDoc->mUndo.AddHead(Action(SEG7, NEW));
 				}
 
 				if (temp != NULL) {
@@ -543,6 +549,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 						break;
 					case OUTPIN :
 						pDoc->temp = new Out();
+						break;
+					case SEG7 :
+						pDoc->temp = new Sevenseg();
 						break;
 					}
 				}

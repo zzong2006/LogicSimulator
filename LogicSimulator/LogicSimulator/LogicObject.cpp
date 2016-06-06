@@ -300,8 +300,19 @@ void LogicObject::set_inputCoord(int x, int y)
 		}
 		break;
 	case WIRING_TYPE:
-		inputCoord[0].first.x = x;
-		inputCoord[0].first.y = y;
+		if (objectName == SEG7)
+		{
+			for (int i = 0; i < 7; i++)
+				inputCoord[i].first.x = x;
+			
+			for (int i = 0; i < 7; i++)
+				inputCoord[i].first.y = (y - 3 * UNIT) + (UNIT * i);
+		}
+		else {
+
+			inputCoord[0].first.x = x;
+			inputCoord[0].first.y = y;
+		}
 		break;
 	case FLIPFLOP_TYPE:
 		if (objectName == JK_FF)

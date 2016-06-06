@@ -188,6 +188,10 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectName = T_FF;
 		pDoc->objectType = FLIPFLOP_TYPE;
 	}
+	else if (typeTemp == "7-Seg") {
+		pDoc->objectName = SEG7;
+		pDoc->objectType = WIRING_TYPE;
+	}
 	else {
 		pDoc->isSelected = FALSE;
 	}

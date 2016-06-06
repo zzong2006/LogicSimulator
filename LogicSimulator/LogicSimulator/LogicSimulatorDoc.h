@@ -17,7 +17,7 @@
 #include "DFlipFlop.h"
 #include "JKFlipFlop.h"
 #include "TFlipFlop.h"
-
+#include "Sevenseg.h"
 class Action
 {
 public :
@@ -43,12 +43,14 @@ public :
 
 	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Sevenseg *> segInfo;
 	std::vector <LineObject *> lines;
 	std::vector <Clock *> clockInfo;
 	std::vector <FlipFlop *> FFInfo;
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
 	std::vector <Out *> outInfo;
+	
 };
 
 class CLogicSimulatorDoc : public CDocument
@@ -74,6 +76,7 @@ public:
 	std::vector <Gate *> gateInfo;
 	std::vector <Pin *> pinInfo;
 	std::vector <Out *> outInfo;
+	std::vector <Sevenseg *> segInfo;
 	
 	int objectType;
 	int objectName;

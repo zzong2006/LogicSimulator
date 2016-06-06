@@ -405,6 +405,19 @@ void CLogicSimulatorDoc::CheckCircuit()
 			curLogic->inputCoord[i].second = -1;			//input chk 초기화
 	}
 
+	for (int i = 0; i < segInfo.size(); i++)
+	{
+		curLogic = segInfo.at(i);
+
+		curLogic->chk = 0;
+
+		int out = curLogic->outputNum, in = curLogic->inputNum;
+
+		//입력핀 초기화
+		for (int i = 0; i < in; i++)
+			curLogic->inputCoord[i].second = -1;			//input chk 초기화
+	}
+
 	////////////////////출력 시작/////////////////////
 	//입력 Pin/Clock 과 관련된 값만 받기
 	//출력 Pin 같은 경우는 제외해야 한다.
@@ -520,6 +533,22 @@ void CLogicSimulatorDoc::CheckCircuit()
 				}
 			}
 
+			for (int i = 0; i < segInfo.size(); i++)
+			{
+				Sevenseg* curout = segInfo.at(i);
+				if (curout->chk == 0)
+				{
+					int ip = curout->inputNum;
+					for (int j = 0; j < ip; j++)
+					{
+						if (curout->inputCoord[j].first == temp_line->line[0] || curout->inputCoord[j].first == temp_line->line[1])
+						{
+							curout->inputCoord[j].second = temp_line->state;
+						}
+					}
+				}
+			}
+
 			temp_line->chk = 1;
 		}
 
@@ -579,7 +608,18 @@ void CLogicSimulatorDoc::CheckCircuit()
 			}
 		}
 		}
-		
+
+		for (int i = 0; i < segInfo.size(); i++)
+		{
+			Sevenseg* temp_out = segInfo.at(i);
+			//Gate 방문
+			if (temp_out->isInputSet() && temp_out->chk == 0)
+			{
+				temp_out->chk = 1;
+				temp_out->setOutput();
+			}
+		}
+
 		//Outpin 방문 (제일 마지막)
 		for (int i = 0; i < outInfo.size(); i++)
 		{

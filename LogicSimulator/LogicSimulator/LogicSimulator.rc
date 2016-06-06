@@ -97,6 +97,8 @@ IDB_WIRING              BITMAP                  "res\\bitmap4.bmp"
 
 IDB_WIRING_SHADOW       BITMAP                  "res\\bitmap5.bmp"
 
+IDB_SEVEN_SEGMENT       BITMAP                  "res\\bmp00004.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
