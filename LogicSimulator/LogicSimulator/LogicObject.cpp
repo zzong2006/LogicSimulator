@@ -294,6 +294,51 @@ void LogicObject::set_Coord_ByFacing(CString input)
 			}
 		}
 		break;
+	case LIB:
+		switch (facing)
+		{
+		case EAST:
+			for (int i = 0; i < outputNum; i++)
+			{
+				outputCoord[i].first.x = bottom.x;
+				outputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+			}
+			for (int i = 0; i < inputNum; i++)
+			{
+				inputCoord[i].first.x = top.x;
+				inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+			}
+			break;
+		case WEST:
+			for (int i = 0; i < outputNum; i++)
+			{
+				inputCoord[i].first.x = top.x;
+				inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+			}
+			for (int i = 0; i < inputNum; i++)
+			{
+				outputCoord[i].first.x = bottom.x;
+				outputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+			}
+			break;
+		case SOUTH:
+			for (int i = 0; i < inputNum; i++)
+			{
+				inputCoord[i].first.x = top.x + i * UNIT;
+				inputCoord[i].first.y = bottom.y;
+			}
+			break;
+		case NORTH:
+			for (int i = 0; i < inputNum; i++)
+			{
+				inputCoord[i].first.x = top.x + i * UNIT;
+				inputCoord[i].first.y = top.y;
+			}
+			break;
+
+		}
+		break;
+		
 	}
 	//로직 오브젝트의 입출력 좌표를 이용해
 	//이미 현재 오브젝트에 상속된 line의 좌표를 끊고 새로 만든다.
