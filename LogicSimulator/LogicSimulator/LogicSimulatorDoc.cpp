@@ -73,8 +73,8 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		1. 선 ( 개수 -> 정보)
 		2. 오브젝트 (개수 -> 정보)
 		///////////////////////////////////////////////////////*/
-		line_num = currBox->lines.size();
-		logic_num = currBox->logicInfo.size();
+		line_num = (int)currBox->lines.size();
+		logic_num = (int)currBox->logicInfo.size();
 
 		ar << line_num;
 		ar << logic_num;
@@ -292,7 +292,6 @@ void CLogicSimulatorDoc::OnFileSave()
 
 		HANDLE hFile;
 		DWORD dwRead;
-		DWORD dwWritten;
 
 		//파일 저장 시작
 		CString con;

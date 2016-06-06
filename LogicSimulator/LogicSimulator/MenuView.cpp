@@ -5,7 +5,8 @@
 #include "LogicSimulator.h"
 #include "MenuView.h"
 #include "LogicSimulatorDoc.h"
-#include "andGate.h"
+#include "CircuitView.h"
+#include "MainFrm.h"
 #include "Resource.h"
 // CMenuView
 
@@ -89,7 +90,8 @@ void CMenuView::OnInitialUpdate()
 
 	HTREEITEM hLibrary = treeCtrl.InsertItem(_T("Library"), 0, 0, TVI_ROOT, TVI_LAST);
 
-	treeCtrl.InsertItem(_T("Library Box"), 14, 14, hLibrary, TVI_LAST);
+	treeCtrl.InsertItem(_T("Main Library Box"), 14, 14, hLibrary, TVI_LAST);
+	treeCtrl.InsertItem(_T("Sub Library Box"), 15, 15, hLibrary, TVI_LAST);
 }
 
 
@@ -192,12 +194,20 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->currBox->objectName = SEG7;
 		pDoc->currBox->objectType = WIRING_TYPE;
 	}
+	else if (typeTemp == "Main Library Box") {
+		//현재가 메인 라이브러리 박스면 무시하고
+		//다른 라이브러리 박스면 박스 추출
+		pDoc->currBox->isSelected = FALSE;
+	}
+	else if (typeTemp == "Sub Library Box") {
+		pDoc->currBox->isSelected = FALSE;
+	}
 	else {
 		pDoc->currBox->isSelected = FALSE;
 	}
 
 	//폴더를 선택했을 경우에는 선택한게 아니므로 FALSE
-	if (typeTemp == "Gates" || typeTemp == "Wiring" || typeTemp == "Flip-Flop")
+	if (typeTemp == "Gates" || typeTemp == "Wiring" || typeTemp == "Flip-Flop" || typeTemp == "Library")
 	{
 		pDoc->currBox->isSelected = FALSE;
 	}
@@ -269,12 +279,27 @@ void CMenuView::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
 
 	//항목 정보의 이름을 얻는다.
 	CString typeTemp = treeCtrl.GetItemText(current_item);
-	
+
 	//라이브러리를 더블클릭하면 해당	파일의
 	//로직도를 보여준다.
-	if (typeTemp == "Library Box")
+	if (typeTemp == "Sub Library Box")
 	{
-		AfxMessageBox(L"gewgew");
+		pDoc->currBox = &(pDoc->logicBox[1]);
+
+		CCircuitView *CVCtrl = (CCircuitView *)((CMainFrame*)AfxGetMainWnd())->m_wndSplitterMain.GetPane(0, 1);
+
+		CVCtrl->Invalidate();
+		pDoc->currBox->isSelected = FALSE;
+
+	}
+	else if (typeTemp == "Main Library Box")
+	{
+		pDoc->currBox = &(pDoc->logicBox[0]);
+
+		CCircuitView *CVCtrl = (CCircuitView *)((CMainFrame*)AfxGetMainWnd())->m_wndSplitterMain.GetPane(0, 1);
+
+		CVCtrl->Invalidate();
+		pDoc->currBox->isSelected = FALSE;
 	}
 	else {
 		pDoc->currBox->isSelected = FALSE;

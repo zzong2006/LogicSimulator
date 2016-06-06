@@ -20,7 +20,7 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
-	LibraryBox logicBox[5];		//logicBox[0] 메인 박스
+	LibraryBox logicBox[2];		//logicBox[0] 메인 박스
 	LibraryBox* currBox;
 
 // 작업입니다.
