@@ -210,9 +210,9 @@ void LogicObject::set_inputCoord(int x, int y)
 			inputCoord[0].first.x = x - 6 * UNIT; // K
 			inputCoord[0].first.y = y - 2 * UNIT;
 			inputCoord[1].first.x = x - 6 * UNIT; // C
-			inputCoord[1].first.y = y * UNIT;
+			inputCoord[1].first.y = y;
 			inputCoord[2].first.x = x - 6 * UNIT; // J
-			inputCoord[2].first.y = y + 2* UNIT;
+			inputCoord[2].first.y = y + 2 * UNIT;
 
 		}
 		else {

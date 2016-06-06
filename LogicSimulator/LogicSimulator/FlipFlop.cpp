@@ -42,11 +42,23 @@ void FlipFlop::setOutput()
 			}
 			break;
 		case JK_FF:
+			if (inputCoord[0].second == TRUE && inputCoord[2].second == TRUE)
+			{	//J == K
+				outputCoord[0].second = !outputCoord[0].second;
+				outputCoord[1].second = !outputCoord[1].second;
+			}
+			else if (inputCoord[0].second ==FALSE && inputCoord[2].second == TRUE)
+			{	//J== 1 && K ==0
+				outputCoord[0].second = FALSE;
+				outputCoord[1].second = TRUE;
+			}
+			else if (inputCoord[0].second == TRUE && inputCoord[2].second == FALSE)
+			{ // J == 0 && K == 1
+				outputCoord[0].second = TRUE;
+				outputCoord[1].second = FALSE;
+			}
 			break;
 		}
-	}
-	else {		//상승,하강 트리거 적용안되면 이전 값 그래도 가져다씀.
-	
 	}
 
 	CurrClock = inputCoord[1].second;
@@ -66,10 +78,7 @@ FlipFlop::FlipFlop() : LogicObject()
 
 	outputNum = 2;			//Q , Q'
 
-	if (objectName == JK_FF)
-		inputNum = 3;
-	else
-		inputNum = 2;
+	inputNum = 2;
 
 	outputCoord[0].second = 0;
 	//Q는 Q'의 반대

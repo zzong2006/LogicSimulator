@@ -173,6 +173,16 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectName = D_FF;
 		pDoc->objectType = FLIPFLOP_TYPE;
 	}
+	else if (typeTemp == "JK Flip-Flop")
+	{
+		pDoc->objectName = JK_FF;
+		pDoc->objectType = FLIPFLOP_TYPE;
+	}
+	else if (typeTemp == "T Flip-Flop")
+	{
+		pDoc->objectName = T_FF;
+		pDoc->objectType = FLIPFLOP_TYPE;
+	}
 	else {
 		pDoc->isSelected = FALSE;
 	}

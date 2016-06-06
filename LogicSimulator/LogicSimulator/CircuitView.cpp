@@ -340,8 +340,10 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					Ftemp = new DFlipFlop(dec_x, dec_y);
 					break;
 				case JK_FF:
+					Ftemp = new JKFlipFlop(dec_x, dec_y);
 					break;
 				case T_FF:
+					Ftemp = new TFlipFlop(dec_x, dec_y);
 					break;
 				}
 
@@ -550,6 +552,12 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					{
 					case D_FF:
 						pDoc->temp = new DFlipFlop();
+						break;
+					case T_FF:
+						pDoc->temp = new TFlipFlop();
+						break;
+					case JK_FF:
+						pDoc->temp = new JKFlipFlop();
 						break;
 					}
 				}

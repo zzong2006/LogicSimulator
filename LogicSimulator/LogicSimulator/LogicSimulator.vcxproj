@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
@@ -191,6 +191,7 @@
     <ClInclude Include="DFlipFlop.h" />
     <ClInclude Include="FlipFlop.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="JKFlipFlop.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="LogicObject.h" />
     <ClInclude Include="LogicSimulator.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TFlipFlop.h" />
     <ClInclude Include="Wiring.h" />
     <ClInclude Include="xorGate.h" />
   </ItemGroup>
@@ -219,6 +221,7 @@
     <ClCompile Include="DFlipFlop.cpp" />
     <ClCompile Include="FlipFlop.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="JKFlipFlop.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="LogicObject.cpp" />
     <ClCompile Include="LogicSimulator.cpp" />
@@ -239,6 +242,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TFlipFlop.cpp" />
     <ClCompile Include="Wiring.cpp" />
     <ClCompile Include="xorGate.cpp" />
   </ItemGroup>
