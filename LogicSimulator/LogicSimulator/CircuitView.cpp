@@ -282,7 +282,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					pDoc->logicInfo.push_back(Gtemp);
 					pDoc->gateInfo.push_back(Gtemp);
-					pDoc->mUndo.AddHead(Action(temp));
+					pDoc->mUndo.AddHead(Action(GATE_TYPE, NEW));
 				}
 			}
 			else if (pDoc->objectType == WIRING_TYPE)
@@ -298,18 +298,24 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					Ptemp = new Pin(dec_x, dec_y);
 					pDoc->pinInfo.push_back(Ptemp);
 					temp = Ptemp;
+
+					pDoc->mUndo.AddHead(Action(PIN, NEW));
 					break;
 	
 				case CLOCK:
 					Ctemp = new Clock(dec_x,dec_y);
 					pDoc->clockInfo.push_back(Ctemp);
 					temp = Ctemp;
+
+					pDoc->mUndo.AddHead(Action(CLOCK, NEW));
 					break;
 
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
 					pDoc->outInfo.push_back(Otemp);
 					temp = Otemp;
+
+					pDoc->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 					
 				}
@@ -320,7 +326,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					//출력핀은 출력 선이 없다.
 					//7 seg도 마찬가지임.
-					pDoc->mUndo.AddHead(Action(temp));
 					pDoc->logicInfo.push_back(temp);
 
 				}
@@ -345,7 +350,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					pDoc->logicInfo.push_back(Ftemp);
 					pDoc->FFInfo.push_back(Ftemp);
-					pDoc->mUndo.AddHead(Action(Ftemp));
+					pDoc->mUndo.AddHead(Action(FLIPFLOP_TYPE, NEW));
 				}
 			}
 
@@ -702,7 +707,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 		/////////////////////////////점 지우기 & 메모리에 추가////////////////////////////////////
 
-		Action mk_line = Action(LINE);
+		Action mk_line = Action(LINE,NEW);
 
 		for (int i = 1; i > -1; i--)
 		{

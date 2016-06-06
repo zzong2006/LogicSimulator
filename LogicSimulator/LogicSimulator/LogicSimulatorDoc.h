@@ -19,27 +19,12 @@
 class Action
 {
 public :
-	Action(LineObject* line)
+	Action(int type,int act)
 	{
-		lines.push_back(line);
-		Type = LINE;
-	}
-	Action(LineObject** line)
-	{
-		lines.push_back(line[0]);
-		lines.push_back(line[1]);
-		Type = LINE;
-	}
-	Action(LogicObject* clock)
-	{
-		logicInfo.push_back(clock);
-		Type = OBJECT;
-	}
-	Action(int type)
-	{
+		Type = type;
+		Act = act;
 		if (type == LINE)
 		{
-			Type = type;
 			line_num = 2;
 		}
 	}
@@ -50,12 +35,18 @@ public :
 	enum{
 		line_add
 	};
-
-	int Type;
+	int Act, Type;
 	int line_num;
+
+
 	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
+	std::vector <Clock *> clockInfo;
+	std::vector <FlipFlop *> FFInfo;
+	std::vector <Gate *> gateInfo;
+	std::vector <Pin *> pinInfo;
+	std::vector <Out *> outInfo;
 };
 
 class CLogicSimulatorDoc : public CDocument
