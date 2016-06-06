@@ -8,6 +8,7 @@
 #define IDD_PROPERTYVIEW                310
 #define IDC_STATIC_PROPGRID             310
 #define IDB_BITMAP2                     317
+#define IDB_LIBRARY                     317
 #define IDC_CURSOR1                     318
 #define IDB_BITMAP1                     319
 #define IDB_FLIPFLOP                    323

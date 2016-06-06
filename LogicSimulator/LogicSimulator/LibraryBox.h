@@ -43,22 +43,16 @@ public:
 	std::vector <LineObject *> lines;
 };
 
-class LibraryBox : public LogicObject
+class LibraryBox 
 {
 public:
-	CString selectedType;
-	BOOL isSelected;
+	int ID;						//서브인가 메인인가 구분함
+	int NumInput, NumOuput;	//출력핀과 입력핀의 개수
 	BOOL CanBeDivided;		//분기 가능상태면 동그라미
-	BOOL clickMode;
-	BOOL selectMode;
-	BOOL simulateMode;
 	BOOL isOnFocus;			//선택 상태 모서리에 네모
 	std::vector <LogicObject *> currObject;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
-
-	int objectType;
-	int objectName;
 
 	LogicObject* temp;
 
@@ -69,9 +63,7 @@ public:
 
 	//method
 	void CheckCircuit();
-	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
-	void draw_main(Gdiplus::Graphics* gp);
-	void set_Coord_From_outC(int x, int y);
+
 
 	BOOL IsInput(LogicObject* lo);
 	BOOL IsGate(LogicObject* lo);

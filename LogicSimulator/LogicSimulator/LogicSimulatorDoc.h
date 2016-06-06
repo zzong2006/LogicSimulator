@@ -11,6 +11,7 @@
 #include "TFlipFlop.h"
 #include "Sevenseg.h"
 #include "LibraryBox.h"
+#include "Box.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -20,6 +21,15 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
+	CString selectedType;
+	BOOL isSelected;
+	BOOL clickMode;
+	BOOL selectMode;
+	BOOL simulateMode;
+	
+	int objectType;
+	int objectName;
+
 	LibraryBox logicBox[2];		//logicBox[0] 메인 박스
 	LibraryBox* currBox;
 

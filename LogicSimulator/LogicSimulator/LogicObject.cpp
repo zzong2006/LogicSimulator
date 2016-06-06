@@ -7,6 +7,18 @@
 
 #define UNIT 10
 
+void LogicObject::drawLine(Gdiplus::Graphics * gp)
+{
+	for (int i = 0; i < inputNum; i++)
+	{
+
+	}
+	for (int i = 0; i < outputNum; i++)
+	{
+
+	}
+}
+
 void LogicObject::showSelected(Gdiplus::Graphics * gp)
 {
 	Gdiplus::Pen *p;

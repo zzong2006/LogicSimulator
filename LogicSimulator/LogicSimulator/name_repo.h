@@ -23,12 +23,16 @@
 #define WEST						779
 #define NORTH						780
 
+#define LIB							11100
+#define BOX							11000
+#define MAIN_LIB					12000
+#define SUB_LIB					12010
 
 #define GATE_TYPE					30000
 #define WIRING_TYPE				30001
 #define FLIPFLOP_TYPE			30002
 
-#define OFF_SIGNAL					0
+#define OFF_SIGNAL				0
 #define ON_SIGNAL					1
 
 #define LINE						100
@@ -38,7 +42,7 @@
 #define MAX_REDO					10
 
 #define VERTICAL					0
-#define HORIZONTAL					1
+#define HORIZONTAL				1
 
 #define NEW							0
 #define REMOVE						1

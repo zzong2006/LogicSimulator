@@ -35,6 +35,13 @@ END_MESSAGE_MAP()
 CLogicSimulatorDoc::CLogicSimulatorDoc()
 {
 	currBox = &logicBox[0];
+	currBox->ID = MAIN_LIB;
+	logicBox[1].ID = SUB_LIB;
+
+	clickMode = false;
+	selectMode = true;
+	simulateMode = false;
+	isSelected = false;
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()

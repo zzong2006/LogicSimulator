@@ -5,11 +5,9 @@
 LibraryBox::LibraryBox()
 {
 	temp = NULL;
-	clickMode = false;
-	selectMode = true;
-	simulateMode = false;
 	CanBeDivided = false;
 	isOnFocus = false;
+	NumOuput = NumInput = 0;
 }
 
 
@@ -187,20 +185,6 @@ void LibraryBox::CheckCircuit()
 	}
 }
 
-void LibraryBox::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
-{
-	
-}
-
-void LibraryBox::draw_main(Gdiplus::Graphics * gp)
-{
-
-}
-
-void LibraryBox::set_Coord_From_outC(int x, int y)
-{
-
-}
 
 BOOL LibraryBox::IsInput(LogicObject * lo)
 {

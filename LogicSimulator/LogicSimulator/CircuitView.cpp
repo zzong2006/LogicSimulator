@@ -113,7 +113,7 @@ void CCircuitView::DrawImage(CDC *pDC)
 	}
 	
 	//현재 메뉴에서 아이템 선택한 상태라면 shadowing 그리기
-	if (pDoc->currBox->isSelected) {
+	if (pDoc->isSelected) {
 		Gdiplus::Pen DP(Gdiplus::Color(255, 255, 255), 2); //Dummy Pen 
 		pDoc->currBox->temp->set_outputCoord(dec_x, dec_y);
 		pDoc->currBox->temp->draw_shadow(&graphics, &DP);
@@ -184,7 +184,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 	for (int i = 0; i < pDoc->currBox->lines.size(); i++)		
 	{
 		if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point)
-			&& !(pDoc->currBox->isSelected) && !(pDoc->currBox->clickMode))
+			&& !(pDoc->isSelected) && !(pDoc->clickMode))
 		{
 			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 			LineObject* curline = pDoc->currBox->lines.at(i);
@@ -211,7 +211,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			pos = pDoc->currBox->logicInfo.at(i)->outputCoord[j].first;
 
 			if (dec_x == pos.x && dec_y == pos.y
-				&& !(pDoc->currBox->isSelected) && !(pDoc->currBox->clickMode))
+				&& !(pDoc->isSelected) && !(pDoc->clickMode))
 			{
 				object = LINE;
 				break;
@@ -222,7 +222,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		{
 			pos = pDoc->currBox->logicInfo.at(i)->inputCoord[j].first;
 			if (dec_x == pos.x && dec_y == pos.y
-				&& !(pDoc->currBox->isSelected) && !(pDoc->currBox->clickMode))
+				&& !(pDoc->isSelected) && !(pDoc->clickMode))
 			{
 				object = LINE;
 				break;
@@ -238,13 +238,13 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		LogicObject* temp;
 		temp = NULL;
 
-		if (pDoc->currBox->isSelected) {
-			if (pDoc->currBox->objectType == GATE_TYPE)
+		if (pDoc->isSelected) {
+			if (pDoc->objectType == GATE_TYPE)
 			{
 				Gate *Gtemp;
 				Gtemp = NULL;
 
-				switch (pDoc->currBox->objectName)
+				switch (pDoc->objectName)
 				{
 				case AND_GATE:
 					Gtemp = new andGate(dec_x, dec_y);
@@ -275,7 +275,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					pDoc->currBox->mUndo.AddHead(Action(GATE_TYPE, NEW));
 				}
 			}
-			else if (pDoc->currBox->objectType == WIRING_TYPE)
+			else if (pDoc->objectType == WIRING_TYPE)
 			{
 				Pin *Ptemp = NULL;
 				Clock *Ctemp = NULL;
@@ -283,7 +283,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				Sevenseg *Stemp = NULL;
 				temp = NULL;
 
-				switch (pDoc->currBox->objectName)
+				switch (pDoc->objectName)
 				{
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
@@ -323,11 +323,11 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 				}
 			}
-			else if (pDoc->currBox->objectType == FLIPFLOP_TYPE)
+			else if (pDoc->objectType == FLIPFLOP_TYPE)
 			{
 				FlipFlop *Ftemp = NULL;
 
-				switch (pDoc->currBox->objectName)
+				switch (pDoc->objectName)
 				{
 				case D_FF:
 					Ftemp = new DFlipFlop(dec_x, dec_y);
@@ -347,17 +347,30 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					pDoc->currBox->mUndo.AddHead(Action(FLIPFLOP_TYPE, NEW));
 				}
 			}
+			else if (pDoc->objectType == LIB) {
+				Box *Btemp = NULL;
+
+				if (pDoc->objectName == MAIN_LIB)
+					Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[0]));
+				else 
+					Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[1]));
+				
+				Btemp->set_Coord_From_outC(dec_x, dec_y);
+
+				pDoc->currBox->logicInfo.push_back(Btemp);
+				pDoc->currBox->mUndo.AddHead(Action(LIB, NEW));
+			}
 
 			delete pDoc->currBox->temp;
 			pDoc->currBox->temp = NULL;
-			pDoc->currBox->isSelected = false;
+			pDoc->isSelected = false;
 		}
 		
 		////클릭 모드///////////////////////////////
 
 		//클릭 모드인 경우 
 		//Pin 과 Clock 의 output 데이터를 바꿀뿐 gate 는 영향이 없다..
-		if (pDoc->currBox->clickMode) {
+		if (pDoc->clickMode) {
 			POINT temp_top, temp_bottom;
 
 			for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
@@ -376,7 +389,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 		else {	//클릭 모드 상태에서만 객체 선택 가능
-			if (!(pDoc->currBox->isSelected)) {
+			if (!(pDoc->isSelected)) {
 				pDoc->currBox->currObject.clear();
 
 				POINT temp_top, temp_bottom;
@@ -412,7 +425,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						
 						PVCtrl->InitializePropGrid(pDoc->currBox->currObject.at(0));
 					}
-					else {
+					else {	//다수 선택 
 
 					}
 				}
@@ -420,7 +433,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 	}
 	/////////선 생성/////////////////////////////
-	else if(object != OBJECT && !(pDoc->currBox->isSelected))
+	else if(object != OBJECT && !(pDoc->isSelected))
 	{
 		//동그란 표시 지우기
 		if (pDoc->currBox->CanBeDivided) {
@@ -453,13 +466,13 @@ BOOL CCircuitView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		ScreenToClient(&point);
 
 		//배치 모드일땐 십자 표시
-		if (pDoc->currBox->isSelected)
+		if (pDoc->isSelected)
 			::SetCursor(AfxGetApp()->LoadCursor(IDC_CURSOR1));
 		//선택 모드일땐 화살표 표시
-		else if (pDoc->currBox->selectMode)
+		else if (pDoc->selectMode)
 			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
 		//클릭 모드일땐 손모양 표시
-		else if (pDoc->currBox->clickMode)
+		else if (pDoc->clickMode)
 			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_HAND));
 
 		return TRUE;
@@ -487,12 +500,11 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (pDoc->currBox->isSelected) {
+		if (pDoc->isSelected) {
 			if (pDoc->currBox->temp == NULL) {
-				if (pDoc->currBox->objectType == GATE_TYPE)
+				if (pDoc->objectType == GATE_TYPE)
 				{
-
-					switch (pDoc->currBox->objectName)
+					switch (pDoc->objectName)
 					{
 					case AND_GATE:
 						pDoc->currBox->temp = new andGate();
@@ -515,27 +527,29 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					}
 
 				}
-				else if (pDoc->currBox->objectType == WIRING_TYPE)
+				else if (pDoc->objectType == WIRING_TYPE)
 				{
-					switch (pDoc->currBox->objectName)
+					switch (pDoc->objectName)
 					{
 					case PIN:
 						pDoc->currBox->temp = new Pin();
+						pDoc->currBox->NumInput++;
 						break;
 					case CLOCK:
 						pDoc->currBox->temp = new Clock();
 						break;
 					case OUTPIN :
 						pDoc->currBox->temp = new Out();
+						pDoc->currBox->NumOuput++;
 						break;
 					case SEG7 :
 						pDoc->currBox->temp = new Sevenseg();
 						break;
 					}
 				}
-				else if (pDoc->currBox->objectType == FLIPFLOP_TYPE)
+				else if (pDoc->objectType == FLIPFLOP_TYPE)
 				{
-					switch (pDoc->currBox->objectName)
+					switch (pDoc->objectName)
 					{
 					case D_FF:
 						pDoc->currBox->temp = new DFlipFlop();
@@ -547,6 +561,10 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 						pDoc->currBox->temp = new JKFlipFlop();
 						break;
 					}
+				}
+				else if (pDoc->objectType == LIB)
+				{
+						pDoc->currBox->temp = new Box();
 				}
 			}
 			Invalidate();
@@ -591,7 +609,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 	BOOL nothingSearched = TRUE;
 	//선을 이동중이거나 다른 작업중이면 동그라미 표시가 생기면 안된다. 클릭 모드 포함 (손 모양)
 	if (nFlags != MK_LBUTTON &&
-		!(pDoc->currBox->isSelected) && !(pDoc->currBox->clickMode)) {
+		!(pDoc->isSelected) && !(pDoc->clickMode)) {
 		for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 		{
 			if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point)) {
@@ -649,7 +667,7 @@ void CCircuitView::OnInitialUpdate()
 	CView::OnInitialUpdate();
 
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-	pDoc->currBox->isSelected = false;
+	pDoc->isSelected = false;
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
@@ -736,7 +754,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				if (i != cur_line && pDoc->currBox->lines.at(i)->Is_match_IineCoord(point))
 				{
 					if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point)
-						&& !(pDoc->currBox->isSelected) && !(pDoc->currBox->clickMode))
+						&& !(pDoc->isSelected) && !(pDoc->clickMode))
 					{
 						LineObject* curline = pDoc->currBox->lines.at(i);
 						if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
@@ -787,8 +805,8 @@ void CCircuitView::OnClickMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pDoc->currBox->clickMode = TRUE;
-	pDoc->currBox->selectMode = FALSE;
+	pDoc->clickMode = TRUE;
+	pDoc->selectMode = FALSE;
 
 }
 
@@ -797,8 +815,8 @@ void CCircuitView::OnSelectMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pDoc->currBox->clickMode = FALSE;
-	pDoc->currBox->selectMode = TRUE;
+	pDoc->clickMode = FALSE;
+	pDoc->selectMode = TRUE;
 }
 
 //클릭 모드를 체크할때의 조건 확인
@@ -806,7 +824,7 @@ void CCircuitView::OnUpdateClickMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pCmdUI->SetCheck(pDoc->currBox->clickMode == TRUE);
+	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
 }
 
 //선택모드를 체크할 때의 조건 확인
@@ -814,7 +832,7 @@ void CCircuitView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pCmdUI->SetCheck(pDoc->currBox->selectMode == TRUE);
+	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
 }
 
 
@@ -822,12 +840,12 @@ void CCircuitView::OnOnSimulate()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	if (pDoc->currBox->simulateMode) {
-		pDoc->currBox->simulateMode = FALSE;
+	if (pDoc->simulateMode) {
+		pDoc->simulateMode = FALSE;
 		KillTimer(0);
 	}
 	else {
-		pDoc->currBox->simulateMode = TRUE;
+		pDoc->simulateMode = TRUE;
 		SetTimer(0, 10, NULL);
 	}
 		
@@ -838,7 +856,7 @@ void CCircuitView::OnUpdateOnSimulate(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pCmdUI->SetCheck(pDoc->currBox->simulateMode == TRUE);
+	pCmdUI->SetCheck(pDoc->simulateMode == TRUE);
 }
 
 

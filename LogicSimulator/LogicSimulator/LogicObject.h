@@ -38,6 +38,8 @@ public:
 	//출력 좌표를 이용하여 로직 객체 전체(top/bottom)의 좌표를 정함.
 	virtual void set_Coord_From_outC(int x, int y) = 0;	
 
+	//입출력 선을 표시해준다.
+	void drawLine(Gdiplus::Graphics* gp);
 	//객체가 선택됬다면 양 끝 모서리에 네모를 표시함.
 	void showSelected(Gdiplus::Graphics* gp);
 	//라벨 표시하기
@@ -53,8 +55,6 @@ public:
 
 	void setOutput();
 
-	void moveCycle();
-	
 
 	void set_outputCoord(int x, int y);		//출력 좌표 설정
 	void set_inputCoord(int x, int y);		//입력 좌표 설정

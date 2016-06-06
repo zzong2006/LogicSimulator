@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="andGate.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="CircuitView.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="DFlipFlop.h" />
@@ -218,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="andGate.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="CircuitView.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="DFlipFlop.cpp" />
@@ -268,6 +270,7 @@
     <Image Include="res\bmp00001.bmp" />
     <Image Include="res\bmp00002.bmp" />
     <Image Include="res\bmp00003.bmp" />
+    <Image Include="res\bmp00004.bmp" />
     <Image Include="res\flipflop.png" />
     <Image Include="res\gate.png" />
     <Image Include="res\icon1.ico" />
