@@ -10,7 +10,7 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	max.x = MAX(line[0].x, line[1].x);
 	max.y = MAX(line[0].y, line[1].y);
 
-	CRect area(min.x - 1, min.y - 1, max.x + 1, max.y + 1);
+	CRect area(min.x - 2, min.y - 2, max.x + 2, max.y + 2);
 
 	if (area.PtInRect(src))
 		return TRUE;
@@ -27,7 +27,7 @@ BOOL LineObject::Is_match_CLICK(CPoint src)
 	max.y = MAX(line[0].y, line[1].y);
 
 	CRect area(min.x - 5, min.y - 5, max.x + 5, max.y + 5);
-	CRect coord_area(min.x - 1, min.y - 1, max.x + 1, max.y + 1);
+	CRect coord_area(min.x - 2, min.y - 2, max.x + 2, max.y + 2);
 	if (area.PtInRect(src) && !coord_area.PtInRect(src))
 		return TRUE;
 

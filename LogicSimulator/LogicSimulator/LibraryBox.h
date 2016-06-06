@@ -45,7 +45,7 @@ public:
 	std::vector <LineObject *> lines;
 	std::vector <int> lineIndex;
 	std::vector <int> logicIndex;
-
+	CPoint initP[2];
 };
 
 class Store

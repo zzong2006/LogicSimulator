@@ -415,12 +415,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					//마우스가 객체안에 있으면 선택함.
 					if (PtInRect(rect, point))
 					{
+						Action temp = Action(OBJECT, MOVE);
 						checkFocus = TRUE;
 						pDoc->currBox->isOnFocus = TRUE;
 						pDoc->currBox->logicInfo.at(i)->isSelected = TRUE;
-						//pDoc->currBox->currObject.push_back(pDoc->currBox->logicInfo.at(i));
+
 						prevT.x = dec_x;
 						prevT.y = dec_y;
+
+						temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
+						temp.initP[0] = pDoc->currBox->logicInfo.at(i)->top;
+						temp.initP[1] = pDoc->currBox->logicInfo.at(i)->bottom;
+						pDoc->currBox->mUndo.AddHead(temp);
 					}
 				}
 				
@@ -445,12 +451,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					pDoc->currBox->lines.at(i)->isSelected = FALSE;
 					if (pDoc->currBox->lines.at(i)->Is_match_CLICK(point))
 					{
+						Action temp = Action(LINE, MOVE);
 						pDoc->currBox->lines.at(i)->isSelected = TRUE;
 						sdis.x = dec_x - pDoc->currBox->lines.at(i)->line[0].x;
 						sdis.y = dec_y - pDoc->currBox->lines.at(i)->line[0].y;
 						edis.x = dec_x - pDoc->currBox->lines.at(i)->line[1].x;
 						edis.y = dec_y - pDoc->currBox->lines.at(i)->line[1].y;
-			}
+
+						temp.initP[0] = pDoc->currBox->lines.at(i)->line[0];
+						temp.initP[1] = pDoc->currBox->lines.at(i)->line[1];
+						temp.lines.push_back(pDoc->currBox->lines.at(i));
+						pDoc->currBox->mUndo.AddHead(temp);
+					}
 		}
 
 	}
@@ -1175,8 +1187,6 @@ void CCircuitView::OnEditPaste()
 				case SEG7:
 					Stemp = new Sevenseg(dec_x, dec_y);
 					temp = Stemp;
-
-
 				}
 
 				if (temp != NULL) {

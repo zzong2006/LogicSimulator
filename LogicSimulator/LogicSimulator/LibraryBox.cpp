@@ -263,6 +263,8 @@ void LibraryBox::Undo()
 	int lkedn = temp.lineked_line.size();
 	int ln = temp.lines.size();
 
+	CPoint top, bottom;
+
 	switch (temp.Act)
 	 {
 		case NEW:
@@ -296,6 +298,27 @@ void LibraryBox::Undo()
 			}
 			break;
 		case MOVE:
+			switch (temp.Type)
+			{
+			case OBJECT :
+				top = temp.logicInfo.at(0)->top;
+				bottom = temp.logicInfo.at(0)->bottom;
+				temp.logicInfo.at(0)->top = temp.initP[0];
+				temp.logicInfo.at(0)->bottom = temp.initP[1];
+				temp.logicInfo.at(0)->set_Coord_ByFacing(_T("12"));
+
+				temp.initP[0] = top;
+				temp.initP[1] = bottom;
+				break;
+			case LINE:
+				top = temp.lines.at(0)->line[0];
+				bottom = temp.lines.at(0)->line[1];
+				temp.lines.at(0)->line[0] = temp.initP[0];
+				temp.lines.at(0)->line[1] = temp.initP[1];
+				temp.initP[0] = top;
+				temp.initP[1] = bottom;
+				break;
+			}
 			break;
 		case COPY:
 			for (int i = 0; i < temp.lines.size(); i++)
@@ -316,6 +339,9 @@ void LibraryBox::Redo()
 	temp = mRedo.RemoveHead();
 	int lkedn = temp.lineked_line.size();
 	int ln = temp.lines.size();
+
+	CPoint top, bottom;
+
 	switch (temp.Act)
 	{
 		case NEW:
@@ -349,7 +375,27 @@ void LibraryBox::Redo()
 			}
 		break;
 		case MOVE:
+			switch (temp.Type)
+			{
+			case OBJECT:
+				top = temp.logicInfo.at(0)->top;
+				bottom = temp.logicInfo.at(0)->bottom;
+				temp.logicInfo.at(0)->top = temp.initP[0];
+				temp.logicInfo.at(0)->bottom = temp.initP[1];
+				temp.logicInfo.at(0)->set_Coord_ByFacing(_T("12"));
 
+				temp.initP[0] = top;
+				temp.initP[1] = bottom;
+				break;
+			case LINE:
+				top = temp.lines.at(0)->line[0];
+				bottom = temp.lines.at(0)->line[1];
+				temp.lines.at(0)->line[0] = temp.initP[0];
+				temp.lines.at(0)->line[1] = temp.initP[1];
+				temp.initP[0] = top;
+				temp.initP[1] = bottom;
+				break;
+			}
 		break;
 
 		case COPY:
