@@ -18,7 +18,6 @@
 #define IDB_WIRING                      329
 #define IDB_BITMAP5                     330
 #define IDB_WIRING_SHADOW               330
-#define IDB_BITMAP3                     332
 #define IDB_SEVEN_SEGMENT               332
 #define IDC_MFCPROPERTYGRID1            1002
 #define ID_CLICK_MODE                   32772
@@ -29,13 +28,15 @@
 #define ID_ON_SIMULATE                  32781
 #define ID_32782                        32782
 #define edi                             32783
+#define ID_32788                        32788
+#define ID_OUTPUT_GRAPH                 32789
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        333
-#define _APS_NEXT_COMMAND_VALUE         32788
+#define _APS_NEXT_COMMAND_VALUE         32790
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           313
 #endif

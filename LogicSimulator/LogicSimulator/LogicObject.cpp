@@ -125,7 +125,38 @@ void LogicObject::set_Coord_ByFacing(CString input)
 	case WIRING_TYPE:
 		if (objectName == SEG7)
 		{
-			
+			switch (facing)
+			{
+			case EAST:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = bottom.x;
+					inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				}
+				break;
+			case WEST:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x;
+					inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				}
+				break;
+			case SOUTH:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x + i * UNIT;
+					inputCoord[i].first.y = bottom.y;
+				}
+				break;
+			case NORTH:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x + i * UNIT;
+					inputCoord[i].first.y = top.y;
+				}
+				break;
+
+			}
 		}
 		else if(objectName == OUTPIN) {
 			switch (facing)

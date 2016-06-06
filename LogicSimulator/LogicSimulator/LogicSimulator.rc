@@ -162,6 +162,7 @@ BEGIN
     POPUP "시뮬레이션"
     BEGIN
         MENUITEM "시뮬레이션 시작",                    ID_ON_SIMULATE
+        MENUITEM "출력 파형 그래프",                   ID_OUTPUT_GRAPH
     END
     POPUP "전환"
     BEGIN
