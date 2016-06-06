@@ -5,47 +5,12 @@
 #pragma once
 #include <vector>
 #include <queue>
-#include "andGate.h"
-#include "orGate.h"
-#include "notGate.h"
-#include "xorGate.h"
-#include "nandGate.h"
-#include "norGate.h"
-#include "Pin.h"
-#include "Clock.h"
 #include "Out.h"
 #include "DFlipFlop.h"
 #include "JKFlipFlop.h"
 #include "TFlipFlop.h"
 #include "Sevenseg.h"
-
-class Action
-{
-public :
-	Action(int type,int act)
-	{
-		Type = type;
-		Act = act;
-		if (type == LINE)
-			line_num = 2;
-
-	}
-	Action()
-	{
-
-	}
-	enum{
-		line_add
-	};
-	int Act, Type;
-	int line_num;
-
-
-	std::vector <LineObject *> lineked_line;
-	std::vector <LogicObject *> logicInfo;
-	std::vector <Sevenseg *> segInfo;
-	std::vector <LineObject *> lines;
-};
+#include "LibraryBox.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
@@ -55,37 +20,9 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
-	CString selectedType;
-	BOOL isSelected;
-	BOOL CanBeDivided;		//분기 가능상태면 동그라미
-	BOOL clickMode;
-	BOOL selectMode;
-	BOOL simulateMode;
-	BOOL isOnFocus;			//선택 상태 모서리에 네모
-	std::vector <LogicObject *> currObject;
-	std::vector <LogicObject *> logicInfo;
-	std::vector <LineObject *> lines;
+	LibraryBox logicBox[5];		//logicBox[0] 메인 박스
+	LibraryBox* currBox;
 
-	
-	int objectType;
-	int objectName;
-
-	int gateNum;
-
-	LogicObject* temp;
-
-	// undo/redo
-	CList <Action> mUndo;
-	CList <Action> mRedo;
-
-	BOOL IsInput(LogicObject* lo);
-	BOOL IsGate(LogicObject* lo);
-	BOOL IsOutput(LogicObject* lo);
-
-	BOOL CanUndo();
-	BOOL CanRedo();
-	void Undo();
-	void Redo();
 // 작업입니다.
 public:
 
@@ -117,7 +54,6 @@ protected:
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
 public:
-	void CheckCircuit();
 	afx_msg void OnFileSave();
 	afx_msg void OnFileOpen();
 	afx_msg void OnFileNew();

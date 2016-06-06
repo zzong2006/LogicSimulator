@@ -3,6 +3,12 @@
 #include "LogicObject.h"
 #include "Clock.h"
 #include "FlipFlop.h"
+#include "andGate.h"
+#include "orGate.h"
+#include "xorGate.h"
+#include "norGate.h"
+#include "nandGate.h"
+#include "notGate.h"
 #include "Gate.h"
 #include "Pin.h"
 #include "Out.h"
@@ -60,6 +66,13 @@ public:
 	CList <Action> mUndo;
 	CList <Action> mRedo;
 
+
+	//method
+	void CheckCircuit();
+	void draw_shadow(Gdiplus::Graphics* gp, Gdiplus::Pen * p);
+	void draw_main(Gdiplus::Graphics* gp);
+	void set_Coord_From_outC(int x, int y);
+
 	BOOL IsInput(LogicObject* lo);
 	BOOL IsGate(LogicObject* lo);
 	BOOL IsOutput(LogicObject* lo);
@@ -68,9 +81,6 @@ public:
 	BOOL CanRedo();
 	void Undo();
 	void Redo();
-
-	//method
-	
 
 	LibraryBox();
 	~LibraryBox();

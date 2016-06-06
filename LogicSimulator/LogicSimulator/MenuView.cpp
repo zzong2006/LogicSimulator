@@ -121,7 +121,7 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 	if (current_item != NULL) {
 		treeCtrl.Select(current_item, TVGN_CARET);
-		pDoc->isSelected = TRUE;
+		pDoc->currBox->isSelected = TRUE;
 	}
 
 	//항목 정보의 이름을 얻는다.
@@ -130,81 +130,81 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 	if (typeTemp == "AND Gate")
 	{
-		pDoc->objectName = AND_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = AND_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "OR Gate")
 	{
-		pDoc->objectName = OR_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = OR_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "NOT Gate")
 	{
-		pDoc->objectName = NOT_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = NOT_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "NAND Gate")
 	{
-		pDoc->objectName = NAND_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = NAND_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "NOR Gate")
 	{
-		pDoc->objectName = NOR_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = NOR_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "XOR Gate")
 	{
-		pDoc->objectName = XOR_GATE;
-		pDoc->objectType = GATE_TYPE;
+		pDoc->currBox->objectName = XOR_GATE;
+		pDoc->currBox->objectType = GATE_TYPE;
 	}
 	else if (typeTemp == "Pin")
 	{
-		pDoc->objectName = PIN;
-		pDoc->objectType = WIRING_TYPE;
+		pDoc->currBox->objectName = PIN;
+		pDoc->currBox->objectType = WIRING_TYPE;
 	}
 	else if (typeTemp == "Clock")
 	{
-		pDoc->objectName = CLOCK;
-		pDoc->objectType = WIRING_TYPE;
+		pDoc->currBox->objectName = CLOCK;
+		pDoc->currBox->objectType = WIRING_TYPE;
 	}
 	else if (typeTemp == "Out")
 	{
-		pDoc->objectName = OUTPIN;
-		pDoc->objectType = WIRING_TYPE;
+		pDoc->currBox->objectName = OUTPIN;
+		pDoc->currBox->objectType = WIRING_TYPE;
 	}
 	else if (typeTemp == "D Flip-Flop")
 	{
-		pDoc->objectName = D_FF;
-		pDoc->objectType = FLIPFLOP_TYPE;
+		pDoc->currBox->objectName = D_FF;
+		pDoc->currBox->objectType = FLIPFLOP_TYPE;
 	}
 	else if (typeTemp == "JK Flip-Flop")
 	{
-		pDoc->objectName = JK_FF;
-		pDoc->objectType = FLIPFLOP_TYPE;
+		pDoc->currBox->objectName = JK_FF;
+		pDoc->currBox->objectType = FLIPFLOP_TYPE;
 	}
 	else if (typeTemp == "T Flip-Flop")
 	{
-		pDoc->objectName = T_FF;
-		pDoc->objectType = FLIPFLOP_TYPE;
+		pDoc->currBox->objectName = T_FF;
+		pDoc->currBox->objectType = FLIPFLOP_TYPE;
 	}
 	else if (typeTemp == "7-Seg") {
-		pDoc->objectName = SEG7;
-		pDoc->objectType = WIRING_TYPE;
+		pDoc->currBox->objectName = SEG7;
+		pDoc->currBox->objectType = WIRING_TYPE;
 	}
 	else {
-		pDoc->isSelected = FALSE;
+		pDoc->currBox->isSelected = FALSE;
 	}
 
 	//폴더를 선택했을 경우에는 선택한게 아니므로 FALSE
 	if (typeTemp == "Gates" || typeTemp == "Wiring" || typeTemp == "Flip-Flop")
 	{
-		pDoc->isSelected = FALSE;
+		pDoc->currBox->isSelected = FALSE;
 	}
 	
-	if (pDoc->temp != NULL) {
-		delete pDoc->temp;
-		pDoc->temp = NULL;
+	if (pDoc->currBox->temp != NULL) {
+		delete pDoc->currBox->temp;
+		pDoc->currBox->temp = NULL;
 	}
 
 
@@ -216,8 +216,8 @@ void CMenuView::OnClickMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pDoc->clickMode = TRUE;
-	pDoc->selectMode = FALSE;
+	pDoc->currBox->clickMode = TRUE;
+	pDoc->currBox->selectMode = FALSE;
 }
 
 
@@ -225,7 +225,7 @@ void CMenuView::OnUpdateClickMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pCmdUI->SetCheck(pDoc->clickMode == TRUE);
+	pCmdUI->SetCheck(pDoc->currBox->clickMode == TRUE);
 }
 
 
@@ -233,8 +233,8 @@ void CMenuView::OnSelectMode()
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pDoc->clickMode = FALSE;
-	pDoc->selectMode = TRUE;
+	pDoc->currBox->clickMode = FALSE;
+	pDoc->currBox->selectMode = TRUE;
 }
 
 
@@ -242,7 +242,7 @@ void CMenuView::OnUpdateSelectMode(CCmdUI *pCmdUI)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	pCmdUI->SetCheck(pDoc->selectMode == TRUE);
+	pCmdUI->SetCheck(pDoc->currBox->selectMode == TRUE);
 }
 
 
@@ -264,7 +264,7 @@ void CMenuView::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
 
 	if (current_item != NULL) {
 		treeCtrl.Select(current_item, TVGN_CARET);
-		pDoc->isSelected = TRUE;
+		pDoc->currBox->isSelected = TRUE;
 	}
 
 	//항목 정보의 이름을 얻는다.
@@ -277,12 +277,12 @@ void CMenuView::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
 		AfxMessageBox(L"gewgew");
 	}
 	else {
-		pDoc->isSelected = FALSE;
+		pDoc->currBox->isSelected = FALSE;
 	}
 
-	if (pDoc->temp != NULL) {
-		delete pDoc->temp;
-		pDoc->temp = NULL;
+	if (pDoc->currBox->temp != NULL) {
+		delete pDoc->currBox->temp;
+		pDoc->currBox->temp = NULL;
 	}
 
 	*pResult = 0;

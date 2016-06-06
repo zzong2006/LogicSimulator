@@ -34,30 +34,21 @@ END_MESSAGE_MAP()
 
 CLogicSimulatorDoc::CLogicSimulatorDoc()
 {
-	temp = NULL;
-	clickMode = false;
-	selectMode = true;
-	simulateMode = false;
-	CanBeDivided = false;
-	isOnFocus = false;
+	currBox = &logicBox[0];
 }
 
 CLogicSimulatorDoc::~CLogicSimulatorDoc()
 {
-	for (int i = 0; i < logicInfo.size(); i++)
-		delete logicInfo.at(i);
-	for (int i = 0; i < lines.size(); i++)
-		delete lines.at(i);
 	
 }
 
 BOOL CLogicSimulatorDoc::OnNewDocument()
 {
-	for (int i = 0; i < logicInfo.size(); i++)
-		delete logicInfo.at(i);
+	for (int i = 0; i < currBox->logicInfo.size(); i++)
+		delete currBox->logicInfo.at(i);
 	
-	for (int i = 0; i < lines.size(); i++)
-		delete lines.at(i);
+	for (int i = 0; i < currBox->lines.size(); i++)
+		delete currBox->lines.at(i);
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
@@ -78,12 +69,12 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
-		/*/////////////////////////////////////////////////////////저장 순서//////////////////////////////////////////////////////////
+		/*/////////////////////저장 순서///////////////////////
 		1. 선 ( 개수 -> 정보)
 		2. 오브젝트 (개수 -> 정보)
 		///////////////////////////////////////////////////////*/
-		line_num = lines.size();
-		logic_num = logicInfo.size();
+		line_num = currBox->lines.size();
+		logic_num = currBox->logicInfo.size();
 
 		ar << line_num;
 		ar << logic_num;
@@ -91,12 +82,12 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		//선 위치 1번 -> 2번
 		for (int i = 0; i < line_num; i++)
 		{
-			ar << lines.at(i)->line[0] << lines.at(i)->line[1];
+			ar << currBox->lines.at(i)->line[0] << currBox->lines.at(i)->line[1];
 		}
 		//타입 -> 이릅 -> 위치
 		for (int i = 0; i < logic_num; i++)
 		{
-			LogicObject* tempLogic = logicInfo.at(i);
+			LogicObject* tempLogic = currBox->logicInfo.at(i);
 			CPoint find_pos;
 			find_pos.x = tempLogic->get_bottm().x;
 			find_pos.y = (tempLogic->get_top().y + tempLogic->get_bottm().y) / 2;
@@ -119,7 +110,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			CPoint pos1, pos2;
 			ar >> pos1 >> pos2;
 			LineObject* templine = new LineObject(pos1, pos2);
-			lines.push_back(templine);
+			currBox->lines.push_back(templine);
 		}
 
 		for (int i = 0; i < logic_num; i++)
@@ -163,7 +154,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 
 				if (Gtemp != NULL) {
 					Gtemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-					logicInfo.push_back(Gtemp);
+					currBox->logicInfo.push_back(Gtemp);
 				}
 				break;
 			case FLIPFLOP_TYPE :
@@ -182,7 +173,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				if (Ftemp != NULL) {
 					Ftemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 
-					logicInfo.push_back(Ftemp);
+					currBox->logicInfo.push_back(Ftemp);
 				}
 				break;
 			case WIRING_TYPE :
@@ -191,7 +182,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				case PIN :
 					Ptemp = NULL;
 					Ptemp = new Pin(find_pos.x, find_pos.y);
-					logicInfo.push_back(Ptemp);
+					currBox->logicInfo.push_back(Ptemp);
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -200,14 +191,14 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ctemp = new Clock(find_pos.x, find_pos.y);
 					Ctemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-					logicInfo.push_back(Ctemp);
+					currBox->logicInfo.push_back(Ctemp);
 					break;
 				case OUTPIN :
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-					logicInfo.push_back(Otemp);
+					currBox->logicInfo.push_back(Otemp);
 					break;
 				}
 				break;
@@ -286,283 +277,7 @@ void CLogicSimulatorDoc::Dump(CDumpContext& dc) const
 
 
 // CLogicSimulatorDoc 명령
-BOOL CLogicSimulatorDoc::IsInput(LogicObject* lo)
-{
-	return lo->objectName == PIN || lo->objectName == CLOCK;
-}
-BOOL CLogicSimulatorDoc::IsGate(LogicObject* lo)
-{
-	return lo->objectType == GATE_TYPE || lo->objectType == FLIPFLOP_TYPE;
-}
 
-BOOL CLogicSimulatorDoc::IsOutput(LogicObject* lo)
-{
-	
-	return lo->objectType == OUTPIN || SEG7;
-}
-
-void CLogicSimulatorDoc::CheckCircuit()
-{
-	std::queue <LineObject *> searchLine;
-	LogicObject* curLogic;
-
-	//초기화
-	for (int i = 0; i < lines.size(); i++)
-	{
-		lines.at(i)->chk = 0;
-		lines.at(i)->state = OFF_SIGNAL;
-	}
-	
-	//게이트 ,라이브러리 박스, 출력핀, 플립플롭
-	for (int i = 0; i < logicInfo.size(); i++)
-	{
-		curLogic = logicInfo.at(i);
-		if (IsInput(curLogic))
-		{
-			CPoint pos = curLogic->outputCoord[0].first;
-			int lin = lines.size();
-
-			for (int j = 0; j < lin; j++)
-			{
-				LineObject* curline = lines.at(j);
-				if (curline->line[0] == pos || curline->line[1] == pos)
-				{
-					curline->chk = 1;
-					curline->state = curLogic->getOutput();
-					searchLine.push(curline);
-				}
-			}
-			curLogic->chk = 1;
-		}
-		else{
-			curLogic->chk = 0;
-			int out = curLogic->outputNum, in = curLogic->inputNum;
-
-			//입력핀 초기화
-			for (int i = 0; i < in; i++)
-				curLogic->inputCoord[i].second = -1;			//input chk 초기화
-		}
-	}
-
-
-	////////////////////출력 시작/////////////////////
-	//입력 Pin/Clock 과 관련된 값만 받기
-	//출력 Pin 같은 경우는 제외해야 한다.
-
-	////////////////////돌고 돌아/////////////////////////
-	while (!searchLine.empty())
-	{
-		//(초반) Pin에 연결된 선을 다 돌면서 검사한다.
-		while (!searchLine.empty())
-		{
-			LineObject* temp_line = searchLine.front();
-			searchLine.pop();
-			
-			/////////연결된 선 체크////////////////////////
-			int lin = (int)lines.size();
-			for (int i = 0; i < lin; i++)
-			{
-				LineObject* curline = lines.at(i);
-				if (curline->chk == 0)
-				{
-					if (curline->line[0] == temp_line->line[0] || curline->line[1] == temp_line->line[0]
-						|| curline->line[0] == temp_line->line[1] || curline->line[1] == temp_line->line[1])
-					{
-						curline->chk = 1;
-						curline->state = temp_line->state;
-						searchLine.push(curline);
-					}
-				}
-			}
-
-
-			//게이트 ,라이브러리 박스, 출력핀, 플립플롭
-			for (int i = 0; i < logicInfo.size(); i++)
-			{
-				LogicObject* curLogic = logicInfo.at(i);
-				if (!IsInput(curLogic))
-				{
-					if (curLogic->chk == 0)
-					{
-						int ip = curLogic->inputNum;
-						for (int j = 0; j < ip; j++)
-						{
-							if (curLogic->inputCoord[j].first == temp_line->line[0] || curLogic->inputCoord[j].first == temp_line->line[1])
-							{
-								curLogic->inputCoord[j].second = temp_line->state;
-							}
-						}
-
-					}
-				}
-			}
-			temp_line->chk = 1;
-		}
-
-		/////////////////게이트 출력선 체크//////////////////////////
-		//순회 해야될 LogicObject-> gate, flipflop, Library Box 세가지. 로직 오브젝트의 입력 선이 모두 방문되었나? && 이미 방문하였는가?
-
-		for (int i = 0; i < logicInfo.size(); i++)
-		{
-			LogicObject* curLogic = logicInfo.at(i);
-			//Gate 방문
-			if (IsGate(curLogic))
-			{
-				if (curLogic->chk == 0 && curLogic->isInputSet())
-				{
-					curLogic->chk = 1;
-					curLogic->setOutput();
-
-					//플립플롭 출력선은 두개
-					for (int j = 0; j < curLogic->outputNum; j++)
-					{
-						CPoint gatpos = curLogic->outputCoord[j].first;
-
-						int lin = (int)lines.size();
-						for (int i = 0; i < lin; i++)
-						{
-							LineObject* curline = lines.at(i);
-							if (curline->line[0] == gatpos || curline->line[1] == gatpos)
-							{
-								curline->state = curLogic->outputCoord[j].second;
-
-								if (curline->chk != 1)
-									searchLine.push(curline);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//Outpin 방문 (제일 마지막)
-		for (int i = 0; i < logicInfo.size(); i++)
-		{
-			LogicObject* curLogic = logicInfo.at(i);
-
-			if (IsOutput(curLogic))
-			{
-				//Gate 방문
-				if (curLogic->isInputSet() && curLogic->chk == 0)
-				{
-					curLogic->chk = 1;
-					if (curLogic->objectName == SEG7) {
-						Sevenseg* curSeg = (Sevenseg *)curLogic;
-						curSeg->setOutput();
-					}
-					else {
-						curLogic->setOutput();
-					}
-					
-				}
-			}
-		}
-	}
-}
-
-BOOL CLogicSimulatorDoc::CanUndo()
-{
-	while (mUndo.GetCount() > MAX_UNDO)
-	{
-		mUndo.RemoveTail();
-	}
-	return (mUndo.GetCount() > 0);
-}
-
-void CLogicSimulatorDoc::Undo()
-{
-	Action temp;
-	CPoint stp, edp;
-
-	temp = mUndo.RemoveHead();
-	int lkedn = temp.lineked_line.size();
-
-	switch (temp.Act)
-	{
-	case NEW :
-		if (temp.Type == LINE)
-		{
-
-			for (int i = lkedn - 1; i > 0; i -= 2)
-			{
-				temp.lineked_line.at(i - 1)->line[1] = temp.lineked_line.at(i)->line[1];
-				lines.pop_back();
-			}
-				
-			for (int i = 0; i < 2; i++)
-			{
-				temp.lines.push_back(lines.at(lines.size() - 1));
-				lines.pop_back();
-			}
-		}
-		else{
-			temp.logicInfo.push_back(logicInfo.at(logicInfo.size() - 1));
-			logicInfo.pop_back();
-		}
-		break;
-	case DELETE :
-		
-		break;
-	case MOVE :
-		break;
-	case COPY :
-		break;
-	case PASTE :
-		break;
-	}
-	mRedo.AddHead(temp);
-}
-
-BOOL CLogicSimulatorDoc::CanRedo()
-{
-	while (mRedo.GetCount() > MAX_UNDO)
-	{
-		mRedo.RemoveTail();
-	}
-	return (mRedo.GetCount() > 0);
-}
-
-void CLogicSimulatorDoc::Redo()
-{
-	Action temp;
-	CPoint stp, edp;
-
-	temp = mRedo.RemoveHead();
-	int lkedn = temp.lineked_line.size();
-
-	switch (temp.Act)
-	{
-	case NEW:
-		if (temp.Type == LINE)
-		{
-			for (int i = 1; i > -1; i--)
-			{
-				lines.push_back(temp.lines.at(i));
-				temp.lines.pop_back();
-			}
-
-			for (int i = 0; i < lkedn; i += 2)
-			{
-				temp.lineked_line.at(i)->line[1] = temp.lineked_line.at(i + 1)->line[0];
-				lines.push_back(temp.lineked_line.at(i + 1));
-			}
-		}
-		else{
-			logicInfo.push_back(temp.logicInfo.at(0));
-			temp.logicInfo.pop_back();
-		}
-		break;
-	case DELETE:
-		break;
-	case MOVE:
-		break;
-	case COPY:
-		break;
-	case PASTE:
-		break;
-	}
-	mUndo.AddHead(temp);
-}
 
 void CLogicSimulatorDoc::OnFileSave()
 {
@@ -678,8 +393,8 @@ void CLogicSimulatorDoc::OnFileNew()
 
 void CLogicSimulatorDoc::clearAll()
 {
-	lines.clear();
-	logicInfo.clear();
-	mUndo.RemoveAll();
-	mRedo.RemoveAll();
+	currBox->lines.clear();
+	currBox->logicInfo.clear();
+	currBox->mUndo.RemoveAll();
+	currBox->mRedo.RemoveAll();
 }

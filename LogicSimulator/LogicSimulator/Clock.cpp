@@ -76,7 +76,7 @@ void Clock::moveCycle()
 		cycle = oriCycle;
 		toggleOutput();
 
-		pDoc->CheckCircuit();
+		pDoc->currBox->CheckCircuit();
 		CVCtrl->Invalidate();
 	}
 

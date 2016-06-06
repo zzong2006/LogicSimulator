@@ -157,33 +157,33 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 
-	if (pDoc->currObject.size() == 1) {
+	if (pDoc->currBox->currObject.size() == 1) {
 		switch (pProperty->GetData())
 		{
 		case 0:			//Label
-			pDoc->currObject.at(0)->setLabel(pProperty->GetValue());
+			pDoc->currBox->currObject.at(0)->setLabel(pProperty->GetValue());
 			break;
 		case 1:			//Facing
-			pDoc->currObject.at(0)->setFacing(pProperty->GetValue());
-			pDoc->currObject.at(0)->set_Coord_ByFacing(pProperty->GetValue());
+			pDoc->currBox->currObject.at(0)->setFacing(pProperty->GetValue());
+			pDoc->currBox->currObject.at(0)->set_Coord_ByFacing(pProperty->GetValue());
 			break;
 		case 2:
 		{
-			FlipFlop *FFtemp = (FlipFlop*)pDoc->currObject.at(0);
+			FlipFlop *FFtemp = (FlipFlop*)pDoc->currBox->currObject.at(0);
 			FFtemp->SetTrigger(pProperty->GetValue());
 
 		}
 			break;
 		case 3:
 		{
-			Clock *Ctemp = (Clock *)pDoc->currObject.at(0);
+			Clock *Ctemp = (Clock *)pDoc->currBox->currObject.at(0);
 			CString cycle = pProperty->GetValue();
 			Ctemp->setCycle(_ttoi(cycle));
 		}
 			break;
 		}
 	}
-	pDoc->CheckCircuit();
+	pDoc->currBox->CheckCircuit();
 	CVCtrl->Invalidate();
 
 	return 0L;
