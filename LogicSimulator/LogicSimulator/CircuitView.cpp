@@ -51,7 +51,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 //	ON_WM_KEYDOWN()
 	ON_COMMAND(ID_EDIT_UNDO, &CCircuitView::OnEditUndo)
 	ON_COMMAND(ID_EDIT_REDO, &CCircuitView::OnEditRedo)
-	ON_WM_DELETEITEM()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 
@@ -179,8 +179,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	////////분기 검사//////
 	int ln = (int)pDoc->lines.size();
-
-	for (int i = 0; i < pDoc->lines.size(); i++)		
+	for (int i = 0; i < pDoc->lines.size(); i++)
 	{
 		if (pDoc->lines.at(i)->Is_match_IineCoord(point)
 			&& !(pDoc->isSelected) && !(pDoc->clickMode))
@@ -189,24 +188,13 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 			LineObject* curline = pDoc->lines.at(i);
 			if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 			{
-				LineObject* newline = new LineObject(cur_pos);
-
-				newline->line[1] = curline->line[1];
-				curline->line[1] = cur_pos;
-				newline->shape = curline->shape;
-
-				pDoc->lines.push_back(newline);
-				pDoc->mUndo.GetHead().line_num++;
-				pDoc->mUndo.GetHead().lineked_line.push_back(curline);
-				pDoc->mUndo.GetHead().lineked_line.push_back(newline);
 				object = LINE;
 			}
-			
+
 			object = LINE;
 			break;
 		}
 	}
-
 
 	//논리 오브젝트들 중에서 선 분기 가능검사
 	for (int i = 0; i < pDoc->logicInfo.size() && object == OBJECT; i++)
@@ -687,66 +675,94 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		int curline = pDoc->lines.size() - 1;
 		temp_line[0] = pDoc->lines.at(cur_line - 1);
 		temp_line[1] = pDoc->lines.at(cur_line);
-		//로직 오브젝트 검색 삭제
-
-		int ln = pDoc->lines.size();
-
-		/////////////////선 속성 추가 ////////////////
-		if (temp_line[0]->line[1].x == temp_line[0]->line[0].x)
-			temp_line[0]->shape = VERTICAL;
-		else
-			temp_line[0]->shape = HORIZONTAL;
-
-		if (temp_line[0]->shape == HORIZONTAL)
-			temp_line[1]->shape = VERTICAL;
-		else temp_line[1]->shape = HORIZONTAL;
-
-		/////////////////////////////점 지우기 & 메모리에 추가////////////////////////////////////
-
-		Action mk_line = Action(LINE,NEW);
-
-		for (int i = 1; i > -1; i--)
+		if (!(temp_line[0]->line[0] == temp_line[0]->line[1] && temp_line[1]->line[0] == temp_line[1]->line[1]))
 		{
-			if (temp_line[i]->line[0] == temp_line[i]->line[1])
-			{
-				//pDoc->lines.pop_back();
-				//mk_line.line_num--;
-			}
-		}
 
-		//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
-		for (int i = 0; i < ln; i++)
-		{
-			if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
+			for (int i = 0; i < pDoc->lines.size(); i++)
 			{
-				if (pDoc->lines.at(i)->Is_match_IineCoord(point)
-					&& !(pDoc->isSelected) && !(pDoc->clickMode))
-				{
+					//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 					LineObject* curline = pDoc->lines.at(i);
-					if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
+					if (pDoc->lines.at(i)->Is_match_IineCoord(temp_line[0]->line[0]))
 					{
-						LineObject* newline = new LineObject(cur_pos);
+						if (curline->line[0] != temp_line[0]->line[0] && curline->line[1] != temp_line[0]->line[0])
+						{
+							LineObject* newline = new LineObject(temp_line[0]->line[0]);
 
-						newline->line[1] = curline->line[1];
-						curline->line[1] = cur_pos;
+							newline->line[1] = curline->line[1];
+							curline->line[1] = temp_line[0]->line[0];
+							newline->shape = curline->shape;
 
-						newline->shape = curline->shape;
+							pDoc->lines.insert(pDoc->lines.begin() + pDoc->lines.size() - 2, newline);
+							pDoc->mUndo.GetHead().lineked_line.push_back(curline);
+							pDoc->mUndo.GetHead().lineked_line.push_back(newline);
+						}
+					}
+			}
 
-						mk_line.line_num++;
-						mk_line.lineked_line.push_back(curline);
-						mk_line.lineked_line.push_back(newline);
 
-						pDoc->lines.push_back(newline);
+			//로직 오브젝트 검색 삭제
+
+			int ln = pDoc->lines.size();
+
+			/////////////////선 속성 추가 ////////////////
+			if (temp_line[0]->line[1].x == temp_line[0]->line[0].x)
+				temp_line[0]->shape = VERTICAL;
+			else
+				temp_line[0]->shape = HORIZONTAL;
+
+			if (temp_line[0]->shape == HORIZONTAL)
+				temp_line[1]->shape = VERTICAL;
+			else temp_line[1]->shape = HORIZONTAL;
+
+			/////////////////////////////점 지우기 & 메모리에 추가////////////////////////////////////
+
+			Action mk_line = Action(LINE, NEW);
+
+			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
+			for (int i = 0; i < ln; i++)
+			{
+				if (i != cur_line && pDoc->lines.at(i)->Is_match_IineCoord(point))
+				{
+					if (pDoc->lines.at(i)->Is_match_IineCoord(point)
+						&& !(pDoc->isSelected) && !(pDoc->clickMode))
+					{
+						LineObject* curline = pDoc->lines.at(i);
+						if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
+						{
+							LineObject* newline = new LineObject(cur_pos);
+
+							newline->line[1] = curline->line[1];
+							curline->line[1] = cur_pos;
+
+							newline->shape = curline->shape;
+
+							mk_line.lineked_line.push_back(curline);
+							mk_line.lineked_line.push_back(newline);
+
+							pDoc->lines.push_back(newline);
+						}
 					}
 				}
 			}
-		}
-
-		//if (mk_line.line_num > 0)
 			pDoc->mUndo.AddHead(mk_line);
-		
+		}
+		else
+		{
+			pDoc->lines.pop_back();
+			pDoc->lines.pop_back();
+		}
+		//if (mk_line.line_num > 0)
 		object = OBJECT;
 	}
+
+	for (int i = 0; i < pDoc->lines.size(); i++)
+	{
+		if (pDoc->lines.at(i)->Is_match_IineCoord(point))
+		{
+			pDoc->lines.at(i)->isSelected = TRUE;
+		}
+	}
+
 	pDoc->CheckCircuit();
 	Invalidate();
 
@@ -857,25 +873,34 @@ void CCircuitView::OnEditRedo()
 }
 
 
-void CCircuitView::OnDeleteItem(int nIDCtl, LPDELETEITEMSTRUCT lpDeleteItemStruct)
+void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-	int lin = pDoc->lines.size();
-	int lon = pDoc->logicInfo.size();
-
-	for (int i = 0; i < lin; i++)
+	if (nChar == VK_DELETE)
 	{
-		
-	}
+		CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+		Action temp;
+		int lin = pDoc->lines.size();
+		int lon = pDoc->logicInfo.size();
 
-	for (int i = 0; i < lon; i++)
-	{
-		if (pDoc->logicInfo.at(i)->isSelected == TRUE)
+		for (int i = 0; i < lin; i++)
 		{
-
+			if (pDoc->lines.at(i)->isSelected == TRUE)
+			{
+				pDoc->lines.erase(pDoc->lines.begin() + i);
+				lin--;
+			}
 		}
-	}
 
-	CView::OnDeleteItem(nIDCtl, lpDeleteItemStruct);
+		for (int i = 0; i < lon; i++)
+		{
+			if (pDoc->logicInfo.at(i)->isSelected == TRUE)
+			{
+				pDoc->logicInfo.erase(pDoc->logicInfo.begin() + i);
+				lon--;
+			}
+		}
+		Invalidate();
+	}
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
