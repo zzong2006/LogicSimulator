@@ -26,6 +26,22 @@ BOOL LineObject::Is_match_IineCoord(CPoint src)
 	
 	가로인지 세로인지 검사해서 좀더 길게(2정도) 나오도록
 */
+
+void LineObject::draw_showSelected(Gdiplus::Graphics* gp)
+{
+	Gdiplus::Pen *p;
+	Gdiplus::Point drw_line[2];
+	drw_line[0].X = line[0].x;
+	drw_line[0].Y = line[0].y;
+	drw_line[1].X = line[1].x;
+	drw_line[1].Y = line[1].y;
+
+	p = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0), 3);
+
+	gp->DrawRectangle(p, drw_line[0].X - 2, drw_line[0].Y - 2, 4, 4);
+	gp->DrawRectangle(p, drw_line[1].X - 2, drw_line[1].Y - 2, 4, 4);
+}
+
 void LineObject::draw_main(Gdiplus::Graphics *gp)
 {
 	Gdiplus::Pen *p;

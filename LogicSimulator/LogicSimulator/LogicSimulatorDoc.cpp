@@ -410,6 +410,7 @@ void CLogicSimulatorDoc::clearAll()
 	currBox->logicInfo.clear();
 	currBox->mUndo.RemoveAll();
 	currBox->mRedo.RemoveAll();
+
 	currBox->NumInput = 0;
 	currBox->NumOuput = 0;
 

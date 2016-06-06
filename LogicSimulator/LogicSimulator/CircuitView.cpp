@@ -126,7 +126,12 @@ void CCircuitView::DrawImage(CDC *pDC)
 	P.SetColor(Gdiplus::Color(0, 0, 0));
 
 	for (int i = 0; i < pDoc->currBox->lines.size(); i++)
-		pDoc->currBox->lines.at(i)->draw_main(&graphics);
+	{
+		LineObject* tempLine = pDoc->currBox->lines.at(i);
+		tempLine->draw_main(&graphics);
+		if (tempLine->isSelected)
+			tempLine->draw_showSelected(&graphics);
+	}
 }
 
 // CCircuitView 진단입니다.
@@ -181,12 +186,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	int ln = (int)pDoc->currBox->lines.size();
 
-	for (int i = 0; i < pDoc->currBox->lines.size(); i++)		
+	for (int i = 0; i < ln; i++)
 	{
+		pDoc->currBox->lines.at(i)->isSelected = FALSE;
 		if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point)
 			&& !(pDoc->isSelected) && !(pDoc->clickMode))
 		{
-			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
 			LineObject* curline = pDoc->currBox->lines.at(i);
 			if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
 			{
@@ -711,29 +716,6 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 		temp_line[1] = pDoc->currBox->lines.at(cur_line);
 		if (!(temp_line[0]->line[0] == temp_line[0]->line[1] && temp_line[1]->line[0] == temp_line[1]->line[1]))
 		{
-
-			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
-			{
-					//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
-					LineObject* curline = pDoc->currBox->lines.at(i);
-					if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(temp_line[0]->line[0]))
-					{
-						if (curline->line[0] != temp_line[0]->line[0] && curline->line[1] != temp_line[0]->line[0])
-						{
-							LineObject* newline = new LineObject(temp_line[0]->line[0]);
-
-							newline->line[1] = curline->line[1];
-							curline->line[1] = temp_line[0]->line[0];
-							newline->shape = curline->shape;
-
-							pDoc->currBox->lines.insert(pDoc->currBox->lines.begin() + pDoc->currBox->lines.size() - 2, newline);
-							pDoc->currBox->mUndo.GetHead().lineked_line.push_back(curline);
-							pDoc->currBox->mUndo.GetHead().lineked_line.push_back(newline);
-						}
-					}
-			}
-
-
 			//로직 오브젝트 검색 삭제
 
 			int ln = pDoc->currBox->lines.size();
@@ -753,31 +735,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 			Action mk_line = Action(LINE, NEW);
 
 			//////////////////////////////////////////선에서 나온순간 잘라버리기/////////////////////////////////////
-			for (int i = 0; i < ln; i++)
-			{
-				if (i != cur_line && pDoc->currBox->lines.at(i)->Is_match_IineCoord(point))
-				{
-					if (pDoc->currBox->lines.at(i)->Is_match_IineCoord(point)
-						&& !(pDoc->isSelected) && !(pDoc->clickMode))
-					{
-						LineObject* curline = pDoc->currBox->lines.at(i);
-						if (curline->line[0] != cur_pos && curline->line[1] != cur_pos)
-						{
-							LineObject* newline = new LineObject(cur_pos);
 
-							newline->line[1] = curline->line[1];
-							curline->line[1] = cur_pos;
-
-							newline->shape = curline->shape;
-
-							mk_line.lineked_line.push_back(curline);
-							mk_line.lineked_line.push_back(newline);
-
-							pDoc->currBox->lines.push_back(newline);
-						}
-					}
-				}
-			}
 			pDoc->currBox->mUndo.AddHead(mk_line);
 		}
 		else
@@ -788,6 +746,8 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 
 		object = OBJECT;
 	}
+
+	pDoc->currBox->LineCheck();
 
 	for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 	{
@@ -915,7 +875,7 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if (nChar == VK_DELETE)
 	{
 		CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-		Action temp;
+		Action temp = Action(ALL, REMOVE);
 		int lin = pDoc->currBox->lines.size();
 		int lon = pDoc->currBox->logicInfo.size();
 
@@ -924,6 +884,9 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		{
 			if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
 			{
+
+				temp.lines.push_back(pDoc->currBox->lines.at(i));
+				temp.lineIndex.push_back(i);
 				pDoc->currBox->lines.erase(pDoc->currBox->lines.begin() + i);
 				lin--;
 			}
@@ -933,10 +896,16 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		{
 			if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
 			{
+				temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
+				temp.logicIndex.push_back(i);
 				pDoc->currBox->logicInfo.erase(pDoc->currBox->logicInfo.begin() + i);
 				lon--;
 			}
 		}
+
+		pDoc->currBox->LineCheck();
+		pDoc->currBox->mRedo.RemoveAll();
+		pDoc->currBox->mUndo.AddHead(temp);
 		Invalidate();
 	}
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);

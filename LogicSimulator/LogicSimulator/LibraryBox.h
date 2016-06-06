@@ -40,9 +40,12 @@ public:
 
 
 	std::vector <LineObject *> lineked_line;
+
 	std::vector <LogicObject *> logicInfo;
 	std::vector <Sevenseg *> segInfo;
 	std::vector <LineObject *> lines;
+	std::vector <int> lineIndex;
+	std::vector <int> logicIndex;
 };
 
 class LibraryBox 
@@ -69,11 +72,15 @@ public:
 	void CheckCircuit();
 
 	int FindEmpty(int type);	//라이브러리 입출력 빈자리 찾아주기
-
+	void LineCheck();
 
 	BOOL IsInput(LogicObject* lo);
 	BOOL IsGate(LogicObject* lo);
 	BOOL IsOutput(LogicObject* lo);
+
+	BOOL IsConflict(LineObject* st, LineObject* ed, CPoint& pos);
+	BOOL IsConnect(CPoint p, LineObject* ed);
+
 
 	BOOL CanUndo();
 	BOOL CanRedo();
