@@ -15,6 +15,7 @@ public:
 
 	BOOL state = FALSE;		//line의 값
 	BOOL chk;				//방문 했는지 안했는지 확인
+	BOOL isSelected;
 	int shape;
 
 	int connect_pin;

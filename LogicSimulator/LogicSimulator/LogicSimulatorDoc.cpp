@@ -72,7 +72,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		/*/////////////////////저장 순서///////////////////////
 		1. 선 ( 개수 -> 정보)
 		2. 오브젝트 (개수 -> 정보)
-		///////////////////////////////////////////////////////*/
+*/
 		line_num = (int)currBox->lines.size();
 		logic_num = (int)currBox->logicInfo.size();
 
@@ -277,7 +277,6 @@ void CLogicSimulatorDoc::Dump(CDumpContext& dc) const
 
 
 // CLogicSimulatorDoc 명령
-
 
 void CLogicSimulatorDoc::OnFileSave()
 {
