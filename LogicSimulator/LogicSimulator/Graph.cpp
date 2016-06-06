@@ -88,6 +88,10 @@ void Graph::OnPaint()
 	}
 
 	int i ,final_i;
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 3, RGB(255, 0, 0));    // »¡°£»ö Ææ »ý¼º
+	dc.SelectObject(&pen);
+
 	for (i = 0; i < pDoc->currBox->NumInput; i++)
 	{
 		for (int j = 1; j < (count < 200 ? count : 200); j++)
@@ -109,9 +113,11 @@ void Graph::OnPaint()
 			inputline[i][0].x = 0;
 			inputline[i][0].y = 60 + 50 * i;
 		}
-		dc.Polyline(inputline[i], (count < 200 ? count : 200));
 
+		dc.Polyline(inputline[i], (count < 200 ? count : 200));
+		
 	}
+
 	final_i = i;
 
 	if (UpdateGraph) {
@@ -124,7 +130,11 @@ void Graph::OnPaint()
 		}
 		UpdateGraph = false;
 	}
-	
+	pen.DeleteObject();
+
+
+	pen.CreatePen(PS_SOLID, 3, RGB(0, 0, 255));  // ÆÄ¶õ»ö Ææ »ý¼º
+	dc.SelectObject(&pen);
 
 	for (i = 0; i < pDoc->currBox->NumOuput; i++)
 	{
@@ -149,9 +159,8 @@ void Graph::OnPaint()
 			outputline[i][0].y = 80 + 50 * (i + final_i);
 		}
 		dc.Polyline(outputline[i], (count < 200 ? count : 200));
+		
 	}
-	
-	
 	//dc.Rectangle(10, 10, 10, 100);
 }
 
@@ -186,7 +195,7 @@ BOOL Graph::OnInitDialog()
 			outputline[i][j].y = 60 + 50 * (i + 9);
 		}
 	}
-	this->SetTimer(0, 10, NULL);
+	this->SetTimer(0, 1000, NULL);
 
 	previousInput = -1;
 	UpdateGraph = 1;

@@ -10,6 +10,7 @@ class Graph : public CDialogEx
 public:
 	int inputValue[10], outputValue[10];
 	int previousInput, UpdateGraph = 0;
+
 	POINT inputline[10][250];
 	POINT outputline[10][250];
 	int count = 0;
