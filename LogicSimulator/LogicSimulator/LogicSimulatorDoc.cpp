@@ -427,5 +427,9 @@ void CLogicSimulatorDoc::clearAll()
 
 void CLogicSimulatorDoc::OnOutputGraph()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	Graph dlg;
+	Graph *pDlg = new Graph;
+	pDlg->Create(IDD_DIALOG1);
+	pDlg->ShowWindow(SW_SHOW);
+
 }

@@ -14,6 +14,7 @@
 #include "Box.h"
 #include "MainFrm.h"
 #include "CircuitView.h"
+#include "Graph.h"
 
 class CLogicSimulatorDoc : public CDocument
 {
