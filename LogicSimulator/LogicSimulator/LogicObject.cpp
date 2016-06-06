@@ -125,7 +125,38 @@ void LogicObject::set_Coord_ByFacing(CString input)
 	case WIRING_TYPE:
 		if (objectName == SEG7)
 		{
-			
+			switch (facing)
+			{
+			case EAST:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = bottom.x;
+					inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				}
+				break;
+			case WEST:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x;
+					inputCoord[i].first.y = top.y + 2 * UNIT + i * UNIT;
+				}
+				break;
+			case SOUTH:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x + i * UNIT;
+					inputCoord[i].first.y = bottom.y;
+				}
+				break;
+			case NORTH:
+				for (int i = 0; i < 7; i++)
+				{
+					inputCoord[i].first.x = top.x + i * UNIT;
+					inputCoord[i].first.y = top.y;
+				}
+				break;
+
+			}
 		}
 		else if(objectName == OUTPIN) {
 			switch (facing)
@@ -300,8 +331,19 @@ void LogicObject::set_inputCoord(int x, int y)
 		}
 		break;
 	case WIRING_TYPE:
-		inputCoord[0].first.x = x;
-		inputCoord[0].first.y = y;
+		if (objectName == SEG7)
+		{
+			for (int i = 0; i < 7; i++)
+				inputCoord[i].first.x = x;
+			
+			for (int i = 0; i < 7; i++)
+				inputCoord[i].first.y = (y - 3 * UNIT) + (UNIT * i);
+		}
+		else {
+
+			inputCoord[0].first.x = x;
+			inputCoord[0].first.y = y;
+		}
 		break;
 	case FLIPFLOP_TYPE:
 		if (objectName == JK_FF)

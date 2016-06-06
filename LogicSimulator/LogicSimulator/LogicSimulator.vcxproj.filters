@@ -79,6 +79,9 @@
     <ClCompile Include="LibraryBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Sevenseg.cpp">
+      <Filter>Wiring</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogicSimulator.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="name_repo.h">
       <Filter>리소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Sevenseg.h">
+      <Filter>Wiring</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\LogicSimulatorDoc.ico">
@@ -215,6 +221,7 @@
     <Image Include="res\flipflop.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\bmp00004.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\cursor1.cur">

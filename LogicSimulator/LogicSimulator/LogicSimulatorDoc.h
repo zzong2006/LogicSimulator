@@ -17,6 +17,7 @@
 #include "DFlipFlop.h"
 #include "JKFlipFlop.h"
 #include "TFlipFlop.h"
+#include "Sevenseg.h"
 
 class Action
 {
@@ -42,6 +43,7 @@ public :
 
 	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Sevenseg *> segInfo;
 	std::vector <LineObject *> lines;
 };
 
@@ -63,6 +65,7 @@ public:
 	std::vector <LogicObject *> currObject;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
+
 	
 	int objectType;
 	int objectName;

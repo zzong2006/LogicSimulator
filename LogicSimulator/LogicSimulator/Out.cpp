@@ -41,9 +41,6 @@ void Out::set_Coord_From_outC(int x, int y)
 	bottom.x = x; bottom.y = y + 1 * UNIT;
 }
 
-void Out::turn()
-{
-}
 
 void Out::toggleOutput()
 {

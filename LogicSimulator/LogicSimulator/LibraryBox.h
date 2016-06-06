@@ -7,34 +7,18 @@
 #include "Pin.h"
 #include "Out.h"
 #include "name_repo.h"
-
+#include "Sevenseg.h"
 
 class Action
 {
 public:
-	Action(LineObject* line)
+	Action(int type, int act)
 	{
-		lines.push_back(line);
-		Type = LINE;
-	}
-	Action(LineObject** line)
-	{
-		lines.push_back(line[0]);
-		lines.push_back(line[1]);
-		Type = LINE;
-	}
-	Action(LogicObject* clock)
-	{
-		logicInfo.push_back(clock);
-		Type = OBJECT;
-	}
-	Action(int type)
-	{
+		Type = type;
+		Act = act;
 		if (type == LINE)
-		{
-			Type = type;
 			line_num = 2;
-		}
+
 	}
 	Action()
 	{
@@ -43,19 +27,19 @@ public:
 	enum {
 		line_add
 	};
-
-	int Type;
+	int Act, Type;
 	int line_num;
+
+
 	std::vector <LineObject *> lineked_line;
 	std::vector <LogicObject *> logicInfo;
+	std::vector <Sevenseg *> segInfo;
 	std::vector <LineObject *> lines;
 };
 
 class LibraryBox : public LogicObject
 {
 public:
-	//출력은 Out 갯수만큼 , 입력은 Pin 갯수만큼 받는다.
-
 	CString selectedType;
 	BOOL isSelected;
 	BOOL CanBeDivided;		//분기 가능상태면 동그라미
@@ -66,16 +50,9 @@ public:
 	std::vector <LogicObject *> currObject;
 	std::vector <LogicObject *> logicInfo;
 	std::vector <LineObject *> lines;
-	std::vector <Clock *> clockInfo;
-	std::vector <FlipFlop *> FFInfo;
-	std::vector <Gate *> gateInfo;
-	std::vector <Pin *> pinInfo;
-	std::vector <Out *> outInfo;
 
 	int objectType;
 	int objectName;
-
-	int gateNum;
 
 	LogicObject* temp;
 
@@ -83,10 +60,17 @@ public:
 	CList <Action> mUndo;
 	CList <Action> mRedo;
 
+	BOOL IsInput(LogicObject* lo);
+	BOOL IsGate(LogicObject* lo);
+	BOOL IsOutput(LogicObject* lo);
+
 	BOOL CanUndo();
 	BOOL CanRedo();
 	void Undo();
 	void Redo();
+
+	//method
+	
 
 	LibraryBox();
 	~LibraryBox();

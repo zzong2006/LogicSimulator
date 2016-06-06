@@ -444,7 +444,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 				if (curLogic->isInputSet() && curLogic->chk == 0)
 				{
 					curLogic->chk = 1;
-					curLogic->setOutput();
+					//curLogic->setOutput();
 				}
 			}
 		}
