@@ -39,3 +39,9 @@
 
 #define VERTICAL					0
 #define HORIZONTAL					1
+
+#define NEW							0
+#define DELETE						1
+#define MOVE						2
+#define COPY						3
+#define PASTE						4

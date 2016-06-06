@@ -26,6 +26,7 @@ IMPLEMENT_DYNCREATE(CLogicSimulatorDoc, CDocument)
 BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE, &CLogicSimulatorDoc::OnFileSave)
 	ON_COMMAND(ID_FILE_OPEN, &CLogicSimulatorDoc::OnFileOpen)
+	ON_COMMAND(ID_FILE_NEW, &CLogicSimulatorDoc::OnFileNew)
 END_MESSAGE_MAP()
 
 
@@ -72,7 +73,7 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 // CLogicSimulatorDoc serialization
 void CLogicSimulatorDoc::Serialize(CArchive& ar)
 {
-	int line_num, gate_num, pin_num, out_num, clock_num;
+	int line_num, gate_num, pin_num, out_num, clock_num, flipflop_num;
 
 	if (ar.IsStoring())
 	{
@@ -83,18 +84,21 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		3. 입력핀 (개수 -> 정보)
 		4. 출력핀 (개수 -> 정보)
 		5. 클럭 (개수 -> 정보)
+		6. 플립플롭 (개수 -> 정보)
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 		line_num = lines.size();
 		gate_num = gateInfo.size();
 		pin_num = pinInfo.size();
 		out_num = outInfo.size();
 		clock_num = clockInfo.size();
+		flipflop_num = FFInfo.size();
 
 		ar << line_num;
 		ar << gate_num;
 		ar << pin_num;
 		ar << out_num;
 		ar << clock_num;
+		ar << flipflop_num;
 
 		//선 위치 1번 -> 2번
 		for (int i = 0; i < line_num; i++)
@@ -138,6 +142,15 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			ar << find_pos;
 		}
 
+		for (int i = 0; i < flipflop_num; i++)
+		{
+			FlipFlop * tempFF = FFInfo.at(i);
+			CPoint find_pos;
+			find_pos.x = tempFF->get_bottm().x;
+			find_pos.y = (tempFF->get_top().y + tempFF->get_bottm().y) / 2;
+			ar << tempFF->objectName<< find_pos;
+		}
+
 	}
 	else
 	{
@@ -148,12 +161,14 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		3. 입력핀 (개수 -> 정보)
 		4. 출력핀 (개수 -> 정보)
 		5. 클럭 (개수 -> 정보)
+		6. 플립플롭 (개수 -> 정보)
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 		ar >> line_num;
 		ar >> gate_num;
 		ar >> pin_num;
 		ar >> out_num;
 		ar >> clock_num;
+		ar >> flipflop_num;
 
 		for (int i = 0; i < line_num; i++)
 		{
@@ -237,6 +252,30 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 			logicInfo.push_back(Ctemp);
 			clockInfo.push_back(Ctemp);
+		}
+
+		for (int i = 0; i < flipflop_num; i++)
+		{
+			int oName;
+			CPoint find_pos;
+			FlipFlop *Ftemp = NULL;
+			ar >> oName >> find_pos;
+			switch (oName)
+			{
+			case D_FF:
+				Ftemp = new DFlipFlop(find_pos.x, find_pos.y);
+				break;
+			case JK_FF:
+				break;
+			case T_FF:
+				break;
+			}
+			if (Ftemp != NULL) {
+				Ftemp->set_Coord_From_outC(find_pos.x, find_pos.y);
+
+				logicInfo.push_back(Ftemp);
+				FFInfo.push_back(Ftemp);
+			}
 		}
 
 	}
@@ -448,7 +487,7 @@ void CLogicSimulatorDoc::CheckCircuit()
 					}
 				}
 			}
-
+					
 			for (int i = 0; i < FFInfo.size(); i++)
 			{
 				FlipFlop* curFF = FFInfo.at(i);
@@ -535,12 +574,12 @@ void CLogicSimulatorDoc::CheckCircuit()
 
 							if (curline->chk != 1)
 								searchLine.push(curline);
-						}
 					}
 				}
 			}
 		}
-
+		}
+		
 		//Outpin 방문 (제일 마지막)
 		for (int i = 0; i < outInfo.size(); i++)
 		{
@@ -573,25 +612,60 @@ void CLogicSimulatorDoc::Undo()
 	temp = mUndo.RemoveHead();
 	int lkedn = temp.lineked_line.size();
 
-	switch (temp.Type)
+	switch (temp.Act)
 	{
-	case LINE :
-
-		for (int i = lkedn - 1; i > 0; i -= 2)
+	case NEW :
+		if (temp.Type == LINE)
 		{
-			temp.lineked_line.at(i - 1)->line[1] = temp.lineked_line.at(i)->line[1];
-			lines.pop_back();
-		}
 
-		for (int i = 0; i < 2; i++)
-		{
-			temp.lines.push_back(lines.at(lines.size() - 1));
-			lines.pop_back();
+			for (int i = lkedn - 1; i > 0; i -= 2)
+			{
+				temp.lineked_line.at(i - 1)->line[1] = temp.lineked_line.at(i)->line[1];
+				lines.pop_back();
+			}
+				
+			for (int i = 0; i < 2; i++)
+			{
+				temp.lines.push_back(lines.at(lines.size() - 1));
+				lines.pop_back();
+			}
 		}
-
+		else{
+			temp.logicInfo.push_back(logicInfo.at(logicInfo.size() - 1));
+			logicInfo.pop_back();
+			switch (temp.Type)
+			{
+			case GATE_TYPE:
+				temp.gateInfo.push_back(gateInfo.at(gateInfo.size() - 1));
+				gateInfo.pop_back();
+				break;
+			case FLIPFLOP_TYPE:
+				temp.FFInfo.push_back(FFInfo.at(FFInfo.size() - 1));
+				FFInfo.pop_back();
+				break;
+			case PIN:
+				temp.pinInfo.push_back(pinInfo.at(pinInfo.size() - 1));
+				pinInfo.pop_back();
+				break;
+			case OUTPIN :
+				temp.outInfo.push_back(outInfo.at(outInfo.size() - 1));
+				outInfo.pop_back();
+				break;
+			case CLOCK:
+				temp.clockInfo.push_back(clockInfo.at(clockInfo.size() - 1));
+				clockInfo.pop_back();
+				break;
+			}
+		}
 		break;
-	case OBJECT :
-		logicInfo.pop_back();
+	case DELETE :
+		
+		break;
+	case MOVE :
+		break;
+	case COPY :
+		break;
+	case PASTE :
 		break;
 	}
 	mRedo.AddHead(temp);
@@ -614,23 +688,58 @@ void CLogicSimulatorDoc::Redo()
 	temp = mRedo.RemoveHead();
 	int lkedn = temp.lineked_line.size();
 
-	switch (temp.Type)
+	switch (temp.Act)
 	{
-	case LINE : 
-		for (int i = 1; i > -1; i--)
+	case NEW:
+		if (temp.Type == LINE)
 		{
-			lines.push_back(temp.lines.at(i));
-			temp.lines.pop_back();
-		}
+			for (int i = 1; i > -1; i--)
+			{
+				lines.push_back(temp.lines.at(i));
+				temp.lines.pop_back();
+			}
 
-		for (int i = 0; i < lkedn; i += 2)
-		{
-			temp.lineked_line.at(i)->line[1] = temp.lineked_line.at(i + 1)->line[0];
-			lines.push_back(temp.lineked_line.at(i + 1));
+			for (int i = 0; i < lkedn; i += 2)
+			{
+				temp.lineked_line.at(i)->line[1] = temp.lineked_line.at(i + 1)->line[0];
+				lines.push_back(temp.lineked_line.at(i + 1));
+			}
+		}
+		else{
+			logicInfo.push_back(temp.logicInfo.at(0));
+			temp.logicInfo.pop_back();
+			switch (temp.Type)
+			{
+			case GATE_TYPE:
+				gateInfo.push_back(temp.gateInfo.at(0));
+				temp.gateInfo.pop_back();
+				break;
+			case FLIPFLOP_TYPE:
+				FFInfo.push_back(temp.FFInfo.at(0));
+				temp.FFInfo.pop_back();
+				break;
+			case PIN:
+				pinInfo.push_back(temp.pinInfo.at(0));
+				temp.pinInfo.pop_back();
+				break;
+			case OUTPIN:
+				outInfo.push_back(temp.outInfo.at(0));
+				temp.outInfo.pop_back();
+				break;
+			case CLOCK:
+				clockInfo.push_back(temp.clockInfo.at(0));
+				temp.clockInfo.pop_back();
+				break;
+			}
 		}
 		break;
-	case OBJECT:
-		logicInfo.push_back(temp.logicInfo.at(0));
+	case DELETE:
+		break;
+	case MOVE:
+		break;
+	case COPY:
+		break;
+	case PASTE:
 		break;
 	}
 	mUndo.AddHead(temp);
@@ -725,4 +834,36 @@ void CLogicSimulatorDoc::OnFileOpen()
 		}
 	}
 
+}
+
+
+void CLogicSimulatorDoc::OnFileNew()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	int Answer;
+	Answer = AfxMessageBox(_T("저장 하시겠습니까?"), MB_YESNOCANCEL);
+	switch (Answer)
+	{
+	case IDYES:
+		OnFileSave();
+		clearAll();
+		break;
+	case IDNO :
+		clearAll();
+		break;
+	case IDCANCEL :
+		break;
+	}
+}
+
+void CLogicSimulatorDoc::clearAll()
+{
+	lines.clear();
+	logicInfo.clear();
+	gateInfo.clear();
+	pinInfo.clear();
+	outInfo.clear();
+	clockInfo.clear();
+	mUndo.RemoveAll();
+	mRedo.RemoveAll();
 }
