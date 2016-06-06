@@ -66,6 +66,8 @@ void CMenuView::OnInitialUpdate()
 	treeCtrl.SetImageList(&il, TVSIL_NORMAL);
 	il.Detach();
 
+	HTREEITEM Main = treeCtrl.InsertItem(_T("Main Library Box"), 14, 14, TVI_ROOT, TVI_LAST);
+
 	HTREEITEM hGate = treeCtrl.InsertItem(_T("Gates"), 0, 0, TVI_ROOT, TVI_LAST);
 
 	treeCtrl.InsertItem(_T("AND Gate"), 1, 1, hGate, TVI_LAST);
@@ -90,7 +92,7 @@ void CMenuView::OnInitialUpdate()
 
 	HTREEITEM hLibrary = treeCtrl.InsertItem(_T("Library"), 0, 0, TVI_ROOT, TVI_LAST);
 
-	treeCtrl.InsertItem(_T("Main Library Box"), 14, 14, hLibrary, TVI_LAST);
+
 	treeCtrl.InsertItem(_T("Sub Library Box"), 15, 15, hLibrary, TVI_LAST);
 }
 
@@ -195,12 +197,7 @@ void CMenuView::OnNMClick(NMHDR *pNMHDR, LRESULT *pResult)
 		pDoc->objectType = WIRING_TYPE;
 	}
 	else if (typeTemp == "Main Library Box") {
-		//현재가 메인 라이브러리 박스면 무시하고
-		//다른 라이브러리 박스면 박스 추출
-		if (pDoc->currBox->ID != MAIN_LIB) {
-			pDoc->objectName = MAIN_LIB;
-			pDoc->objectType = LIB;
-		}else
+		//Sub만 만들수 있게끔 해야함.
 			pDoc->isSelected = FALSE;
 	}
 	else if (typeTemp == "Sub Library Box") {

@@ -55,6 +55,11 @@ void Pin::toggleOutput()
 	output = !output;
 }
 
+void Pin::setConNum(int input)
+{
+	connectedNum = input;
+}
+
 
 Pin::Pin() : Wiring()
 {

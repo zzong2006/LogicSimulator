@@ -172,8 +172,10 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ftemp = new DFlipFlop(find_pos.x, find_pos.y);
 					break;
 				case JK_FF:
+					Ftemp = new JKFlipFlop(find_pos.x,find_pos.y);
 					break;
 				case T_FF:
+					Ftemp = new TFlipFlop(find_pos.x, find_pos.y);
 					break;
 				}
 
@@ -190,6 +192,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = NULL;
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
+					currBox->NumInput++;
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -203,6 +206,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				case OUTPIN :
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
+					currBox->NumOuput++;
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
@@ -398,8 +402,16 @@ void CLogicSimulatorDoc::OnFileNew()
 
 void CLogicSimulatorDoc::clearAll()
 {
+	CMainFrame *pFrame = (CMainFrame *)AfxGetMainWnd();
+
+	CCircuitView *CVCtrl = (CCircuitView *)(pFrame->m_wndSplitterMain.GetPane(0, 1));
+
 	currBox->lines.clear();
 	currBox->logicInfo.clear();
 	currBox->mUndo.RemoveAll();
 	currBox->mRedo.RemoveAll();
+	currBox->NumInput = 0;
+	currBox->NumOuput = 0;
+
+	CVCtrl->Invalidate();
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Box.h"
+#include "LibraryBox.h"
 #include "resource.h"
 
 void Box::draw_shadow(Gdiplus::Graphics * gp, Gdiplus::Pen * p)
@@ -48,6 +49,42 @@ Box::Box(int x, int y, LibraryBox* LB) : LogicObject()
 
 	this->set_outputCoord(x, y);
 	this->set_inputCoord(x, y);
+}
+
+void Box::setOutput()
+{
+	//각 번호에 해당하는 input을 각 자리에 넣어준다.
+	for (int i = 0; i < inputNum; i++)
+	{
+		for (int j = 0; j < connectedBox->logicInfo.size(); j++)
+		{
+			if (connectedBox->logicInfo.at(j)->objectName == PIN) {
+				Pin* tempP =(Pin *)connectedBox->logicInfo.at(j);
+				if (tempP->getConNum() == i) {
+					tempP->output = inputCoord[i].second;
+					break;
+				}
+			}
+		}
+	}
+	//한번 알고리즘 돌려준다.
+	connectedBox->CheckCircuit();
+
+	//각 번호에 해당하는 output을 각 자리에 얻는다.
+
+	for (int i = 0; i < outputNum; i++)
+	{
+		for (int j = 0; j < connectedBox->logicInfo.size(); j++)
+		{
+			if (connectedBox->logicInfo.at(j)->objectName == OUTPIN) {
+				Out* tempP = (Out *)connectedBox->logicInfo.at(j);
+				if (tempP->getConNum() == i) {
+					outputCoord[i].second = tempP->output;
+					break;
+				}
+			}
+		}
+	}
 }
 
 Box::Box() : LogicObject()

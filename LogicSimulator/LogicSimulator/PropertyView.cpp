@@ -89,7 +89,7 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 	m_pGridInfo.SetVSDotNetLook();
 	m_pGridInfo.EnableDescriptionArea(FALSE);
 
-	CString labelName, trigger ,cycleHz;
+	CString labelName, trigger ,cycleHz, CoN;
 
 	switch (tempLO->facing) {
 	case EAST:
@@ -143,6 +143,30 @@ void CPropertyView::InitializePropGrid(LogicObject *tempLO)
 
 	}
 
+	if (tempLO->objectName == OUTPIN || tempLO->objectName == PIN)
+	{
+		if (tempLO->objectName == OUTPIN) {
+			Out * Ptemp = (Out *)tempLO;
+			CoN.Format(_T("%d"), Ptemp->getConNum());
+		}
+			
+		else {
+			Pin * Ptemp = (Pin *)tempLO;
+			CoN.Format(_T("%d"), Ptemp->getConNum());
+		}
+
+		CMFCPropertyGridProperty* ConnectedNum = new CMFCPropertyGridProperty(_T("ConnectedNumber"), CoN, _T("설명"), 4);
+
+		CString tempNum;
+		for (int i = -1; i < 10; i++)
+		{
+			tempNum.Format(_T("%d"), i);
+			ConnectedNum->AddOption(tempNum);
+		}
+		ConnectedNum->AllowEdit(FALSE);
+		pGroupInfo->AddSubItem(ConnectedNum);
+	}
+
 	m_pGridInfo.AddProperty(pGroupInfo);
 	
 	m_pGridInfo.UpdateData(FALSE);
@@ -181,6 +205,99 @@ LRESULT CPropertyView::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 			Ctemp->setCycle(_ttoi(cycle));
 		}
 			break;
+
+		case 4:
+			CString changedValue = pProperty->GetValue();
+			//출력핀
+			if (pDoc->currBox->currObject.at(0)->objectName == OUTPIN) {
+				if (_ttoi(changedValue) >= pDoc->currBox->NumOuput) {
+					AfxMessageBox(L"Cannot be modified by changing upper output number");
+				}
+				else {
+					Out * Otemp = (Out *)pDoc->currBox->currObject.at(0);
+					//1가지
+					if (_ttoi(changedValue) < 0) {
+						pDoc->currBox->ConnOutput[Otemp->getConNum()] = FALSE;
+						Otemp->setConNum(-1);
+					}
+					
+					//2가지
+					BOOL Swap = FALSE;
+					for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
+					{
+						if (pDoc->currBox->logicInfo.at(i)->objectName == OUTPIN) {
+							Out * OtherTemp = (Out *)pDoc->currBox->logicInfo.at(i);
+
+							if (OtherTemp->getConNum() == _ttoi(changedValue)) {
+								int hoi;
+
+								hoi = OtherTemp->getConNum();
+								OtherTemp->setConNum(Otemp->getConNum());
+								Otemp->setConNum(_ttoi(changedValue));
+
+								Swap = TRUE;
+								break;
+							}
+						}
+					}
+
+					//3가지 : 없을 경우
+					if (!Swap)
+					{
+						pDoc->currBox->ConnOutput[Otemp->getConNum()] = FALSE;
+						Otemp->setConNum(_ttoi(changedValue));
+						pDoc->currBox->ConnOutput[Otemp->getConNum()] = TRUE;
+					}
+					//총 3가지 경우, -1로 바꿀때, 다른 걸로 바꾸는데 이미 있을때, 다른걸로 바꾸는데 없을때
+				}
+			}
+			//입력핀
+			else {
+				if (_ttoi(changedValue) >= pDoc->currBox->NumInput) {
+					AfxMessageBox(L"Cannot be modified by changing upper input number");
+				}
+				else {
+					Pin * Ptemp = (Pin *)pDoc->currBox->currObject.at(0);
+					//1가지
+					if (_ttoi(changedValue) < 0) {
+						pDoc->currBox->ConnInput[Ptemp->getConNum()] = FALSE;
+						Ptemp->setConNum(-1);
+					}
+
+					//2가지
+					BOOL Swap = FALSE;
+					for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
+					{
+						if (pDoc->currBox->logicInfo.at(i)->objectName == PIN) {
+							Pin * OtherTemp = (Pin *)pDoc->currBox->logicInfo.at(i);
+
+							if (OtherTemp->getConNum() == _ttoi(changedValue)) {
+								int hoi;
+
+								hoi = OtherTemp->getConNum();
+								OtherTemp->setConNum(Ptemp->getConNum());
+								Ptemp->setConNum(_ttoi(changedValue));
+
+								Swap = TRUE;
+								break;
+							}
+						}
+					}
+
+					//3가지 : 없을 경우
+					if (!Swap)
+					{
+						
+						pDoc->currBox->ConnInput[Ptemp->getConNum()] = FALSE;
+						Ptemp->setConNum(_ttoi(changedValue));
+						pDoc->currBox->ConnInput[Ptemp->getConNum()] = TRUE;
+
+					}
+					//총 3가지 경우, -1로 바꿀때, 다른 걸로 바꾸는데 이미 있을때, 다른걸로 바꾸는데 없을때
+				}
+			}
+			
+		break;
 		}
 	}
 	pDoc->currBox->CheckCircuit();

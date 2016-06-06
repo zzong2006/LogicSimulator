@@ -319,12 +319,20 @@ void LogicObject::set_outputCoord(int x, int y)
 		outputCoord[1].first.x = x;		//Q'
 		outputCoord[1].first.y = y + 2 * UNIT;
 	}
-	else
+	else 
 	{
 		outputCoord[0].first.x = x;
 		outputCoord[0].first.y = y;
 	}
 	
+	if (objectType == LIB)
+	{
+		for (int i = 0; i < outputNum; i++)
+		{
+			outputCoord[i].first.x = x;
+			outputCoord[i].first.y = (y - 4 * UNIT) + i * UNIT;
+		}
+	}
 }
 
 void LogicObject::set_inputCoord(int x, int y)
@@ -375,6 +383,12 @@ void LogicObject::set_inputCoord(int x, int y)
 			inputCoord[1].first.y = y + 2 * UNIT;
 		}
 		break;
+	case LIB:
+		for (int i = 0; i < inputNum; i++)
+		{
+			inputCoord[i].first.x = x - 10 *UNIT;
+			inputCoord[i].first.y = (y - 4 * UNIT) + i * UNIT;
+		}
 	}
 	
 }

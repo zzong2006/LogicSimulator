@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LibraryBox.h"
+#include "Box.h"
 #include <queue>
 
 LibraryBox::LibraryBox()
@@ -8,6 +9,11 @@ LibraryBox::LibraryBox()
 	CanBeDivided = false;
 	isOnFocus = false;
 	NumOuput = NumInput = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		ConnInput[i] = ConnOutput[i] = FALSE;
+	}
 }
 
 
@@ -134,6 +140,10 @@ void LibraryBox::CheckCircuit()
 						FlipFlop* fftemp = (FlipFlop *)curLogic;
 						fftemp->setOutput();
 					}
+					else if (curLogic->objectType == LIB) {
+						Box* Bxtemp = (Box *)curLogic;
+						Bxtemp->setOutput();
+					}
 					else {
 						curLogic->setOutput();
 					}
@@ -167,7 +177,6 @@ void LibraryBox::CheckCircuit()
 
 			if (IsOutput(curLogic))
 			{
-				//Gate ¹æ¹®
 				if (curLogic->isInputSet() && curLogic->chk == 0)
 				{
 					curLogic->chk = 1;
@@ -185,6 +194,30 @@ void LibraryBox::CheckCircuit()
 	}
 }
 
+int LibraryBox::FindEmpty(int type)
+{
+	if (!type)			//input
+	{
+		for (int i = 0; i < (NumInput > 10? 10 : NumInput); i++)
+		{
+			if (!ConnInput[i]) {
+				ConnInput[i] = TRUE;
+				return i;
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < (NumOuput > 10 ? 10 : NumOuput); i++)
+		{
+			if (!ConnOutput[i]) {
+				ConnOutput[i] = TRUE;
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
 
 BOOL LibraryBox::IsInput(LogicObject * lo)
 {
@@ -193,7 +226,7 @@ BOOL LibraryBox::IsInput(LogicObject * lo)
 
 BOOL LibraryBox::IsGate(LogicObject * lo)
 {
-	return lo->objectType == GATE_TYPE || lo->objectType == FLIPFLOP_TYPE;
+	return lo->objectType == GATE_TYPE || lo->objectType == FLIPFLOP_TYPE || lo->objectType == LIB;
 }
 
 BOOL LibraryBox::IsOutput(LogicObject * lo)

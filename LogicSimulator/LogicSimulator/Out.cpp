@@ -52,6 +52,11 @@ void Out::setOutput()
 	output = inputCoord[0].second;
 }
 
+void Out::setConNum(int input)
+{
+	connectedNum = input;
+}
+
 Out::Out() : Wiring()
 {
 	width = 2;

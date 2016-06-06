@@ -12,6 +12,8 @@
 #include "Sevenseg.h"
 #include "LibraryBox.h"
 #include "Box.h"
+#include "MainFrm.h"
+#include "CircuitView.h"
 
 class CLogicSimulatorDoc : public CDocument
 {

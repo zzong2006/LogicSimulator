@@ -288,7 +288,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
 					temp = Ptemp;
-
+					pDoc->currBox->NumInput++;
+					//라이브러리 상자에 대한 입력 위치를 찾아준다.
+					Ptemp->setConNum(pDoc->currBox->FindEmpty(0));
 					pDoc->currBox->mUndo.AddHead(Action(PIN, NEW));
 					break;
 	
@@ -302,7 +304,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
 					temp = Otemp;
-
+					pDoc->currBox->NumOuput++;
+					//라이브러리 상자에 대한 출력 위치를 찾아준다.
+					Otemp->setConNum(pDoc->currBox->FindEmpty(1));
 					pDoc->currBox->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 				case SEG7:
@@ -533,14 +537,14 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					{
 					case PIN:
 						pDoc->currBox->temp = new Pin();
-						pDoc->currBox->NumInput++;
+						
 						break;
 					case CLOCK:
 						pDoc->currBox->temp = new Clock();
 						break;
 					case OUTPIN :
 						pDoc->currBox->temp = new Out();
-						pDoc->currBox->NumOuput++;
+						
 						break;
 					case SEG7 :
 						pDoc->currBox->temp = new Sevenseg();
