@@ -215,6 +215,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TFlipFlop.h" />
+    <ClInclude Include="undo.h" />
     <ClInclude Include="Wiring.h" />
     <ClInclude Include="xorGate.h" />
   </ItemGroup>
@@ -251,6 +252,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TFlipFlop.cpp" />
+    <ClCompile Include="undo.cpp" />
     <ClCompile Include="Wiring.cpp" />
     <ClCompile Include="xorGate.cpp" />
   </ItemGroup>

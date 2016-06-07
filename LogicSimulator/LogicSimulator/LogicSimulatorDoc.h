@@ -14,9 +14,10 @@
 #include "Box.h"
 #include "MainFrm.h"
 #include "CircuitView.h"
+#include "undo.h"
 #include "Graph.h"
 
-class CLogicSimulatorDoc : public CDocument
+class CLogicSimulatorDoc : public CDocument,public undo
 {
 protected: // serialization에서만 만들어집니다.
 	CLogicSimulatorDoc();
@@ -29,7 +30,9 @@ public:
 	BOOL clickMode;
 	BOOL selectMode;
 	BOOL simulateMode;
-	
+	BOOL moved;
+	BOOL locked;			//초기에 움직일때 움직일수 없게 만들음..
+
 	int objectType;
 	int objectName;
 
@@ -42,7 +45,9 @@ public:
 // 재정의입니다.
 public:
 	virtual BOOL OnNewDocument();
+	BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual void Serialize(CArchive& ar);
+	virtual void DeleteContents() ;
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);

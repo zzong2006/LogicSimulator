@@ -52,22 +52,31 @@ CLogicSimulatorDoc::~CLogicSimulatorDoc()
 
 BOOL CLogicSimulatorDoc::OnNewDocument()
 {
-	for (int i = 0; i < currBox->logicInfo.size(); i++)
-		delete currBox->logicInfo.at(i);
-	
-	for (int i = 0; i < currBox->lines.size(); i++)
-		delete currBox->lines.at(i);
+
 
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
+	for (int i = 0; i < currBox->logicInfo.size(); i++)
+		delete currBox->logicInfo.at(i);
+
+	for (int i = 0; i < currBox->lines.size(); i++)
+		delete currBox->lines.at(i);
+
+	CheckPoint();
 	// TODO: 여기에 재초기화 코드를 추가합니다.
 	// SDI 문서는 이 문서를 다시 사용합니다.
 
 	return TRUE;
 }
 
+BOOL CLogicSimulatorDoc::OnOpenDocument(LPCTSTR lpszPathName) {
+	if (!CLogicSimulatorDoc::OnOpenDocument(lpszPathName))
+		return FALSE;
 
+	CheckPoint();
+	return TRUE;
+}
 
 
 // CLogicSimulatorDoc serialization
@@ -113,8 +122,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		for (int i = 0; i < currBox->lines.size(); i++)
 			delete currBox->lines.at(i);
 
-		for (int i = 0; i < currBox->currObject.size(); i++)
-			delete currBox->currObject.at(i);
+		
 
 		currBox->lines.clear();
 		currBox->currObject.clear();
@@ -248,6 +256,11 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			}
 		}
 	}
+}
+
+void CLogicSimulatorDoc::DeleteContents()
+{
+
 }
 
 #ifdef SHARED_HANDLERS
@@ -440,8 +453,6 @@ void CLogicSimulatorDoc::clearAll()
 
 	currBox->lines.clear();
 	currBox->logicInfo.clear();
-	currBox->mUndo.RemoveAll();
-	currBox->mRedo.RemoveAll();
 
 	currBox->CanBeDivided = false;
 	currBox->isOnFocus = false;

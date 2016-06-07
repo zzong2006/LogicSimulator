@@ -507,6 +507,7 @@ LogicObject::LogicObject()
 	output = 0;
 	facing = EAST;
 	bottom.x = bottom.y = top.y = top.x = -INT_MAX;
+	isSelected = FALSE;
 }
 
 
