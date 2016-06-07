@@ -17,45 +17,6 @@
 #include "name_repo.h"
 #include "Sevenseg.h"
 
-class Action
-{
-public:
-	Action(int type, int act)
-	{
-		Type = type;
-		Act = act;
-		if (type == LINE)
-			line_num = 2;
-	}
-	Action()
-	{
-
-	}
-	enum {
-		line_add
-	};
-	int Act, Type;
-	int line_num;
-
-
-	std::vector <LineObject *> lineked_line;
-
-	std::vector <LogicObject *> logicInfo;
-	std::vector <Sevenseg *> segInfo;
-	std::vector <LineObject *> lines;
-	std::vector <int> lineIndex;
-	std::vector <int> logicIndex;
-	CPoint initP[2];
-};
-
-class Store
-{
-public :
-	std::vector <int > type, name;
-	int logicNum;
-	CPoint dec;
-	std::vector <LineObject > lines;
-};
 
 class LibraryBox 
 {
@@ -71,12 +32,6 @@ public:
 	std::vector <LineObject *> lines;
 
 	LogicObject* temp;
-	Store store;
-
-	// undo/redo
-	CList <Action> mUndo;
-	CList <Action> mRedo;
-
 
 	//method
 	void CheckCircuit();
