@@ -391,7 +391,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-					if (PtInRect(rect, point))
+					if (PtInRect(rect, point) && (tempLogic->objectName == PIN || tempLogic->objectName == CLOCK))
 						tempLogic->toggleOutput();
 				}
 			}
@@ -423,16 +423,14 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						prevT.x = dec_x;
 						prevT.y = dec_y;
 
-						temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
+						pDoc->currBox->currObject.push_back(pDoc->currBox->logicInfo.at(i));
+						
 						temp.initP[0] = pDoc->currBox->logicInfo.at(i)->top;
 						temp.initP[1] = pDoc->currBox->logicInfo.at(i)->bottom;
 						pDoc->currBox->mUndo.AddHead(temp);
 					}
 				}
 				
-				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
-				if (!checkFocus)
-					pDoc->currBox->isOnFocus = FALSE;
 
 				//현재 선택된 로직 오브젝트의 상태를 보여준다.
 				if (pDoc->currBox->isOnFocus) {
@@ -453,6 +451,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					{
 						Action temp = Action(LINE, MOVE);
 						pDoc->currBox->lines.at(i)->isSelected = TRUE;
+						pDoc->currBox->isOnFocus = TRUE;
+						checkFocus = TRUE;
+
 						sdis.x = dec_x - pDoc->currBox->lines.at(i)->line[0].x;
 						sdis.y = dec_y - pDoc->currBox->lines.at(i)->line[0].y;
 						edis.x = dec_x - pDoc->currBox->lines.at(i)->line[1].x;
@@ -463,9 +464,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						temp.lines.push_back(pDoc->currBox->lines.at(i));
 						pDoc->currBox->mUndo.AddHead(temp);
 					}
-		}
+				}
 
-	}
+				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
+				if (!checkFocus)
+					pDoc->currBox->isOnFocus = FALSE;
+			}
 		}
 	}
 
@@ -537,7 +541,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (nFlags == MK_LBUTTON)
+		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus)
 		{
 			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 			{
@@ -559,10 +563,11 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					pDoc->currBox->logicInfo.at(i)->top.y    += dec_y - prevT.y;
 					pDoc->currBox->logicInfo.at(i)->bottom.x += dec_x - prevT.x;
 					pDoc->currBox->logicInfo.at(i)->bottom.y += dec_y - prevT.y;
-					prevT.x = dec_x;
-					prevT.y = dec_y;
+					
 				}
 			}
+			prevT.x = dec_x;
+			prevT.y = dec_y;
 
 			Invalidate();
 		}
@@ -764,20 +769,37 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	dec_y = Rounding(point.y);
 	CPoint cur_pos(dec_x, dec_y);
 
-	for (int i = 0; i < pDoc->currBox->lines.size(); i++)
-	{
-		///////////////////undo 추가/////////////////////
-		pDoc->currBox->lines.at(i)->isSelected == FALSE;
-	}
-
-	for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
-	{
-		///////////////////undo 추가/////////////////////
-		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+	if (pDoc->currBox->isOnFocus) {
+		for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 		{
-			pDoc->currBox->logicInfo.at(i)->set_Coord_ByFacing(_T("d"));
+			///////////////////undo 추가/////////////////////
+			pDoc->currBox->lines.at(i)->isSelected == FALSE;
 		}
-		pDoc->currBox->logicInfo.at(i)->isSelected == FALSE;
+
+		for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
+		{
+			///////////////////undo 추가/////////////////////
+			if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+			{
+				CString input;
+				switch (pDoc->currBox->logicInfo.at(i)->facing) {
+				case EAST:
+					input = _T("East");
+					break;
+				case WEST:
+					input = _T("West");
+					break;
+				case NORTH:
+					input = _T("North");
+					break;
+				case SOUTH:
+					input = _T("South");
+					break;
+				}
+				pDoc->currBox->logicInfo.at(i)->set_Coord_ByFacing(input);
+			}
+			pDoc->currBox->logicInfo.at(i)->isSelected == FALSE;
+		}
 	}
 
 	//그리기를 마쳤을때 하는 behavior

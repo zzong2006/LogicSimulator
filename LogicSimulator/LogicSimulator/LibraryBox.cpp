@@ -298,15 +298,33 @@ void LibraryBox::Undo()
 			}
 			break;
 		case MOVE:
+
 			switch (temp.Type)
 			{
-			case OBJECT :
+			case OBJECT:
 				top = temp.logicInfo.at(0)->top;
 				bottom = temp.logicInfo.at(0)->bottom;
 				temp.logicInfo.at(0)->top = temp.initP[0];
 				temp.logicInfo.at(0)->bottom = temp.initP[1];
-				temp.logicInfo.at(0)->set_Coord_ByFacing(_T("12"));
-
+				{
+				CString input;
+				
+				switch (temp.logicInfo.at(0)->facing) {
+					case EAST :
+						input = _T("East");
+					break;
+				case WEST:
+					input = _T("West");
+					break;
+				case NORTH:
+					input = _T("North");
+					break;
+					case SOUTH:
+						input = _T("South");
+						break;
+				}
+				temp.logicInfo.at(0)->set_Coord_ByFacing(input);
+				}
 				temp.initP[0] = top;
 				temp.initP[1] = bottom;
 				break;
@@ -382,8 +400,24 @@ void LibraryBox::Redo()
 				bottom = temp.logicInfo.at(0)->bottom;
 				temp.logicInfo.at(0)->top = temp.initP[0];
 				temp.logicInfo.at(0)->bottom = temp.initP[1];
-				temp.logicInfo.at(0)->set_Coord_ByFacing(_T("12"));
-
+				{
+					CString input;
+					switch (temp.logicInfo.at(0)->facing) {
+					case EAST:
+						input = _T("East");
+						break;
+					case WEST:
+						input = _T("West");
+						break;
+					case NORTH:
+						input = _T("North");
+						break;
+					case SOUTH:
+						input = _T("South");
+						break;
+					}
+					temp.logicInfo.at(0)->set_Coord_ByFacing(input);
+				}
 				temp.initP[0] = top;
 				temp.initP[1] = bottom;
 				break;
