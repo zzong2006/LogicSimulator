@@ -17,6 +17,15 @@
 #include "name_repo.h"
 #include "Sevenseg.h"
 
+class Store
+{
+public:
+	std::vector <int> type, name;
+	int logicNum;
+	CPoint dec;
+	std::vector <LineObject > lines;
+};
+
 
 class LibraryBox 
 {
@@ -32,7 +41,7 @@ public:
 	std::vector <LineObject *> lines;
 
 	LogicObject* temp;
-
+	Store store;
 	//method
 	void CheckCircuit();
 
