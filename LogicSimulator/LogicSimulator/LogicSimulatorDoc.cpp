@@ -120,6 +120,16 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		currBox->currObject.clear();
 		currBox->logicInfo.clear();
 
+		currBox->CanBeDivided = false;
+		currBox->isOnFocus = false;
+		currBox->NumOuput = currBox->NumInput = 0;
+
+		for (int i = 0; i < 10; i++)
+		{
+			currBox->ConnInput[i] = currBox->ConnOutput[i] = FALSE;
+		}
+		// 초기화 종료
+
 		// TODO: 여기에 로딩 코드를 추가합니다.
 		/*/////////////////////////////////////////////////////////로딩 순서//////////////////////////////////////////////////////////
 		1. 선 ( 개수 -> 정보)
@@ -209,7 +219,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = NULL;
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
-					currBox->NumInput++;
+
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -223,7 +233,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				case OUTPIN :
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
-					currBox->NumOuput++;
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
