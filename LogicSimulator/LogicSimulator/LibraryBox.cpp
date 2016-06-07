@@ -29,6 +29,7 @@ LibraryBox::~LibraryBox()
 
 void  LibraryBox::LineCheck()
 {
+	bool merge_flag;
 	for (int i = 0; i < lines.size(); i++)
 	{
 		LineObject* stline = lines.at(i);
@@ -37,113 +38,34 @@ void  LibraryBox::LineCheck()
 		int ed1 = -1, ed2;
 		int cur_shape = stline->shape;
 
+		merge_flag = TRUE;
+
 		for (int j = 0; j < lines.size(); j++)
 		{
-			if (i == j) continue;
-
-			LineObject* edline = lines.at(j);
-			CPoint conpos;
-			if (IsConflict(stline, edline, conpos))
+			if (i != j)
 			{
-				LineObject* newline = new LineObject(conpos.x, conpos.y);
-				newline->line[0] = stline->line[0];
-				if (newline->line[0].x == newline->line[1].x) newline->shape = VERTICAL;
-				else newline->shape = HORIZONTAL;
-				stline->line[0] = conpos;
-				lines.insert(lines.begin() + j, newline);
-			}
-			if (IsConnect(stline->line[0], edline))
-				sp.push_back(j);
-			if (IsConnect(stline->line[1], edline))
-				ep.push_back(j);
-		}
-
-		BOOL connect = FALSE;
-		edge = stline->line[0];
-		for (int j = 0; j < sp.size(); j++)
-		{
-			if (stline->shape != lines.at(sp.at(j))->shape)
-			{
-				connect = FALSE;
-				break;
-			}
-			else{
-				if (lines.at(sp.at(j))->line[0] == stline->line[0])
-					temp = lines.at(sp.at(j))->line[1];
-				else temp = lines.at(sp.at(j))->line[0];
-
-				if (cur_shape == VERTICAL)
+				LineObject* edline = lines.at(j);
+				CPoint conpos;
+				if (IsConflict(stline, edline, conpos))
 				{
-					if (abs(temp.y - stline->line[0].y) > abs(edge.y - stline->line[0].y))
-					{
-						ed1 = sp.at(j);
-						edge = temp;
-						connect = TRUE;
-					}
-				}
-				else
-				{
-					if (abs(temp.x - stline->line[0].x) > abs(edge.x - stline->line[0].x))
-					{
-						ed1 = sp.at(j);
-						edge = temp;
-						connect = TRUE;
-					}
-				}
-			}
-		}
+					merge_flag = FALSE;
+					LineObject* newline = new LineObject(conpos.x, conpos.y);
+					newline->line[0] = stline->line[0];
 
-		if (connect)
-		{
-			stline->line[0] = edge;
-			lines.erase(lines.begin() + ed1);
-		}
+					if (newline->line[0].x == newline->line[1].x) newline->shape = VERTICAL;
+					else newline->shape = HORIZONTAL;
 
-		connect = FALSE;
-		edge = stline->line[1];
-		for (int j = 0; j < ep.size(); j++)
-		{
-			if (stline->shape != lines.at(ep.at(j))->shape)
-			{
-				connect = FALSE;
-				break;
-			}
-			else
-			{
-				if (lines.at(ep.at(j))->line[0] == stline->line[1])
-					temp = lines.at(ep.at(j))->line[1];
-				else temp = lines.at(ep.at(j))->line[0];
-
-				if (cur_shape == VERTICAL)
-				{
-					if (abs(temp.y - stline->line[1].y) > abs(edge.y - stline->line[1].y))
-					{
-						ed2 = ep.at(j);
-						edge = temp;
-						connect = TRUE;
-					}
+					stline->line[0] = conpos;
+					lines.insert(lines.begin() + j, newline);
 				}
-				else
-				{
-					if (abs(temp.x - stline->line[1].x) > abs(edge.x - stline->line[1].x))
-					{
-						ed2 = ep.at(j);
-						edge = temp;
-						connect = TRUE;
-					}
-				}
-			}
-		}
-
-		if (connect)
-		{
-			stline->line[1] = edge;
-			if (ed1 != ed2)
-			{
-				lines.erase(lines.begin() + ed2);
+				if (IsConnect(stline->line[0], edline))
+					sp.push_back(j);
+				if (IsConnect(stline->line[1], edline))
+					ep.push_back(j);
 			}
 		}
 	}
+
 }
 
 void LibraryBox::CheckCircuit()
@@ -194,6 +116,7 @@ void LibraryBox::CheckCircuit()
 	//출력 Pin 같은 경우는 제외해야 한다.
 
 	////////////////////돌고 돌아/////////////////////////
+	int level = 0;
 	while (!searchLine.empty())
 	{
 		//(초반) Pin에 연결된 선을 다 돌면서 검사한다.
@@ -207,12 +130,12 @@ void LibraryBox::CheckCircuit()
 			for (int i = 0; i < lin; i++)
 			{
 				LineObject* curline = lines.at(i);
-				if (curline->chk == 0)
+				if (curline->chk <= level)
 				{
 					if (curline->line[0] == temp_line->line[0] || curline->line[1] == temp_line->line[0]
 						|| curline->line[0] == temp_line->line[1] || curline->line[1] == temp_line->line[1])
 					{
-						curline->chk = 1;
+						curline->chk = level;
 						curline->state = temp_line->state;
 						searchLine.push(curline);
 					}
@@ -227,7 +150,7 @@ void LibraryBox::CheckCircuit()
 				LogicObject* curLogic = logicInfo.at(i);
 				if (!IsInput(curLogic))
 				{
-					if (curLogic->chk == 0)
+					if (curLogic->chk == level)
 					{
 						int ip = curLogic->inputNum;
 						for (int j = 0; j < ip; j++)
