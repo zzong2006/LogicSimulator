@@ -419,6 +419,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						checkFocus = TRUE;
 						pDoc->currBox->isOnFocus = TRUE;
 						pDoc->currBox->logicInfo.at(i)->isSelected = TRUE;
+						pDoc->currBox->currObject.push_back(pDoc->currBox->logicInfo.at(i));
 
 						prevT.x = dec_x;
 						prevT.y = dec_y;

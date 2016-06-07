@@ -20,7 +20,7 @@
 #endif
 
 // CLogicSimulatorDoc
-
+z
 IMPLEMENT_DYNCREATE(CLogicSimulatorDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
@@ -73,6 +73,7 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 void CLogicSimulatorDoc::Serialize(CArchive& ar)
 {
 	int line_num, logic_num;
+	int input_num, output_num;
 
 	if (ar.IsStoring())
 	{
@@ -100,6 +101,10 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			find_pos.x = tempLogic->get_bottm().x;
 			find_pos.y = (tempLogic->get_top().y + tempLogic->get_bottm().y) / 2;
 			ar << tempLogic->objectType << tempLogic->objectName << find_pos;
+			if (objectType == LIB)
+			{
+				ar << tempLogic->inputNum << tempLogic->outputNum;
+			}
 		}
 
 	}
@@ -216,9 +221,11 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				}
 				break;
 			case LIB:
+				ar >> input_num >> output_num;
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-
+				Btemp->inputNum = input_num;
+				Btemp->outputNum = output_num;
 				currBox->logicInfo.push_back(Btemp);
 				break;
 			}
