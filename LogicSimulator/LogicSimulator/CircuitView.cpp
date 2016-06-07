@@ -56,6 +56,7 @@ BEGIN_MESSAGE_MAP(CCircuitView, CView)
 	ON_WM_COPYDATA()
 	ON_COMMAND(ID_EDIT_COPY, &CCircuitView::OnEditCopy)
 	ON_COMMAND(ID_EDIT_PASTE, &CCircuitView::OnEditPaste)
+	ON_COMMAND(ID_EDIT_CUT, &CCircuitView::OnEditCut)
 END_MESSAGE_MAP()
 
 
@@ -391,7 +392,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					CRect rect(temp_top.x, temp_top.y, temp_bottom.x, temp_bottom.y);
 
-					if (PtInRect(rect, point))
+					if (PtInRect(rect, point) && (tempLogic->objectName == PIN || tempLogic->objectName == CLOCK))
 						tempLogic->toggleOutput();
 				}
 			}
@@ -419,21 +420,18 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						checkFocus = TRUE;
 						pDoc->currBox->isOnFocus = TRUE;
 						pDoc->currBox->logicInfo.at(i)->isSelected = TRUE;
-						pDoc->currBox->currObject.push_back(pDoc->currBox->logicInfo.at(i));
 
 						prevT.x = dec_x;
 						prevT.y = dec_y;
 
-						temp.logicInfo.push_back(pDoc->currBox->logicInfo.at(i));
+						pDoc->currBox->currObject.push_back(pDoc->currBox->logicInfo.at(i));
+						
 						temp.initP[0] = pDoc->currBox->logicInfo.at(i)->top;
 						temp.initP[1] = pDoc->currBox->logicInfo.at(i)->bottom;
 						pDoc->currBox->mUndo.AddHead(temp);
 					}
 				}
 				
-				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
-				if (!checkFocus)
-					pDoc->currBox->isOnFocus = FALSE;
 
 				//현재 선택된 로직 오브젝트의 상태를 보여준다.
 				if (pDoc->currBox->isOnFocus) {
@@ -454,6 +452,9 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 					{
 						Action temp = Action(LINE, MOVE);
 						pDoc->currBox->lines.at(i)->isSelected = TRUE;
+						pDoc->currBox->isOnFocus = TRUE;
+						checkFocus = TRUE;
+
 						sdis.x = dec_x - pDoc->currBox->lines.at(i)->line[0].x;
 						sdis.y = dec_y - pDoc->currBox->lines.at(i)->line[0].y;
 						edis.x = dec_x - pDoc->currBox->lines.at(i)->line[1].x;
@@ -464,9 +465,12 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 						temp.lines.push_back(pDoc->currBox->lines.at(i));
 						pDoc->currBox->mUndo.AddHead(temp);
 					}
-		}
+				}
 
-	}
+				//마우스 내에 객체가 하나라도 없으면 선택 취소됨.
+				if (!checkFocus)
+					pDoc->currBox->isOnFocus = FALSE;
+			}
 		}
 	}
 
@@ -538,7 +542,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (nFlags == MK_LBUTTON)
+		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus)
 		{
 			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 			{
@@ -560,10 +564,11 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					pDoc->currBox->logicInfo.at(i)->top.y    += dec_y - prevT.y;
 					pDoc->currBox->logicInfo.at(i)->bottom.x += dec_x - prevT.x;
 					pDoc->currBox->logicInfo.at(i)->bottom.y += dec_y - prevT.y;
-					prevT.x = dec_x;
-					prevT.y = dec_y;
+					
 				}
 			}
+			prevT.x = dec_x;
+			prevT.y = dec_y;
 
 			Invalidate();
 		}
@@ -765,20 +770,37 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	dec_y = Rounding(point.y);
 	CPoint cur_pos(dec_x, dec_y);
 
-	for (int i = 0; i < pDoc->currBox->lines.size(); i++)
-	{
-		///////////////////undo 추가/////////////////////
-		pDoc->currBox->lines.at(i)->isSelected == FALSE;
-	}
-
-	for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
-	{
-		///////////////////undo 추가/////////////////////
-		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+	if (pDoc->currBox->isOnFocus) {
+		for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 		{
-			pDoc->currBox->logicInfo.at(i)->set_Coord_ByFacing(_T("d"));
+			///////////////////undo 추가/////////////////////
+			pDoc->currBox->lines.at(i)->isSelected == FALSE;
 		}
-		pDoc->currBox->logicInfo.at(i)->isSelected == FALSE;
+
+		for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
+		{
+			///////////////////undo 추가/////////////////////
+			if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+			{
+				CString input;
+				switch (pDoc->currBox->logicInfo.at(i)->facing) {
+				case EAST:
+					input = _T("East");
+					break;
+				case WEST:
+					input = _T("West");
+					break;
+				case NORTH:
+					input = _T("North");
+					break;
+				case SOUTH:
+					input = _T("South");
+					break;
+				}
+				pDoc->currBox->logicInfo.at(i)->set_Coord_ByFacing(input);
+			}
+			pDoc->currBox->logicInfo.at(i)->isSelected == FALSE;
+		}
 	}
 
 	//그리기를 마쳤을때 하는 behavior
@@ -1068,6 +1090,7 @@ BOOL CCircuitView::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 
 void CCircuitView::OnEditCopy()
 {
+	PASTED = TRUE;
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
 	int lin = pDoc->currBox->lines.size();
 	int lon = pDoc->currBox->logicInfo.size();
@@ -1076,6 +1099,7 @@ void CCircuitView::OnEditCopy()
 	pDoc->currBox->store.type.clear();
 	pDoc->currBox->store.name.clear();
 
+	//복사할 선 정보받기
 	for (int i = 0; i < lin; i++)
 	{
 		if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
@@ -1088,10 +1112,9 @@ void CCircuitView::OnEditCopy()
 			pDoc->currBox->store.lines.push_back(temp);
 		}
 	}
-
+	//복사할 오브젝트 정보 받기
 	for (int i = 0; i < lon; i++)
 	{
-		// TODO: 여기에 명령 처리기 코드를 추가합니다.
 		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
 		{
 			pDoc->currBox->store.name.push_back(pDoc->currBox->logicInfo.at(i)->objectName);
@@ -1105,23 +1128,26 @@ void CCircuitView::OnEditCopy()
 
 void CCircuitView::OnEditPaste()
 {
-	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-	Action tempAct = Action(ALL, COPY);
+	if (PASTED || CUTED) {
+		CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+		Action tempAct = Action(ALL, COPY);
 
-	for (int i = 0; i < pDoc->currBox->store.lines.size(); i++)
-	{
-		LineObject* newline = new LineObject(0, 0);
-		newline->line[0] = pDoc->currBox->store.lines.at(i).line[0];
-		newline->line[1] = pDoc->currBox->store.lines.at(i).line[1];
-		newline->shape = pDoc->currBox->store.lines.at(i).shape;
-		pDoc->currBox->lines.push_back(newline);
-		tempAct.lines.push_back(newline);
-	}
+		for (int i = 0; i < pDoc->currBox->store.lines.size(); i++)
+		{
+			LineObject* newline = new LineObject(0, 0);
+			newline->line[0] = pDoc->currBox->store.lines.at(i).line[0];
+			newline->line[1] = pDoc->currBox->store.lines.at(i).line[1];
+			newline->shape = pDoc->currBox->store.lines.at(i).shape;
+			pDoc->currBox->lines.push_back(newline);
+			tempAct.lines.push_back(newline);
+		}
 
-	for (int i = 0; i < pDoc->currBox->store.name.size(); i++)
-	{
-		LogicObject* temp;
-		int dec_x = pDoc->currBox->store.dec.x, dec_y = pDoc->currBox->store.dec.y;
+
+		for (int i = 0; i < pDoc->currBox->store.name.size(); i++)
+		{
+			LogicObject* temp;
+			int dec_x = pDoc->currBox->store.dec.x, dec_y = pDoc->currBox->store.dec.y;
+
 			if (pDoc->currBox->store.type.at(i) == GATE_TYPE)
 			{
 				Gate *Gtemp;
@@ -1168,26 +1194,28 @@ void CCircuitView::OnEditPaste()
 				case PIN:
 					Ptemp = new Pin(dec_x, dec_y);
 					temp = Ptemp;
-					pDoc->currBox->NumInput++;
 					//라이브러리 상자에 대한 입력 위치를 찾아준다.
-					Ptemp->setConNum(pDoc->currBox->FindEmpty(0));
+					pDoc->currBox->mUndo.AddHead(Action(PIN, NEW));
 					break;
 
 				case CLOCK:
 					Ctemp = new Clock(dec_x, dec_y);
 					temp = Ctemp;
+
+					pDoc->currBox->mUndo.AddHead(Action(CLOCK, NEW));
 					break;
 
 				case OUTPIN:
 					Otemp = new Out(dec_x, dec_y);
 					temp = Otemp;
-					pDoc->currBox->NumOuput++;
-					//라이브러리 상자에 대한 출력 위치를 찾아준다.
-					Otemp->setConNum(pDoc->currBox->FindEmpty(1));
+					pDoc->currBox->mUndo.AddHead(Action(OUTPIN, NEW));
 					break;
 				case SEG7:
 					Stemp = new Sevenseg(dec_x, dec_y);
 					temp = Stemp;
+
+					pDoc->currBox->mUndo.AddHead(Action(SEG7, NEW));
+
 				}
 
 				if (temp != NULL) {
@@ -1198,13 +1226,137 @@ void CCircuitView::OnEditPaste()
 					//7 seg도 마찬가지임.
 
 				}
+			}
+			else if (pDoc->currBox->store.type.at(i) == FLIPFLOP_TYPE)
+			{
+				FlipFlop *Ftemp = NULL;
+
+				switch (pDoc->currBox->store.name.at(i))
+				{
+				case D_FF:
+					Ftemp = new DFlipFlop(dec_x, dec_y);
+					break;
+				case JK_FF:
+					Ftemp = new JKFlipFlop(dec_x, dec_y);
+					break;
+				case T_FF:
+					Ftemp = new TFlipFlop(dec_x, dec_y);
+					break;
+				}
+
+				if (Ftemp != NULL) {
+					Ftemp->set_Coord_From_outC(dec_x, dec_y);
+					temp = Ftemp;
+				}
+			}
+			else if (pDoc->currBox->store.type.at(i) == LIB) {
+				Box *Btemp = NULL;
+
+				if (pDoc->currBox->store.name.at(i) == MAIN_LIB);
+				//Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[0]));
+				else
+					Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[1]));
+
+				Btemp->set_Coord_From_outC(dec_x, dec_y);
+				temp = Btemp;
+			}
+			pDoc->currBox->logicInfo.push_back(temp);
+			tempAct.logicInfo.push_back(temp);
+			temp = NULL;
+			
 		}
-		pDoc->currBox->logicInfo.push_back(temp);
-		tempAct.logicInfo.push_back(temp);
+
+		pDoc->currBox->mRedo.RemoveAll();
+		pDoc->currBox->mUndo.AddHead(tempAct);
+		Invalidate();
+
+		CUTED = FALSE;
+	}
+	
+}
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+void CCircuitView::OnEditCut()
+{
+	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
+	int lin = pDoc->currBox->lines.size();
+	int lon = pDoc->currBox->logicInfo.size();
+
+	pDoc->currBox->store.lines.clear();
+	pDoc->currBox->store.type.clear();
+	pDoc->currBox->store.name.clear();
+
+	CUTED = TRUE;
+	PASTED = FALSE;
+	//복사할 선 정보받기
+
+	for (int i = 0; i < lin; i++)
+	{
+		if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
+		{
+			LineObject temp = *pDoc->currBox->lines.at(i);
+			temp.line[0].x += 50;
+			temp.line[0].y += 50;
+			temp.line[1].x += 50;
+			temp.line[1].y += 50;
+			pDoc->currBox->store.lines.push_back(temp);
+		}
+	}
+	//복사할 오브젝트 정보 받기
+	for (int i = 0; i < lon; i++)
+	{
+		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+		{
+			pDoc->currBox->store.name.push_back(pDoc->currBox->logicInfo.at(i)->objectName);
+			pDoc->currBox->store.type.push_back(pDoc->currBox->logicInfo.at(i)->objectType);
+			pDoc->currBox->store.dec.x = pDoc->currBox->logicInfo.at(i)->bottom.x + 50;
+			pDoc->currBox->store.dec.y = (pDoc->currBox->logicInfo.at(i)->top.x + pDoc->currBox->logicInfo.at(i)->bottom.y) / 2 + 50;
+		}
+	}
+
+	//복사하고 지워준다.
+
+	lin = pDoc->currBox->lines.size();
+	lon = pDoc->currBox->logicInfo.size();
+
+	for (int i = 0; i < lin; i++)
+	{
+		if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
+		{
+			delete pDoc->currBox->lines.at(i);
+			pDoc->currBox->lines.erase(pDoc->currBox->lines.begin() + i);
+			lin--;
+		}
+	}
+
+	for (int i = 0; i < lon; i++)
+	{
+		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
+		{
+			//OUT & INPIN 특별 취급
+			if (pDoc->currBox->logicInfo.at(i)->objectName == PIN) {
+				Pin* TP = (Pin*)pDoc->currBox->logicInfo.at(i);
+				if (TP->getConNum() >= 0)
+					pDoc->currBox->ConnInput[TP->getConNum()] = FALSE;
+
+				pDoc->currBox->NumInput--;
+			}
+			else if (pDoc->currBox->logicInfo.at(i)->objectName == OUTPIN) {
+				Out* TO = (Out*)pDoc->currBox->logicInfo.at(i);
+				if (TO->getConNum() >= 0)
+					pDoc->currBox->ConnOutput[TO->getConNum()] = FALSE;
+
+				pDoc->currBox->NumOuput--;
+			}
+
+			delete pDoc->currBox->logicInfo.at(i);
+
+			pDoc->currBox->logicInfo.erase(pDoc->currBox->logicInfo.begin() + i);
+			lon--;
+		}
 	}
 
 	pDoc->currBox->mRedo.RemoveAll();
-	pDoc->currBox->mUndo.AddHead(tempAct);
+	//pDoc->currBox->mUndo.AddHead(temp);
 	Invalidate();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }

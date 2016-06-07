@@ -10,6 +10,7 @@ protected:
 	int dec_x, dec_y;
 	int object;
 	int cur_line;
+	BOOL CUTED = FALSE , PASTED =FALSE;
 protected:
 	CCircuitView();           // 동적 만들기에 사용되는 protected 생성자입니다.
 	virtual ~CCircuitView();
@@ -47,6 +48,7 @@ public:
 	afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
 	afx_msg void OnEditCopy();
 	afx_msg void OnEditPaste();
+	afx_msg void OnEditCut();
 };
 
 

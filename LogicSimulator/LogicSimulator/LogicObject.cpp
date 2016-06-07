@@ -224,9 +224,9 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				outputCoord[1].first.y = bottom.y - 1 * UNIT;
 				outputCoord[0].first.y = bottom.y - 5 * UNIT;
 				inputCoord[0].first.x = inputCoord[1].first.x = inputCoord[2].first.x=  top.x;
-				inputCoord[0].first.y = top.y - UNIT;		//K
-				inputCoord[1].first.y = top.y - 3 * UNIT;	//C
-				inputCoord[2].first.y = top.y - 5 * UNIT;	//J
+				inputCoord[0].first.y = top.y + UNIT;		//K
+				inputCoord[1].first.y = top.y + 3 * UNIT;	//C
+				inputCoord[2].first.y = top.y + 5 * UNIT;	//J
 				break;
 			case WEST:
 				outputCoord[0].first.x = outputCoord[1].first.x = top.x;
@@ -264,8 +264,8 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				outputCoord[1].first.y = bottom.y - 1 * UNIT;
 				outputCoord[0].first.y = bottom.y - 5 * UNIT;
 				inputCoord[0].first.x = inputCoord[1].first.x = top.x;
-				inputCoord[0].first.y = top.y - UNIT;
-				inputCoord[1].first.y = top.y - 5 * UNIT;
+				inputCoord[0].first.y = top.y + UNIT;
+				inputCoord[1].first.y = top.y + 5 * UNIT;
 				break;
 			case WEST:
 				outputCoord[0].first.x = outputCoord[1].first.x = top.x;

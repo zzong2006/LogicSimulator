@@ -20,7 +20,7 @@
 #endif
 
 // CLogicSimulatorDoc
-z
+
 IMPLEMENT_DYNCREATE(CLogicSimulatorDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CLogicSimulatorDoc, CDocument)
@@ -57,6 +57,7 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 	
 	for (int i = 0; i < currBox->lines.size(); i++)
 		delete currBox->lines.at(i);
+
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
@@ -73,7 +74,6 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 void CLogicSimulatorDoc::Serialize(CArchive& ar)
 {
 	int line_num, logic_num;
-	int input_num, output_num;
 
 	if (ar.IsStoring())
 	{
@@ -93,7 +93,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		{
 			ar << currBox->lines.at(i)->line[0] << currBox->lines.at(i)->line[1];
 		}
-		//타입 -> 이릅 -> 위치
+		//타입 -> 이름 -> 위치
 		for (int i = 0; i < logic_num; i++)
 		{
 			LogicObject* tempLogic = currBox->logicInfo.at(i);
@@ -101,15 +101,35 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			find_pos.x = tempLogic->get_bottm().x;
 			find_pos.y = (tempLogic->get_top().y + tempLogic->get_bottm().y) / 2;
 			ar << tempLogic->objectType << tempLogic->objectName << find_pos;
-			if (objectType == LIB)
-			{
-				ar << tempLogic->inputNum << tempLogic->outputNum;
-			}
 		}
 
 	}
 	else
 	{
+		//일단 초기화
+		for (int i = 0; i < currBox->logicInfo.size(); i++)
+			delete currBox->logicInfo.at(i);
+
+		for (int i = 0; i < currBox->lines.size(); i++)
+			delete currBox->lines.at(i);
+
+		for (int i = 0; i < currBox->currObject.size(); i++)
+			delete currBox->currObject.at(i);
+
+		currBox->lines.clear();
+		currBox->currObject.clear();
+		currBox->logicInfo.clear();
+
+		currBox->CanBeDivided = false;
+		currBox->isOnFocus = false;
+		currBox->NumOuput = currBox->NumInput = 0;
+
+		for (int i = 0; i < 10; i++)
+		{
+			currBox->ConnInput[i] = currBox->ConnOutput[i] = FALSE;
+		}
+		// 초기화 종료
+
 		// TODO: 여기에 로딩 코드를 추가합니다.
 		/*/////////////////////////////////////////////////////////로딩 순서//////////////////////////////////////////////////////////
 		1. 선 ( 개수 -> 정보)
@@ -199,7 +219,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = NULL;
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
-					currBox->NumInput++;
+
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -213,7 +233,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				case OUTPIN :
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
-					currBox->NumOuput++;
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
@@ -221,11 +240,9 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				}
 				break;
 			case LIB:
-				ar >> input_num >> output_num;
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-				Btemp->inputNum = input_num;
-				Btemp->outputNum = output_num;
+
 				currBox->logicInfo.push_back(Btemp);
 				break;
 			}
