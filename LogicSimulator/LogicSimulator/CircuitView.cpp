@@ -485,7 +485,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		pDoc->currBox->lines.push_back(temp_line[1]);
 	}
 
-
 	pDoc->currBox->CheckCircuit();
 	Invalidate();
 
@@ -901,6 +900,7 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 			pDoc->currBox->lines.pop_back();
 		}
 
+		pDoc->currBox->LineCheck();
 		object = OBJECT;
 
 		pDoc->CheckPoint();
@@ -1047,6 +1047,7 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 
+		pDoc->currBox->LineCheck();
 		pDoc->CheckPoint();
 		Invalidate();
 	}
