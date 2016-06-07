@@ -253,7 +253,7 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 
 
 		if (pDoc->isSelected) {
-			check = TRUE;
+			pDoc->locked = TRUE;
 			if (pDoc->objectType == GATE_TYPE)
 			{
 				Gate *Gtemp;
@@ -537,7 +537,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus)
+		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus && !(pDoc->locked))
 		{
 			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 			{
@@ -771,6 +771,9 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	dec_x = Rounding(point.x);
 	dec_y = Rounding(point.y);
 	CPoint cur_pos(dec_x, dec_y);
+
+	if (pDoc->locked)
+		pDoc->locked = FALSE;
 
 	if (pDoc->currBox->isOnFocus) {
 		for (int i = 0; i < pDoc->currBox->lines.size(); i++)

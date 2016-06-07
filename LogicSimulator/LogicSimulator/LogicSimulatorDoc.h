@@ -31,6 +31,7 @@ public:
 	BOOL selectMode;
 	BOOL simulateMode;
 	BOOL moved;
+	BOOL locked;			//초기에 움직일때 움직일수 없게 만들음..
 
 	int objectType;
 	int objectName;
