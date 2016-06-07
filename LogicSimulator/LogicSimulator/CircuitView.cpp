@@ -402,8 +402,6 @@ void CCircuitView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 		else {	//클릭 모드 상태에서만 객체 선택 가능
 			if (!(pDoc->isSelected)) {
-
-
 				pDoc->currBox->currObject.clear();
 
 				POINT temp_top, temp_bottom;
@@ -564,8 +562,14 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 				}
 			}
+			//이동거리가 짧다면 움직인 것이 아니다.
+			if (dec_x - prevT.x >= 10 || dec_y - prevT.y >= 10)
+				pDoc->moved = TRUE;
+
 			prevT.x = dec_x;
 			prevT.y = dec_y;
+
+			
 
 			Invalidate();
 		}
@@ -771,13 +775,11 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 	if (pDoc->currBox->isOnFocus) {
 		for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 		{
-			///////////////////undo 추가/////////////////////
 			pDoc->currBox->lines.at(i)->isSelected == FALSE;
 		}
 
 		for (int i = 0; i < pDoc->currBox->logicInfo.size(); i++)
 		{
-			///////////////////undo 추가/////////////////////
 			if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
 			{
 				CString input;
@@ -798,6 +800,11 @@ void CCircuitView::OnLButtonUp(UINT nFlags, CPoint point)
 				pDoc->currBox->logicInfo.at(i)->set_Coord_ByFacing(input);
 			}
 			pDoc->currBox->logicInfo.at(i)->isSelected == FALSE;
+		}
+
+		if (pDoc->moved) {
+			pDoc->CheckPoint();
+			pDoc->moved = FALSE;
 		}
 	}
 
@@ -988,29 +995,6 @@ void CCircuitView::OnTimer(UINT_PTR nIDEvent)
 }
 
 
-
-//void CCircuitView::OnEditUndo()
-//{
-//	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-//
-//	if(pDoc->currBox->CanUndo())
-//		pDoc->currBox->Undo();
-//	Beep(800, 50);
-//	Invalidate();
-//}
-
-
-//void CCircuitView::OnEditRedo()
-//{
-//	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)GetDocument();
-//
-//	if (pDoc->currBox->CanRedo())
-//		pDoc->currBox->Redo();
-//	Beep(300, 50);
-//	Invalidate();
-//}
-
-
 void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
@@ -1027,7 +1011,7 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
 			{
 
-				//delete pDoc->currBox->lines.at(i);
+				delete pDoc->currBox->lines.at(i);
 				pDoc->currBox->lines.erase(pDoc->currBox->lines.begin() + i);
 				lin--;
 			}
@@ -1053,13 +1037,14 @@ void CCircuitView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					pDoc->currBox->NumOuput--;
 				}
 
-				//delete pDoc->currBox->logicInfo.at(i);
+				delete pDoc->currBox->logicInfo.at(i);
 
 				pDoc->currBox->logicInfo.erase(pDoc->currBox->logicInfo.begin() + i);
 				lon--;
 			}
 		}
 
+		pDoc->CheckPoint();
 		Invalidate();
 	}
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);

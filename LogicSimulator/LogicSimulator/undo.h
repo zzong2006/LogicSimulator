@@ -24,7 +24,7 @@ public:
 	virtual void DeleteContents() = 0;
 
 	// User accessable functions
-	undo(long undolevels = 4, long = 32768);
+	undo(long undolevels = 8, long = 32768);
 	// Constructor
 	~undo();			// Destructor
 	BOOL CanUndo();		// Returns TRUE if can Undo

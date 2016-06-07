@@ -30,7 +30,8 @@ public:
 	BOOL clickMode;
 	BOOL selectMode;
 	BOOL simulateMode;
-	
+	BOOL moved;
+
 	int objectType;
 	int objectName;
 
