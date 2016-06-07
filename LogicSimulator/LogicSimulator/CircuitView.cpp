@@ -1096,7 +1096,7 @@ void CCircuitView::OnEditCopy()
 	pDoc->currBox->store.lines.clear();
 	pDoc->currBox->store.type.clear();
 	pDoc->currBox->store.name.clear();
-
+	//복사할 선 정보받기
 	for (int i = 0; i < lin; i++)
 	{
 		if (pDoc->currBox->lines.at(i)->isSelected == TRUE)
@@ -1109,10 +1109,9 @@ void CCircuitView::OnEditCopy()
 			pDoc->currBox->store.lines.push_back(temp);
 		}
 	}
-
+	//복사할 오브젝트 정보 받기
 	for (int i = 0; i < lon; i++)
 	{
-		// TODO: 여기에 명령 처리기 코드를 추가합니다.
 		if (pDoc->currBox->logicInfo.at(i)->isSelected == TRUE)
 		{
 			pDoc->currBox->store.name.push_back(pDoc->currBox->logicInfo.at(i)->objectName);
@@ -1139,86 +1138,123 @@ void CCircuitView::OnEditPaste()
 		tempAct.lines.push_back(newline);
 	}
 
+
 	for (int i = 0; i < pDoc->currBox->store.name.size(); i++)
 	{
 		LogicObject* temp;
 		int dec_x = pDoc->currBox->store.dec.x, dec_y = pDoc->currBox->store.dec.y;
-			if (pDoc->currBox->store.type.at(i) == GATE_TYPE)
+
+		if (pDoc->currBox->store.type.at(i) == GATE_TYPE)
+		{
+			Gate *Gtemp;
+			Gtemp = NULL;
+
+			switch (pDoc->currBox->store.name.at(i))
 			{
-				Gate *Gtemp;
-				Gtemp = NULL;
-
-				switch (pDoc->currBox->store.name.at(i))
-				{
-				case AND_GATE:
-					Gtemp = new andGate(dec_x, dec_y);
-					break;
-				case OR_GATE:
-					Gtemp = new orGate(dec_x, dec_y);
-					break;
-				case NAND_GATE:
-					Gtemp = new nandGate(dec_x, dec_y);
-					break;
-				case NOR_GATE:
-					Gtemp = new norGate(dec_x, dec_y);
-					break;
-				case XOR_GATE:
-					Gtemp = new xorGate(dec_x, dec_y);
-					break;
-				case NOT_GATE:
-					Gtemp = new notGate(dec_x, dec_y);
-					break;
-				}
-
-				temp = Gtemp; // delete 용으로 필요함.
-
-				if (Gtemp != NULL) {
-					Gtemp->set_Coord_From_outC(dec_x, dec_y);
-				}
+			case AND_GATE:
+				Gtemp = new andGate(dec_x, dec_y);
+				break;
+			case OR_GATE:
+				Gtemp = new orGate(dec_x, dec_y);
+				break;
+			case NAND_GATE:
+				Gtemp = new nandGate(dec_x, dec_y);
+				break;
+			case NOR_GATE:
+				Gtemp = new norGate(dec_x, dec_y);
+				break;
+			case XOR_GATE:
+				Gtemp = new xorGate(dec_x, dec_y);
+				break;
+			case NOT_GATE:
+				Gtemp = new notGate(dec_x, dec_y);
+				break;
 			}
-			else if (pDoc->currBox->store.type.at(i) == WIRING_TYPE)
+
+			temp = Gtemp; // delete 용으로 필요함.
+
+			if (Gtemp != NULL) {
+				Gtemp->set_Coord_From_outC(dec_x, dec_y);
+			}
+		}
+		else if (pDoc->currBox->store.type.at(i) == WIRING_TYPE)
+		{
+			Pin *Ptemp = NULL;
+			Clock *Ctemp = NULL;
+			Out	*Otemp = NULL;
+			Sevenseg *Stemp = NULL;
+			temp = NULL;
+
+			switch (pDoc->currBox->store.name.at(i))
 			{
-				Pin *Ptemp = NULL;
-				Clock *Ctemp = NULL;
-				Out	*Otemp = NULL;
-				Sevenseg *Stemp = NULL;
-				temp = NULL;
+			case PIN:
+				Ptemp = new Pin(dec_x, dec_y);
+				temp = Ptemp;
+				//라이브러리 상자에 대한 입력 위치를 찾아준다.
+				pDoc->currBox->mUndo.AddHead(Action(PIN, NEW));
+				break;
 
-				switch (pDoc->currBox->store.name.at(i))
-				{
-				case PIN:
-					Ptemp = new Pin(dec_x, dec_y);
-					temp = Ptemp;
-					pDoc->currBox->NumInput++;
-					//라이브러리 상자에 대한 입력 위치를 찾아준다.
-					Ptemp->setConNum(pDoc->currBox->FindEmpty(0));
-					break;
+			case CLOCK:
+				Ctemp = new Clock(dec_x, dec_y);
+				temp = Ctemp;
 
-				case CLOCK:
-					Ctemp = new Clock(dec_x, dec_y);
-					temp = Ctemp;
-					break;
+				pDoc->currBox->mUndo.AddHead(Action(CLOCK, NEW));
+				break;
 
-				case OUTPIN:
-					Otemp = new Out(dec_x, dec_y);
-					temp = Otemp;
-					pDoc->currBox->NumOuput++;
-					//라이브러리 상자에 대한 출력 위치를 찾아준다.
-					Otemp->setConNum(pDoc->currBox->FindEmpty(1));
-					break;
-				case SEG7:
-					Stemp = new Sevenseg(dec_x, dec_y);
-					temp = Stemp;
-				}
+			case OUTPIN:
+				Otemp = new Out(dec_x, dec_y);
+				temp = Otemp;
+				pDoc->currBox->mUndo.AddHead(Action(OUTPIN, NEW));
+				break;
+			case SEG7:
+				Stemp = new Sevenseg(dec_x, dec_y);
+				temp = Stemp;
 
-				if (temp != NULL) {
-					temp->set_outputCoord(dec_x, dec_y);
-					temp->set_Coord_From_outC(dec_x, dec_y);
+				pDoc->currBox->mUndo.AddHead(Action(SEG7, NEW));
 
-					//출력핀은 출력 선이 없다.
-					//7 seg도 마찬가지임.
+			}
 
-				}
+			if (temp != NULL) {
+				temp->set_outputCoord(dec_x, dec_y);
+				temp->set_Coord_From_outC(dec_x, dec_y);
+
+				//출력핀은 출력 선이 없다.
+				//7 seg도 마찬가지임.
+
+			}
+		}
+		else if (pDoc->currBox->store.type.at(i) == FLIPFLOP_TYPE)
+		{
+			FlipFlop *Ftemp = NULL;
+
+			switch (pDoc->currBox->store.name.at(i))
+			{
+			case D_FF:
+				Ftemp = new DFlipFlop(dec_x, dec_y);
+				break;
+			case JK_FF:
+				Ftemp = new JKFlipFlop(dec_x, dec_y);
+				break;
+			case T_FF:
+				Ftemp = new TFlipFlop(dec_x, dec_y);
+				break;
+			}
+
+			if (Ftemp != NULL) {
+				Ftemp->set_Coord_From_outC(dec_x, dec_y);
+				temp = Ftemp;
+			}
+		}
+		else if (pDoc->currBox->store.type.at(i) == LIB) {
+			Box *Btemp = NULL;
+
+			if (pDoc->currBox->store.name.at(i) == MAIN_LIB);
+				//Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[0]));
+			else
+				Btemp = new Box(dec_x, dec_y, &(pDoc->logicBox[1]));
+
+			Btemp->set_Coord_From_outC(dec_x, dec_y);
+			temp = Btemp;
 		}
 		pDoc->currBox->logicInfo.push_back(temp);
 		tempAct.logicInfo.push_back(temp);
@@ -1227,5 +1263,5 @@ void CCircuitView::OnEditPaste()
 	pDoc->currBox->mRedo.RemoveAll();
 	pDoc->currBox->mUndo.AddHead(tempAct);
 	Invalidate();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.

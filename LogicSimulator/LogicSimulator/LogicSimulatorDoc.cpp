@@ -57,6 +57,7 @@ BOOL CLogicSimulatorDoc::OnNewDocument()
 	
 	for (int i = 0; i < currBox->lines.size(); i++)
 		delete currBox->lines.at(i);
+
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
@@ -92,7 +93,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		{
 			ar << currBox->lines.at(i)->line[0] << currBox->lines.at(i)->line[1];
 		}
-		//타입 -> 이릅 -> 위치
+		//타입 -> 이름 -> 위치
 		for (int i = 0; i < logic_num; i++)
 		{
 			LogicObject* tempLogic = currBox->logicInfo.at(i);
@@ -105,6 +106,20 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 	}
 	else
 	{
+		//일단 초기화
+		for (int i = 0; i < currBox->logicInfo.size(); i++)
+			delete currBox->logicInfo.at(i);
+
+		for (int i = 0; i < currBox->lines.size(); i++)
+			delete currBox->lines.at(i);
+
+		for (int i = 0; i < currBox->currObject.size(); i++)
+			delete currBox->currObject.at(i);
+
+		currBox->lines.clear();
+		currBox->currObject.clear();
+		currBox->logicInfo.clear();
+
 		// TODO: 여기에 로딩 코드를 추가합니다.
 		/*/////////////////////////////////////////////////////////로딩 순서//////////////////////////////////////////////////////////
 		1. 선 ( 개수 -> 정보)
