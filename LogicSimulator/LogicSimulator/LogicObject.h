@@ -51,6 +51,7 @@ public:
 	void setFacing(int input);
 	//바라보는쪽에 따라 input/output좌표 설정
 	void set_Coord_ByFacing(CString input);
+	void set_Coord_ByFacing(int input);
 	//좌표 변경할때 스크린 좌표계에 맞게 변경
 	void move_Coord(long & x, long & change);
 

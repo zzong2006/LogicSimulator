@@ -228,10 +228,12 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				outputCoord[0].first.x = outputCoord[1].first.x = bottom.x;
 				outputCoord[1].first.y = bottom.y - 1 * UNIT;
 				outputCoord[0].first.y = bottom.y - 5 * UNIT;
-				inputCoord[0].first.x = inputCoord[1].first.x = inputCoord[2].first.x=  top.x;
+				inputCoord[0].first.x = inputCoord[1].first.x = inputCoord[2].first.x = top.x;
 				inputCoord[0].first.y = top.y + UNIT;		//K
 				inputCoord[1].first.y = top.y + 3 * UNIT;	//C
 				inputCoord[2].first.y = top.y + 5 * UNIT;	//J
+				inputCoord[3].first.y = bottom.y;
+				inputCoord[3].first.x = bottom.x - 3 * UNIT; // R
 				break;
 			case WEST:
 				outputCoord[0].first.x = outputCoord[1].first.x = top.x;
@@ -241,6 +243,8 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				inputCoord[0].first.y = bottom.y - UNIT;	 //K
 				inputCoord[1].first.y = bottom.y - 3 * UNIT; // C
 				inputCoord[2].first.y = bottom.y - 5 * UNIT; //J
+				inputCoord[3].first.x = top.x + 3 * UNIT;
+				inputCoord[3].first.y = top.y ;
 				break;
 			case SOUTH:
 				outputCoord[0].first.y = outputCoord[1].first.y = bottom.y;
@@ -250,6 +254,8 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				inputCoord[0].first.x = bottom.x - UNIT; //K
 				inputCoord[1].first.x = bottom.x - 3 * UNIT;	//C
 				inputCoord[2].first.x = bottom.x - 5 * UNIT; // J
+				inputCoord[3].first.x = top.x;
+				inputCoord[3].first.y = top.y + 3 * UNIT;
 				break;
 			case NORTH:
 				outputCoord[0].first.y = outputCoord[1].first.y = top.y;
@@ -259,6 +265,8 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				inputCoord[0].first.x = bottom.x - 5 * UNIT;	//k
 				inputCoord[1].first.x = bottom.x - 3 * UNIT;	//C
 				inputCoord[2].first.x = bottom.x - UNIT;		//J
+				inputCoord[3].first.x = bottom.x;
+				inputCoord[3].first.y = bottom.y - 3 * UNIT;
 				break;
 			}
 		}
@@ -359,6 +367,29 @@ void LogicObject::set_Coord_ByFacing(CString input)
 	//이미 현재 오브젝트에 상속된 line의 좌표를 끊고 새로 만든다.
 }
 
+void LogicObject::set_Coord_ByFacing(int input)
+{
+	CString temp;
+	switch (input) {
+	case EAST:
+		temp = _T("East");
+		break;
+	case WEST:
+
+		temp = _T("West");
+		break;
+	case NORTH:
+
+		temp = _T("North");
+		break;
+	case SOUTH:
+
+		temp = _T("South");
+		break;
+	}
+	set_Coord_ByFacing(temp);
+}
+
 void LogicObject::move_Coord(long &x, long &change)
 {
 	if ((x > 0 && change > 0) || (x <0 && change <0))
@@ -434,6 +465,8 @@ void LogicObject::set_inputCoord(int x, int y)
 			inputCoord[1].first.y = y;
 			inputCoord[2].first.x = x - 6 * UNIT; // J
 			inputCoord[2].first.y = y + 2 * UNIT;
+			inputCoord[3].first.x = x - 3 * UNIT;	//R
+			inputCoord[3].first.y = y + 3 * UNIT;
 
 		}
 		else {
@@ -471,11 +504,21 @@ POINT LogicObject::get_bottm() const
 
 int LogicObject::isInputSet() const
 {
-	for (int i = 0; i < inputNum; i++)
-	{
-		if (inputCoord[i].second == -1)
-			return 0;
+	if (objectName == JK_FF) {
+		for (int i = 0; i < inputNum-1; i++)
+		{
+			if (inputCoord[i].second == -1)
+				return 0;
+		}
 	}
+	else {
+		for (int i = 0; i < inputNum; i++)
+		{
+			if (inputCoord[i].second == -1)
+				return 0;
+		}
+	}
+	
 		return 1;
 }
 
