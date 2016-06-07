@@ -48,6 +48,7 @@ public:
 	void setLabel(CString input);
 	//바라보는쪽 설정하기
 	void setFacing(CString input);
+	void setFacing(int input);
 	//바라보는쪽에 따라 input/output좌표 설정
 	void set_Coord_ByFacing(CString input);
 	//좌표 변경할때 스크린 좌표계에 맞게 변경

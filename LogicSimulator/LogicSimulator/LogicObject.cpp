@@ -64,6 +64,11 @@ void LogicObject::setFacing(CString input)
 
 }
 
+void LogicObject::setFacing(int input)
+{
+	facing = input;
+}
+
 void LogicObject::set_Coord_ByFacing(CString input)
 {
 	CLogicSimulatorDoc *pDoc = (CLogicSimulatorDoc *)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();

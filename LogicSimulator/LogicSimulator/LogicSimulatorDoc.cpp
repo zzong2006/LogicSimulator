@@ -102,14 +102,14 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		{
 			ar << currBox->lines.at(i)->line[0] << currBox->lines.at(i)->line[1];
 		}
-		//타입 -> 이름 -> 위치
+		//타입 -> 이름 -> 위치 -> 어딜 향하는지 (int)
 		for (int i = 0; i < logic_num; i++)
 		{
 			LogicObject* tempLogic = currBox->logicInfo.at(i);
 			CPoint find_pos;
 			find_pos.x = tempLogic->get_bottm().x;
 			find_pos.y = (tempLogic->get_top().y + tempLogic->get_bottm().y) / 2;
-			ar << tempLogic->objectType << tempLogic->objectName << find_pos;
+			ar << tempLogic->objectType << tempLogic->objectName << find_pos << currBox->logicInfo.at(i)->facing;
 		}
 
 	}
@@ -122,7 +122,6 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		for (int i = 0; i < currBox->lines.size(); i++)
 			delete currBox->lines.at(i);
 
-		
 
 		currBox->lines.clear();
 		currBox->currObject.clear();
@@ -142,7 +141,8 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 		/*/////////////////////////////////////////////////////////로딩 순서//////////////////////////////////////////////////////////
 		1. 선 ( 개수 -> 정보)
 		2. 오브젝트 (개수 -> 정보)
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+		///////////////*/
+
 		ar >> line_num;
 		ar >> logic_num;
 
@@ -156,10 +156,10 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 
 		for (int i = 0; i < logic_num; i++)
 		{
-			int objectType, objectName;
+			int objectType, objectName, facing;
 			CPoint find_pos;
 
-			ar >> objectType >> objectName >> find_pos;
+			ar >> objectType >> objectName >> find_pos >> facing;
 
 			Gate *Gtemp;
 			FlipFlop *Ftemp;
@@ -197,6 +197,8 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				if (Gtemp != NULL) {
 					Gtemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Gtemp);
+					Gtemp->setFacing(facing);
+
 				}
 				break;
 			case FLIPFLOP_TYPE :
@@ -218,6 +220,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ftemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 
 					currBox->logicInfo.push_back(Ftemp);
+					Ftemp->setFacing(facing);
 				}
 				break;
 			case WIRING_TYPE :
@@ -227,7 +230,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = NULL;
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
-
+					Ptemp->setFacing(facing);
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -235,6 +238,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ctemp = NULL;
 					Ctemp = new Clock(find_pos.x, find_pos.y);
 					Ctemp->set_outputCoord(find_pos.x, find_pos.y);
+					Ctemp->setFacing(facing);
 					Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ctemp);
 					break;
@@ -242,6 +246,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
+					Otemp->setFacing(facing);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
 					break;
@@ -250,7 +255,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			case LIB:
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
-
+				Btemp->setFacing(facing);
 				currBox->logicInfo.push_back(Btemp);
 				break;
 			}
