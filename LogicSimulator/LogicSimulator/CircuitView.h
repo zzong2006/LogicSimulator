@@ -42,8 +42,6 @@ public:
 	afx_msg void OnOnSimulate();
 	afx_msg void OnUpdateOnSimulate(CCmdUI *pCmdUI);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
-//	afx_msg void OnEditUndo();
-//	afx_msg void OnEditRedo();
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
 	afx_msg void OnEditCopy();

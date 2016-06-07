@@ -42,21 +42,28 @@ void FlipFlop::setOutput()
 			}
 			break;
 		case JK_FF:
-			if (inputCoord[0].second == TRUE && inputCoord[2].second == TRUE)
-			{	//J == K
-				outputCoord[0].second = !outputCoord[0].second;
-				outputCoord[1].second = !outputCoord[1].second;
+			if (inputCoord[3].second == 1) {
+				outputCoord[0].second = 0;
+				outputCoord[1].second = 1;
 			}
-			else if (inputCoord[0].second ==FALSE && inputCoord[2].second == TRUE)
-			{	//J== 1 && K ==0
-				outputCoord[0].second = FALSE;
-				outputCoord[1].second = TRUE;
+			else {
+				if (inputCoord[0].second == TRUE && inputCoord[2].second == TRUE)
+				{	//J == K
+					outputCoord[0].second = !outputCoord[0].second;
+					outputCoord[1].second = !outputCoord[1].second;
+				}
+				else if (inputCoord[0].second == FALSE && inputCoord[2].second == TRUE)
+				{	//J== 1 && K ==0
+					outputCoord[0].second = FALSE;
+					outputCoord[1].second = TRUE;
+				}
+				else if (inputCoord[0].second == TRUE && inputCoord[2].second == FALSE)
+				{ // J == 0 && K == 1
+					outputCoord[0].second = TRUE;
+					outputCoord[1].second = FALSE;
+				}
 			}
-			else if (inputCoord[0].second == TRUE && inputCoord[2].second == FALSE)
-			{ // J == 0 && K == 1
-				outputCoord[0].second = TRUE;
-				outputCoord[1].second = FALSE;
-			}
+			
 			break;
 		}
 	}

@@ -167,6 +167,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 			Clock *Ctemp;
 			Out *Otemp;
 			Box *Btemp;
+			Sevenseg *Stemp;
 
 			switch (objectType)
 			{
@@ -198,6 +199,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Gtemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Gtemp);
 					Gtemp->setFacing(facing);
+					Gtemp->set_Coord_ByFacing(facing);
 
 				}
 				break;
@@ -221,6 +223,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 
 					currBox->logicInfo.push_back(Ftemp);
 					Ftemp->setFacing(facing);
+					Ftemp->set_Coord_ByFacing(facing);
 				}
 				break;
 			case WIRING_TYPE :
@@ -231,6 +234,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
 					Ptemp->setFacing(facing);
+					Ptemp->set_Coord_ByFacing(facing);
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					break;
@@ -239,6 +243,7 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ctemp = new Clock(find_pos.x, find_pos.y);
 					Ctemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ctemp->setFacing(facing);
+					Ctemp->set_Coord_ByFacing(facing);
 					Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ctemp);
 					break;
@@ -247,8 +252,18 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Otemp = new Out(find_pos.x, find_pos.y);
 					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->setFacing(facing);
+					Otemp->set_Coord_ByFacing(facing);
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
+					break;
+				case SEG7:
+					Stemp = NULL;
+					Stemp = new Sevenseg(find_pos.x, find_pos.y);
+					Stemp->set_outputCoord(find_pos.x, find_pos.y);
+					Stemp->setFacing(facing);
+					Stemp->set_Coord_ByFacing(facing);
+					Stemp->set_Coord_From_outC(find_pos.x, find_pos.y);
+					currBox->logicInfo.push_back(Stemp);
 					break;
 				}
 				break;
@@ -256,7 +271,9 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 				Btemp->setFacing(facing);
+				Btemp->set_Coord_ByFacing(facing);
 				currBox->logicInfo.push_back(Btemp);
+				
 				break;
 			}
 		}
