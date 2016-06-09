@@ -269,6 +269,11 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 				}
 				break;
 			case LIB:
+				if (this->currBox->ID == SUB_LIB) {
+					AfxMessageBox(L"Cannot Load Library Box in Sub Library Field !");
+					this->clearAll();
+					return;
+				}
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
 				Btemp->set_inputCoord(find_pos.x, find_pos.y);
 				Btemp->set_outputCoord(find_pos.x, find_pos.y);
@@ -415,7 +420,7 @@ void CLogicSimulatorDoc::OnFileSave()
 void CLogicSimulatorDoc::OnFileOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CFileDialog dlg(FALSE, L"circ", L"default.circ", OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, L"LogicSimulator Files (*.circ)|*.circ|All Files (*.*)|*.*|");
+	CFileDialog dlg(TRUE, L"circ", L"default.circ", OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, L"LogicSimulator Files (*.circ)|*.circ|All Files (*.*)|*.*|");
 	dlg.m_ofn.lpstrTitle = L"파일을 불러오세요.";
 	dlg.m_ofn.lStructSize = sizeof(OPENFILENAME) + 12;
 

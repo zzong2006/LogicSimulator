@@ -117,6 +117,7 @@ void CCircuitView::DrawImage(CDC *pDC)
 	{
 		pDoc->currBox->logicInfo.at(i)->draw_main(&graphics);
 		//선택 됬다면 표시해줌
+		pDoc->currBox->logicInfo.at(i)->drawLine(&graphics);
 		if (pDoc->currBox->logicInfo.at(i)->isSelected)
 			pDoc->currBox->logicInfo.at(i)->showSelected(&graphics);
 		if (pDoc->currBox->logicInfo.at(i)->label != "") {
@@ -559,6 +560,9 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 					pDoc->currBox->logicInfo.at(i)->bottom.x += dec_x - prevT.x;
 					pDoc->currBox->logicInfo.at(i)->bottom.y += dec_y - prevT.y;
 
+					pDoc->currBox->logicInfo.at(i)->set_inputCoord(dec_x - prevT.x, dec_y - prevT.y);
+					pDoc->currBox->logicInfo.at(i)->set_outputCoord(dec_x - prevT.x, dec_y - prevT.y);
+
 				}
 			}
 			//이동거리가 짧다면 움직인 것이 아니다.
@@ -567,8 +571,6 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 			prevT.x = dec_x;
 			prevT.y = dec_y;
-
-			
 
 			Invalidate();
 		}

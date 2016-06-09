@@ -184,6 +184,7 @@ void LibraryBox::CheckCircuit()
 						fftemp->setOutput();
 					}
 					else if (curLogic->objectType == LIB) {
+						
 						Box* Bxtemp = (Box *)curLogic;
 						Bxtemp->setOutput();
 					}

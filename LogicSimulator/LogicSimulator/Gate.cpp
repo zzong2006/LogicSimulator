@@ -27,6 +27,11 @@ Gate::Gate(int dec_x, int dec_y)
 	this->objectType = GATE_TYPE;
 	this->set_outputCoord(dec_x, dec_y);
 	this->set_inputCoord(dec_x, dec_y);
+
+	for (int i = 0; i < outputNum; i++)
+	{
+		outputCoord[i].second = -1;
+	}
 }
 
 void Gate::draw_main(Gdiplus::Graphics* gp)

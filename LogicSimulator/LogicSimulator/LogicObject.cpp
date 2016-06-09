@@ -9,14 +9,25 @@
 
 void LogicObject::drawLine(Gdiplus::Graphics * gp)
 {
+	Gdiplus::Pen *p;
+	p = new Gdiplus::Pen(Gdiplus::Color(160, 60, 230), 1);
+
 	for (int i = 0; i < inputNum; i++)
 	{
-
+		if (this->inputCoord[i].second < 0) {
+			gp->DrawRectangle(p, Gdiplus::Rect(inputCoord[i].first.x, inputCoord[i].first.y, 3, 3));
+		}
 	}
-	for (int i = 0; i < outputNum; i++)
-	{
+	if (isInputSet()) {
+		for (int i = 0; i < outputNum; i++)
+		{ 
+			gp->DrawRectangle(p, Gdiplus::Rect(outputCoord[i].first.x, outputCoord[i].first.y, 3, 3));
 
+		}
 	}
+	
+
+	delete p;
 }
 
 void LogicObject::showSelected(Gdiplus::Graphics * gp)
@@ -555,6 +566,7 @@ LogicObject::LogicObject()
 	facing = EAST;
 	bottom.x = bottom.y = top.y = top.x = -INT_MAX;
 	isSelected = FALSE;
+
 }
 
 
