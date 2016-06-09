@@ -536,7 +536,7 @@ void CCircuitView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (object == OBJECT)
 	{
-		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus && !(pDoc->locked))
+		if (nFlags == MK_LBUTTON && pDoc->currBox->isOnFocus && !(pDoc->locked) && !(pDoc->clickMode))
 		{
 			for (int i = 0; i < pDoc->currBox->lines.size(); i++)
 			{
@@ -1097,6 +1097,7 @@ void CCircuitView::OnEditCopy()
 		{
 			pDoc->currBox->store.name.push_back(pDoc->currBox->logicInfo.at(i)->objectName);
 			pDoc->currBox->store.type.push_back(pDoc->currBox->logicInfo.at(i)->objectType);
+			pDoc->currBox->store.facing = pDoc->currBox->logicInfo.at(i)->facing;
 			pDoc->currBox->store.dec.x = pDoc->currBox->logicInfo.at(i)->bottom.x + 50;
 			pDoc->currBox->store.dec.y = (pDoc->currBox->logicInfo.at(i)->top.y + pDoc->currBox->logicInfo.at(i)->bottom.y) /2 + 50;
 		}
@@ -1222,9 +1223,10 @@ void CCircuitView::OnEditPaste()
 				Btemp->set_Coord_From_outC(dec_x, dec_y);
 				temp = Btemp;
 			}
+			temp->facing = pDoc->currBox->store.facing;
+			temp->set_Coord_ByFacing(temp->facing);
 			pDoc->currBox->logicInfo.push_back(temp);
 			temp = NULL;
-			
 		}
 
 		pDoc->CheckPoint();
@@ -1269,6 +1271,7 @@ void CCircuitView::OnEditCut()
 		{
 			pDoc->currBox->store.name.push_back(pDoc->currBox->logicInfo.at(i)->objectName);
 			pDoc->currBox->store.type.push_back(pDoc->currBox->logicInfo.at(i)->objectType);
+			pDoc->currBox->store.facing = pDoc->currBox->logicInfo.at(i)->facing;
 			pDoc->currBox->store.dec.x = pDoc->currBox->logicInfo.at(i)->bottom.x + 50;
 			pDoc->currBox->store.dec.y = (pDoc->currBox->logicInfo.at(i)->top.y + pDoc->currBox->logicInfo.at(i)->bottom.y) / 2 + 50;
 		}

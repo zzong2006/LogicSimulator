@@ -29,7 +29,43 @@ LibraryBox::~LibraryBox()
 
 void  LibraryBox::LineCheck()
 {
-	
+	bool merge_flag;
+	for (int i = 0; i < lines.size(); i++)
+	{
+		LineObject* stline = lines.at(i);
+		vector<int> sp, ep, erase;
+		CPoint temp, edge;
+		int ed1 = -1, ed2;
+		int cur_shape = stline->shape;
+
+		merge_flag = TRUE;
+
+		for (int j = 0; j < lines.size(); j++)
+		{
+			if (i != j)
+			{
+				LineObject* edline = lines.at(j);
+				CPoint conpos;
+				if (IsConflict(stline, edline, conpos))
+				{
+					merge_flag = FALSE;
+					LineObject* newline = new LineObject(conpos.x, conpos.y);
+					newline->line[0] = stline->line[0];
+
+					if (newline->line[0].x == newline->line[1].x) newline->shape = VERTICAL;
+					else newline->shape = HORIZONTAL;
+
+					stline->line[0] = conpos;
+					lines.insert(lines.begin() + j, newline);
+				}
+				if (IsConnect(stline->line[0], edline))
+					sp.push_back(j);
+				if (IsConnect(stline->line[1], edline))
+					ep.push_back(j);
+			}
+		}
+	}
+
 }
 
 void LibraryBox::CheckCircuit()
@@ -47,7 +83,7 @@ void LibraryBox::CheckCircuit()
 	for (int i = 0; i < logicInfo.size(); i++)
 	{
 		curLogic = logicInfo.at(i);
-		if (IsInput(curLogic))
+		if (IsInput(curLogic))					//isinput : 입력핀 또는 클럭인가?
 		{
 			CPoint pos = curLogic->outputCoord[0].first;
 			int lin = lines.size();
@@ -80,6 +116,7 @@ void LibraryBox::CheckCircuit()
 	//출력 Pin 같은 경우는 제외해야 한다.
 
 	////////////////////돌고 돌아/////////////////////////
+	int level = 0;
 	while (!searchLine.empty())
 	{
 		//(초반) Pin에 연결된 선을 다 돌면서 검사한다.
@@ -98,7 +135,7 @@ void LibraryBox::CheckCircuit()
 					if (curline->line[0] == temp_line->line[0] || curline->line[1] == temp_line->line[0]
 						|| curline->line[0] == temp_line->line[1] || curline->line[1] == temp_line->line[1])
 					{
-						curline->chk = 1;
+						curline->chk = level;
 						curline->state = temp_line->state;
 						searchLine.push(curline);
 					}
@@ -113,7 +150,7 @@ void LibraryBox::CheckCircuit()
 				LogicObject* curLogic = logicInfo.at(i);
 				if (!IsInput(curLogic))
 				{
-					if (curLogic->chk == 0)
+					if (curLogic->chk == level)
 					{
 						int ip = curLogic->inputNum;
 						for (int j = 0; j < ip; j++)

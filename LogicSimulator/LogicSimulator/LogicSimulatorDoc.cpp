@@ -234,41 +234,44 @@ void CLogicSimulatorDoc::Serialize(CArchive& ar)
 					Ptemp = new Pin(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ptemp);
 					Ptemp->setFacing(facing);
-					Ptemp->set_Coord_ByFacing(facing);
 					Ptemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ptemp->set_Coord_From_outC(find_pos.x, find_pos.y);
+					Ptemp->set_Coord_ByFacing(facing);
 					break;
 				case CLOCK :
 					Ctemp = NULL;
 					Ctemp = new Clock(find_pos.x, find_pos.y);
 					Ctemp->set_outputCoord(find_pos.x, find_pos.y);
 					Ctemp->setFacing(facing);
-					Ctemp->set_Coord_ByFacing(facing);
 					Ctemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Ctemp);
+					Ctemp->set_Coord_ByFacing(facing);
 					break;
 				case OUTPIN :
 					Otemp = NULL;
 					Otemp = new Out(find_pos.x, find_pos.y);
-					Otemp->set_outputCoord(find_pos.x, find_pos.y);
 					Otemp->setFacing(facing);
-					Otemp->set_Coord_ByFacing(facing);
+					
 					Otemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Otemp);
+					Otemp->set_Coord_ByFacing(facing);
 					break;
 				case SEG7:
 					Stemp = NULL;
 					Stemp = new Sevenseg(find_pos.x, find_pos.y);
-					Stemp->set_outputCoord(find_pos.x, find_pos.y);
+					Stemp->set_inputCoord(find_pos.x, find_pos.y);
 					Stemp->setFacing(facing);
-					Stemp->set_Coord_ByFacing(facing);
+					
 					Stemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 					currBox->logicInfo.push_back(Stemp);
+					Stemp->set_Coord_ByFacing(facing);
 					break;
 				}
 				break;
 			case LIB:
 				Btemp = new Box(find_pos.x, find_pos.y, &(logicBox[1]));
+				Btemp->set_inputCoord(find_pos.x, find_pos.y);
+				Btemp->set_outputCoord(find_pos.x, find_pos.y);
 				Btemp->set_Coord_From_outC(find_pos.x, find_pos.y);
 				Btemp->setFacing(facing);
 				Btemp->set_Coord_ByFacing(facing);

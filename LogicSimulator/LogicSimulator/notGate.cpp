@@ -65,6 +65,7 @@ notGate::notGate() : Gate()
 notGate::notGate(int dec_x, int dec_y)
 {
 	inputNum = 1;
+	outputNum = 1;
 	objectName = NOT_GATE;
 	objectType = GATE_TYPE;
 	this->set_outputCoord(dec_x, dec_y);

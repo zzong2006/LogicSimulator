@@ -22,6 +22,7 @@ class Store
 public:
 	std::vector <int> type, name;
 	int logicNum;
+	int facing;
 	CPoint dec;
 	std::vector <LineObject > lines;
 };

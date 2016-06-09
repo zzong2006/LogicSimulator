@@ -114,7 +114,7 @@ void LogicObject::set_Coord_ByFacing(CString input)
 			{
 			case EAST:
 				inputCoord[0].first.x = top.x;
-				inputCoord[0].first.y = top.y - 2 * UNIT;
+				inputCoord[0].first.y = top.y + 2 * UNIT;
 				outputCoord[0].first.x = bottom.x;
 				outputCoord[0].first.y = bottom.y - 2  * UNIT;
 				break;
@@ -122,7 +122,7 @@ void LogicObject::set_Coord_ByFacing(CString input)
 				inputCoord[0].first.x = bottom.x;
 				inputCoord[0].first.y = bottom.y - 2 * UNIT;
 				outputCoord[0].first.x = top.x;
-				outputCoord[0].first.y = top.y +2  * UNIT;
+				outputCoord[0].first.y = top.y + 2  * UNIT;
 				break;
 			case SOUTH:
 				inputCoord[0].first.x = top.x + 2 * UNIT;
@@ -410,7 +410,7 @@ void LogicObject::set_outputCoord(int x, int y)
 		outputCoord[1].first.x = x;		//Q'
 		outputCoord[1].first.y = y + 2 * UNIT;
 	}
-	else 
+	else if(objectType != OUTPIN)
 	{
 		outputCoord[0].first.x = x;
 		outputCoord[0].first.y = y;
@@ -451,7 +451,6 @@ void LogicObject::set_inputCoord(int x, int y)
 				inputCoord[i].first.y = (y - 3 * UNIT) + (UNIT * i);
 		}
 		else {
-
 			inputCoord[0].first.x = x;
 			inputCoord[0].first.y = y;
 		}
