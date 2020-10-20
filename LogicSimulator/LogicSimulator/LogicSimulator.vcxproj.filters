@@ -247,9 +247,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{edc5fcb5-eec0-4e1d-8f8e-06a96a684e31}</UniqueIdentifier>
     </Filter>
